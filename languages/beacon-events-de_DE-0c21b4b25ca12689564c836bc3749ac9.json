@@ -1,0 +1,84 @@
+{
+    "translation-revision-date": "2026-10-21T15:57:20+00:00",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "assets\/editor.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "de_DE",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Events": [
+                "Veranstaltungen"
+            ],
+            "Upcoming events": [
+                "N\u00e4chste Veranstaltungen"
+            ],
+            "View": [
+                "Ansicht"
+            ],
+            "List": [
+                "Liste"
+            ],
+            "Week": [
+                "Woche"
+            ],
+            "Month": [
+                "Monat"
+            ],
+            "Day": [
+                "Tag"
+            ],
+            "Layout": [
+                "Layout"
+            ],
+            "Grouped by day": [
+                "Nach Tagen gruppiert"
+            ],
+            "Compact (one line per event)": [
+                "Kompakt (eine Zeile pro Veranstaltung)"
+            ],
+            "Upcoming events as a list or a month grid.": [
+                "N\u00e4chste Veranstaltungen als Liste oder Monatsraster."
+            ],
+            "Filter bar (category, venue, search, list\/month)": [
+                "Filterleiste (Kategorie, Ort, Suche, Liste\/Monat)"
+            ],
+            "\"Print this month\" link": [
+                "Link \u201eDiesen Monat drucken\u201c"
+            ],
+            "Opens the month on its own page, ready to print.": [
+                "\u00d6ffnet den Monat auf einer eigenen Seite, druckfertig."
+            ],
+            "Days ahead (list)": [
+                "Tage im Voraus (Liste)"
+            ],
+            "Max events (list)": [
+                "Max. Veranstaltungen (Liste)"
+            ],
+            "Category slugs, comma-separated (optional)": [
+                "Kategorie-Slugs, durch Komma getrennt (optional)"
+            ],
+            "Venue slugs, comma-separated (optional)": [
+                "Orts-Slugs, durch Komma getrennt (optional)"
+            ],
+            "Organizer slugs, comma-separated (optional)": [
+                "Veranstalter-Slugs, durch Komma getrennt (optional)"
+            ],
+            "A short one-line-per-event list for sidebars and footers.": [
+                "Eine kurze Liste mit einer Zeile pro Veranstaltung f\u00fcr Seitenleisten und Footer."
+            ],
+            "Venue \/ category details": [
+                "Orts- \/ Kategoriedetails"
+            ],
+            "On a venue, organizer or category page: address and map link, description, subscribe link. Empty elsewhere.": [
+                "Auf einer Orts-, Veranstalter- oder Kategorieseite: Adresse und Karten-Link, Beschreibung, Abo-Link. Sonst leer."
+            ],
+            "Venue \/ category details (shown on venue, organizer and category pages)": [
+                "Orts- \/ Kategoriedetails (auf Orts-, Veranstalter- und Kategorieseiten)"
+            ]
+        }
+    }
+}

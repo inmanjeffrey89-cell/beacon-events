@@ -1,0 +1,189 @@
+{
+    "translation-revision-date": "2026-10-21T15:57:20+00:00",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "assets\/editor-panel.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "de_DE",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "When": [
+                "Wann"
+            ],
+            "Repeats": [
+                "Wiederholung"
+            ],
+            "Not saved yet: fill in every part of the date and time, including AM or PM if it shows.": [
+                "Noch nicht gespeichert: F\u00fclle Datum und Uhrzeit vollst\u00e4ndig aus, auch AM oder PM, falls angezeigt."
+            ],
+            "Starts": [
+                "Beginn"
+            ],
+            "Ends": [
+                "Ende"
+            ],
+            "All day": [
+                "Ganzt\u00e4gig"
+            ],
+            "Does not repeat": [
+                "Keine Wiederholung"
+            ],
+            "Daily": [
+                "T\u00e4glich"
+            ],
+            "Weekly": [
+                "W\u00f6chentlich"
+            ],
+            "Monthly": [
+                "Monatlich"
+            ],
+            "Yearly": [
+                "J\u00e4hrlich"
+            ],
+            "first": [
+                "ersten"
+            ],
+            "second": [
+                "zweiten"
+            ],
+            "third": [
+                "dritten"
+            ],
+            "fourth": [
+                "vierten"
+            ],
+            "Same day of the month as the start": [
+                "Am gleichen Tag im Monat wie der Beginn"
+            ],
+            "Monthly on day %d": [
+                "Monatlich am %d."
+            ],
+            "Monthly on the %1$s %2$s": [
+                "Monatlich am %1$s %2$s"
+            ],
+            "Monthly on the %1$s and %2$s %3$s": [
+                "Monatlich am %1$s und %2$s %3$s"
+            ],
+            "Monthly on the last %s": [
+                "Monatlich am letzten %s"
+            ],
+            "Skip these dates": [
+                "Diese Termine auslassen"
+            ],
+            "Online event": [
+                "Online-Veranstaltung"
+            ],
+            "Tickets & info link": [
+                "Link f\u00fcr Tickets & Infos"
+            ],
+            "Button text": [
+                "Button-Text"
+            ],
+            "Tickets & info": [
+                "Tickets & Infos"
+            ],
+            "Upcoming dates": [
+                "N\u00e4chste Termine"
+            ],
+            "Ticket link for this date": [
+                "Ticket-Link f\u00fcr diesen Termin"
+            ],
+            "As scheduled": [
+                "Wie geplant"
+            ],
+            "Cancelled": [
+                "Abgesagt"
+            ],
+            "Moved": [
+                "Verschoben"
+            ],
+            "Same as the event": [
+                "Wie bei der Veranstaltung"
+            ],
+            "Tickets & RSVP": [
+                "Tickets & Anmeldung"
+            ],
+            "fifth": [
+                "f\u00fcnften"
+            ],
+            "last": [
+                "letzten"
+            ],
+            "Not saved yet: fill in the whole date.": [
+                "Noch nicht gespeichert: F\u00fclle das ganze Datum aus."
+            ],
+            "Cancel one date (it stays listed as cancelled), move it, or give it its own ticket link. Dates reflect the last save.": [
+                "Sage einen Termin ab (er bleibt als abgesagt sichtbar), verschiebe ihn oder gib ihm einen eigenen Ticket-Link. Die Termine entsprechen dem letzten Speichern."
+            ],
+            "New start": [
+                "Neuer Beginn"
+            ],
+            "New end": [
+                "Neues Ende"
+            ],
+            "The last day. Leave it as the start for a one-day event.": [
+                "Der letzte Tag. Bei einer eint\u00e4gigen Veranstaltung gleich dem Beginn lassen."
+            ],
+            "Site time zone (%s)": [
+                "Zeitzone der Website (%s)"
+            ],
+            "Time zone": [
+                "Zeitzone"
+            ],
+            "Change it only when this event happens somewhere else.": [
+                "Nur \u00e4ndern, wenn diese Veranstaltung woanders stattfindet."
+            ],
+            "This event's times are in %1$s, not the site's time zone (%2$s). Pick \"Site time zone\" if that was a mistake.": [
+                "Die Zeiten dieser Veranstaltung gelten in %1$s, nicht in der Zeitzone der Website (%2$s). W\u00e4hle \u201eZeitzone der Website\u201c, falls das ein Versehen war."
+            ],
+            "Meeting link": [
+                "Meeting-Link"
+            ],
+            "Optional: a button to your Eventbrite, Square or other page.": [
+                "Optional: ein Button zu deiner Eventbrite-, Square- oder anderen Seite."
+            ],
+            "Every (interval)": [
+                "Alle (Intervall)"
+            ],
+            "On": [
+                "Am"
+            ],
+            "Repeat ends": [
+                "Wiederholung endet"
+            ],
+            "Never": [
+                "Nie"
+            ],
+            "After a number of times": [
+                "Nach einer Anzahl von Malen"
+            ],
+            "On a date": [
+                "An einem Datum"
+            ],
+            "Number of times": [
+                "Anzahl"
+            ],
+            "Last date": [
+                "Letzter Termin"
+            ],
+            "Separate dates with commas, e.g. 12\/24\/2026, Dec 31": [
+                "Termine mit Komma trennen, z. B. 24.12.2026, 31.12.2026"
+            ],
+            "Skipping:": [
+                "Ausgelassen:"
+            ],
+            "Couldn't read: %s. Use a date like 12\/25\/2026.": [
+                "Nicht lesbar: %s. Nutze ein Datum wie 25.12.2026."
+            ],
+            "Let people sign up for this event or buy tickets with Beacon Events Pro. Payments go through your own Stripe account or WooCommerce, with no per-ticket fee on top. Try it free for 14 days, no card needed.": [
+                "Lass Leute sich mit Beacon Events Pro f\u00fcr diese Veranstaltung anmelden oder Tickets kaufen. Zahlungen laufen \u00fcber dein eigenes Stripe-Konto oder WooCommerce, ohne Geb\u00fchr pro Ticket obendrauf. 14 Tage kostenlos testen, ohne Karte."
+            ],
+            "See what Pro adds": [
+                "Sieh dir an, was Pro bietet"
+            ]
+        }
+    }
+}
