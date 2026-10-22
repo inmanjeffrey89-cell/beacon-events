@@ -4,9 +4,16 @@
 	var el = wp.element.createElement, F = wp.element.Fragment, __ = wp.i18n.__;
 	var useSelect = wp.data.useSelect, useDispatch = wp.data.useDispatch;
 	var useState = wp.element.useState, useEffect = wp.element.useEffect, apiFetch = wp.apiFetch;
-	var Panel = wp.editPost.PluginDocumentSettingPanel, TextControl = wp.components.TextControl, SelectControl = wp.components.SelectControl, ToggleControl = wp.components.ToggleControl, CheckboxControl = wp.components.CheckboxControl, Flex = wp.components.Flex, FlexItem = wp.components.FlexItem;
-	var DAYS = [ [ 'SU', 'Sun' ], [ 'MO', 'Mon' ], [ 'TU', 'Tue' ], [ 'WE', 'Wed' ], [ 'TH', 'Thu' ], [ 'FR', 'Fri' ], [ 'SA', 'Sat' ] ];
-	var NAMES = { SU: 'Sunday', MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday' };
+	var Panel = ( wp.editor && wp.editor.PluginDocumentSettingPanel ) || wp.editPost.PluginDocumentSettingPanel, TextControl = wp.components.TextControl, SelectControl = wp.components.SelectControl, ToggleControl = wp.components.ToggleControl, CheckboxControl = wp.components.CheckboxControl, Flex = wp.components.Flex, FlexItem = wp.components.FlexItem;
+	var _n = wp.i18n._n, _x = wp.i18n._x, sprintf = wp.i18n.sprintf;
+	var CFG = window.beaconPanel || {};
+	// Weekday names in the editor's language come from WordPress (beaconPanel.days / .dabbr, from $wp_locale).
+	var CODES = [ 'SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA' ];
+	var NAMES = CFG.days || { SU: 'Sunday', MO: 'Monday', TU: 'Tuesday', WE: 'Wednesday', TH: 'Thursday', FR: 'Friday', SA: 'Saturday' };
+	var ABBR = CFG.dabbr || { SU: 'Sun', MO: 'Mon', TU: 'Tue', WE: 'Wed', TH: 'Thu', FR: 'Fri', SA: 'Sat' };
+	var DAYS = CODES.map( function ( c ) { return [ c, ABBR[ c ] ]; } );
+	// the same phrases as Recurrence::describe() in PHP, so one translation covers the editor and the event page
+	var ORDX = { '1': _x( 'first', 'the first Monday of the month', 'beacon-events' ), '2': _x( 'second', 'the second Monday of the month', 'beacon-events' ), '3': _x( 'third', 'the third Monday of the month', 'beacon-events' ), '4': _x( 'fourth', 'the fourth Monday of the month', 'beacon-events' ), '5': _x( 'fifth', 'the fifth Monday of the month', 'beacon-events' ), '-1': _x( 'last', 'the last Monday of the month', 'beacon-events' ) };
 
 	function parse( rrule ) {
 		var r = { FREQ: '', INTERVAL: 1, BYDAY: [], COUNT: '', UNTIL: '' };
@@ -28,32 +35,57 @@
 		if ( r.COUNT ) s += ';COUNT=' + parseInt( r.COUNT, 10 ); else if ( r.UNTIL ) s += ';UNTIL=' + r.UNTIL.replace( /-/g, '' );
 		return s;
 	}
+	function and( l ) {
+		if ( l.length < 2 ) return l[ 0 ] || '';
+		/* translators: a list: 1: "Monday, Tuesday", 2: "Friday" → "Monday, Tuesday and Friday" */
+		return sprintf( __( '%1$s and %2$s', 'beacon-events' ), l.slice( 0, -1 ).join( ', ' ), l[ l.length - 1 ] );
+	}
+	function on( what, days ) {
+		/* translators: 1: "Every week", "Every month"…, 2: the days ("Monday and Thursday", "the second Tuesday") */
+		return sprintf( __( '%1$s on %2$s', 'beacon-events' ), what, days );
+	}
 	// "2TU,4TU" → "the second and fourth Tuesday", "1MO,3WE" → "the first Monday and the third Wednesday"
 	function posText( bypos ) {
-		var ordw = { '1': 'first', '2': 'second', '3': 'third', '4': 'fourth', '5': 'fifth', '-1': 'last' }, by = {}, order = [];
-		var and = function ( l ) { return l.length > 1 ? l.slice( 0, -1 ).join( ', ' ) + ' and ' + l[ l.length - 1 ] : ( l[ 0 ] || '' ); };
+		var by = {}, order = [];
 		String( bypos ).split( ',' ).forEach( function ( p ) {
 			var m = /^(-?\d)([A-Z]{2})$/.exec( p ); if ( ! m ) return;
 			var day = NAMES[ m[ 2 ] ] || m[ 2 ];
 			if ( ! by[ day ] ) { by[ day ] = []; order.push( day ); }
-			by[ day ].push( ordw[ m[ 1 ] ] || m[ 1 ] );
+			by[ day ].push( ORDX[ m[ 1 ] ] || m[ 1 ] );
 		} );
-		return and( order.map( function ( day ) { return 'the ' + and( by[ day ] ) + ' ' + day; } ) );
+		/* translators: 1: ordinals ("second and fourth"), 2: weekday → "the second and fourth Tuesday" */
+		return and( order.map( function ( day ) { return sprintf( __( 'the %1$s %2$s', 'beacon-events' ), and( by[ day ] ), day ); } ) );
+	}
+	function untilText( ymd ) {
+		return wp.date && wp.date.dateI18n && CFG.dateFormat ? wp.date.dateI18n( CFG.dateFormat, ymd + 'T12:00:00' ) : ymd;
 	}
 	function describe( r ) {
 		if ( ! r.FREQ ) return __( 'Does not repeat', 'beacon-events' );
-		var unit = { DAILY: 'day', WEEKLY: 'week', MONTHLY: 'month', YEARLY: 'year' }[ r.FREQ ];
-		var s = r.INTERVAL === 1 ? 'Every ' + unit : 'Every ' + r.INTERVAL + ' ' + unit + 's';
-		var days = r.FREQ === 'WEEKLY' ? r.BYDAY.map( function ( d ) { return NAMES[ d ]; } ).filter( Boolean ) : [];
-		if ( r.FREQ === 'MONTHLY' && r.BYPOS ) { s += ' on ' + posText( r.BYPOS ); days = []; }
-		if ( days.length ) s += ' on ' + ( days.length > 1 ? days.slice( 0, -1 ).join( ', ' ) + ' and ' + days[ days.length - 1 ] : days[ 0 ] );
-		if ( r.COUNT ) s += ', ' + r.COUNT + ' times';
-		if ( r.UNTIL && ! r.COUNT ) s += ', until ' + r.UNTIL;
+		var n = r.INTERVAL || 1, s;
+		/* translators: %d: number of days, 2 or more */
+		if ( r.FREQ === 'DAILY' ) s = n === 1 ? __( 'Every day', 'beacon-events' ) : sprintf( _n( 'Every %d day', 'Every %d days', n, 'beacon-events' ), n );
+		/* translators: %d: number of weeks, 2 or more */
+		else if ( r.FREQ === 'WEEKLY' ) s = n === 1 ? __( 'Every week', 'beacon-events' ) : sprintf( _n( 'Every %d week', 'Every %d weeks', n, 'beacon-events' ), n );
+		/* translators: %d: number of months, 2 or more */
+		else if ( r.FREQ === 'MONTHLY' ) s = n === 1 ? __( 'Every month', 'beacon-events' ) : sprintf( _n( 'Every %d month', 'Every %d months', n, 'beacon-events' ), n );
+		/* translators: %d: number of years, 2 or more */
+		else s = n === 1 ? __( 'Every year', 'beacon-events' ) : sprintf( _n( 'Every %d year', 'Every %d years', n, 'beacon-events' ), n );
+		if ( r.FREQ === 'MONTHLY' && r.BYPOS ) {
+			s = on( s, posText( r.BYPOS ) );
+		} else if ( r.FREQ === 'WEEKLY' && r.BYDAY.length ) {
+			// the site's week order, as on the event page: "Saturday and Sunday", not RRULE's "Sunday and Saturday"
+			var first = parseInt( CFG.weekStart, 10 ) || 0;
+			var days = r.BYDAY.filter( function ( d ) { return NAMES[ d ]; } ).sort( function ( a, b ) { return ( ( CODES.indexOf( a ) - first + 7 ) % 7 ) - ( ( CODES.indexOf( b ) - first + 7 ) % 7 ); } );
+			if ( days.length ) s = on( s, and( days.map( function ( d ) { return NAMES[ d ]; } ) ) );
+		}
+		/* translators: %d: how many dates the series has */
+		if ( r.COUNT ) s += ', ' + sprintf( _n( '%d time', '%d times', parseInt( r.COUNT, 10 ), 'beacon-events' ), parseInt( r.COUNT, 10 ) );
+		/* translators: %s: last date of the series */
+		if ( r.UNTIL && ! r.COUNT ) s += ', ' + sprintf( __( 'until %s', 'beacon-events' ), untilText( r.UNTIL ) );
 		return s;
 	}
 
-	var CFG = window.beaconPanel || {};
-	var sprintf = wp.i18n.sprintf, ComboboxControl = wp.components.ComboboxControl;
+	var ComboboxControl = wp.components.ComboboxControl;
 	var MONTHS = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
 	function pad( n ) { return ( n < 10 ? '0' : '' ) + n; }
 	function ymdOf( d ) { return d.getFullYear() + '-' + pad( d.getMonth() + 1 ) + '-' + pad( d.getDate() ); }
@@ -200,7 +232,7 @@
 				if ( sd.getDate() + 7 > new Date( sd.getFullYear(), sd.getMonth() + 1, 0 ).getDate() ) { monthly.push( { value: '-1' + dow, label: sprintf( __( 'Monthly on the last %s', 'beacon-events' ), wname ) } ); }
 			}
 			if ( r.BYPOS && ! monthly.some( function ( o ) { return o.value === r.BYPOS; } ) ) {
-				monthly.push( { value: r.BYPOS, label: 'Monthly on ' + posText( r.BYPOS ) } );
+				monthly.push( { value: r.BYPOS, label: on( __( 'Every month', 'beacon-events' ), posText( r.BYPOS ) ) } );
 			}
 		}
 		// Ends: never / after a number of times / on a date, one at a time
@@ -262,7 +294,8 @@
 	}
 	// Open the panel by default the first time; after that, respect whatever the user leaves it as.
 	try {
-		var sel = wp.data.select( 'core/edit-post' ), disp = wp.data.dispatch( 'core/edit-post' ), key = 'beacon-when/beacon-when';
+		var store = wp.data.select( 'core/editor' ) && wp.data.select( 'core/editor' ).isEditorPanelOpened ? 'core/editor' : 'core/edit-post'; // core/edit-post's copies are deprecated since WP 6.5
+		var sel = wp.data.select( store ), disp = wp.data.dispatch( store ), key = 'beacon-when/beacon-when';
 		if ( sel && disp && ! sel.isEditorPanelOpened( key ) && ! window.localStorage.getItem( 'beacon-when-seen' ) ) { disp.toggleEditorPanelOpened( key ); window.localStorage.setItem( 'beacon-when-seen', '1' ); }
 	} catch ( e ) {}
 } )( window.wp );

@@ -36,6 +36,7 @@ final class Import {
 		add_action( 'admin_post_beacon_export_csv', array( __CLASS__, 'export_csv' ) );
 		add_action( 'admin_post_beacon_import_report', array( __CLASS__, 'download_report' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
+		add_action( Events::REFRESH, array( __CLASS__, 'sweep_files' ) ); // daily
 		// Before redirect_canonical (10): its "closest match" guess would send /events/week/ to any post whose slug starts with "week".
 		add_action( 'template_redirect', array( __CLASS__, 'legacy_redirects' ), 9 );
 	}
@@ -384,12 +385,46 @@ final class Import {
 		unset( $state['seen'], $state['rows'], $state['last'], $state['rows_capped'] );
 		$state['errors']   = array_slice( $state['errors'], 0, 50 );
 		$state['notes']    = array_slice( $state['notes'], 0, 50 );
-		if ( ! empty( $state['file'] ) && file_exists( $state['file'] ) ) {
-			wp_delete_file( $state['file'] );
+		if ( ! empty( $state['file'] ) ) {
+			self::untrack_file( $state['file'] );
 			$state['file'] = ''; }
 		$log = get_option( self::OPT_LOG, array() );
 		array_unshift( $log, $state );
 		update_option( self::OPT_LOG, array_slice( is_array( $log ) ? $log : array(), 0, 5 ), false );
+	}
+
+	/* ---------------- uploaded CSV files ---------------- */
+
+	const OPT_FILES = 'beacon_import_files'; // path => upload time, for CSV imports still running (not autoloaded)
+
+	public static function track_file( string $path ): void {
+		$files          = (array) get_option( self::OPT_FILES, array() );
+		$files[ $path ] = time();
+		update_option( self::OPT_FILES, $files, false );
+	}
+
+	/** Deletes the file and forgets it. */
+	public static function untrack_file( string $path ): void {
+		if ( file_exists( $path ) ) {
+			wp_delete_file( $path ); }
+		$files = (array) get_option( self::OPT_FILES, array() );
+		unset( $files[ $path ] );
+		update_option( self::OPT_FILES, $files, false );
+	}
+
+	/** An import left unfinished (tab closed mid-batch) never reaches finish(): its CSV goes after a day. */
+	public static function sweep_files(): void {
+		$files = (array) get_option( self::OPT_FILES, array() );
+		if ( ! $files ) {
+			return; }
+		foreach ( $files as $path => $at ) {
+			if ( ! is_string( $path ) || (int) $at > time() - DAY_IN_SECONDS ) {
+				continue; }
+			if ( file_exists( $path ) ) {
+				wp_delete_file( $path ); }
+			unset( $files[ $path ] );
+		}
+		update_option( self::OPT_FILES, $files, false );
 	}
 
 	/* ---------------- per-event report (CSV) ---------------- */

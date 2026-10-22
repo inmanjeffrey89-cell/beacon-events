@@ -464,7 +464,7 @@ final class Combine {
 		foreach ( $groups as $g ) {
 			$span = wp_date( 'M j, Y', (int) strtotime( $g['dates'][0] . ' 12:00' ) ) . ' – ' . wp_date( 'M j, Y', (int) strtotime( end( $g['dates'] ) . ' 12:00' ) );
 			$skip = $g['exdates'] ? ' · ' . sprintf( /* translators: %d: number of skipped dates */ _n( '%d date skipped', '%d dates skipped', count( $g['exdates'] ), 'beacon-events' ), count( $g['exdates'] ) ) : '';
-			$skip .= ! empty( $g['dupes'] ) ? ' · ' . sprintf( /* translators: %d: number of duplicate listings */ _n( '%d listed twice', '%d listed twice', (int) $g['dupes'], 'beacon-events' ), (int) $g['dupes'] ) : '';
+			$skip .= ! empty( $g['dupes'] ) ? ' · ' . sprintf( /* translators: %d: number of duplicate listings */ _n( '%d date listed twice', '%d dates listed twice', (int) $g['dupes'], 'beacon-events' ), (int) $g['dupes'] ) : '';
 			echo '<tr><th scope="row" class="check-column"><input type="checkbox" name="groups[]" value="' . esc_attr( implode( '-', $g['ids'] ) ) . '" checked></th>';
 			echo '<td><a href="' . esc_url( (string) get_edit_post_link( $g['ids'][0] ) ) . '">' . esc_html( $g['title'] ) . '</a></td>';
 			echo '<td>' . esc_html( $g['text'] ) . '</td>';

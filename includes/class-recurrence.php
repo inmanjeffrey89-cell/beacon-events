@@ -101,7 +101,7 @@ final class Recurrence {
 		if ( $r['FREQ'] === 'WEEKLY' && $r['BYDAY'] ) {
 			$wanted = array_values( array_filter( array_map( fn( $d ) => self::$days[ $d ] ?? null, $r['BYDAY'] ), fn( $v ) => $v !== null ) );
 			sort( $wanted );
-			$weekStart = $cur->modify( 'sunday last week' )->modify( '+0 days' ); // Sunday of start's week
+			$weekStart = $cur->modify( 'sunday last week' ); // Sunday of start's week
 			if ( (int) $cur->format( 'w' ) === 0 ) {
 				$weekStart = $cur;
 			}
@@ -208,6 +208,15 @@ final class Recurrence {
 						break;
 					} continue; }
 				$d = $d->setDate( (int) $d->format( 'Y' ), (int) $d->format( 'n' ), $mday );
+			} elseif ( $r['FREQ'] === 'YEARLY' ) {
+				// RFC 5545 skips a year that has no such date (Feb 29); "+1 year" would roll it to Mar 1
+				$y = (int) $cur->format( 'Y' ) + $i * $r['INTERVAL'];
+				if ( ! checkdate( (int) $cur->format( 'n' ), (int) $cur->format( 'j' ), $y ) ) {
+					++$i;
+					if ( $y > (int) $end->format( 'Y' ) ) {
+						break;
+					} continue; }
+				$d = $cur->setDate( $y, (int) $cur->format( 'n' ), (int) $cur->format( 'j' ) );
 			} else {
 				$d = $cur->modify( '+' . ( $i * $r['INTERVAL'] ) . " $step" );
 			}

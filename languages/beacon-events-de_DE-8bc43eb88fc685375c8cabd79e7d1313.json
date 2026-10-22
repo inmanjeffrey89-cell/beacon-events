@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-10-20T03:49:53+00:00",
+    "translation-revision-date": "2026-10-22T18:09:00+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "assets\/editor-panel.js",
     "domain": "messages",
@@ -105,6 +105,68 @@
             ],
             "Tickets & RSVP": [
                 "Tickets & Anmeldung"
+            ],
+            "Every day": [
+                "Jeden Tag"
+            ],
+            "Every %d day": [
+                "Jeden %d. Tag",
+                "Alle %d Tage"
+            ],
+            "Every week": [
+                "Jede Woche"
+            ],
+            "Every %d week": [
+                "Jede %d. Woche",
+                "Alle %d Wochen"
+            ],
+            "Every month": [
+                "Jeden Monat"
+            ],
+            "Every %d month": [
+                "Jeden %d. Monat",
+                "Alle %d Monate"
+            ],
+            "Every year": [
+                "Jedes Jahr"
+            ],
+            "Every %d year": [
+                "Jedes %d. Jahr",
+                "Alle %d Jahre"
+            ],
+            "%1$s and %2$s": [
+                "%1$s und %2$s"
+            ],
+            "%1$s on %2$s": [
+                "%1$s am %2$s"
+            ],
+            "the %1$s %2$s": [
+                "%1$s %2$s"
+            ],
+            "%d time": [
+                "%d-mal",
+                "%d-mal"
+            ],
+            "until %s": [
+                "bis %s"
+            ],
+            "the first Monday of the month\u0004first": [
+                "ersten"
+            ],
+            "the second Monday of the month\u0004second": [
+                "zweiten"
+            ],
+            "the third Monday of the month\u0004third": [
+                "dritten"
+            ],
+            "the fourth Monday of the month\u0004fourth": [
+                "vierten"
+            ],
+            "the fifth Monday of the month\u0004fifth": [
+                "f\u00fcnften"
+            ],
+            "the last Monday of the month\u0004last": [
+                "letzten"
             ],
             "fifth": [
                 "f\u00fcnften"

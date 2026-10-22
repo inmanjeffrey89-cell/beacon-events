@@ -119,6 +119,8 @@ final class Events {
 			'link'       => array( __CLASS__, 'sanitize_url' ),
 			'exdates'    => array( __CLASS__, 'sanitize_dates' ),
 			'overrides'  => array( __CLASS__, 'sanitize_overrides' ),
+			'start'      => array( __CLASS__, 'sanitize_datetime' ),
+			'end'        => array( __CLASS__, 'sanitize_datetime' ),
 		);
 		foreach ( self::META as $name => $key ) {
 			register_post_meta(
@@ -148,8 +150,8 @@ final class Events {
 	public static function get( int $event_id ): array {
 		$m = fn( $k ) => (string) get_post_meta( $event_id, self::META[ $k ], true );
 		return array(
-			'start'      => $m( 'start' ),
-			'end'        => $m( 'end' ),
+			'start'      => self::sanitize_datetime( $m( 'start' ) ),
+			'end'        => self::sanitize_datetime( $m( 'end' ) ),
 			'all_day'    => $m( 'all_day' ) === '1',
 			'tz'         => $m( 'tz' ) ?: wp_timezone_string(),
 			'rrule'      => $m( 'rrule' ),
@@ -206,6 +208,22 @@ final class Events {
 		if ( $v !== '' && ! preg_match( '#^[a-z][a-z0-9+.\-]*:#i', $v ) ) {
 			$v = 'https://' . ltrim( $v, '/' ); }
 		return esc_url_raw( $v, array( 'http', 'https' ) );
+	}
+
+	/**
+	 * A start or end the date code can read ("2026-10-06 18:00", "2026-10-06T18:00", "2026-10-06"), else ''. Every view
+	 * builds a DateTimeImmutable from these, so one unreadable string saved over REST used to fatal every render of
+	 * that event; '' means "no date", which the views and materialize() already handle.
+	 */
+	public static function sanitize_datetime( $value ): string {
+		$v = trim( sanitize_text_field( (string) $value ) );
+		if ( '' === $v ) {
+			return ''; }
+		try {
+			new \DateTimeImmutable( $v, new \DateTimeZone( 'UTC' ) );
+		} catch ( \Exception $x ) {
+			return ''; }
+		return $v;
 	}
 
 	/**
@@ -363,6 +381,14 @@ final class Events {
 		if ( $end < $start ) {
 			$end = $start; }
 		$duration = $end->getTimestamp() - $start->getTimestamp();
+		// All-day dates keep their wall clock (00:00 to 23:59 on the same N days): a fixed number of seconds would end
+		// the day the clocks go forward at 00:59 the next day. Timed dates keep the exact length, as RFC 5545 says.
+		$span     = (int) round( ( strtotime( $end->format( 'Y-m-d' ) . ' 00:00 UTC' ) - strtotime( $start->format( 'Y-m-d' ) . ' 00:00 UTC' ) ) / DAY_IN_SECONDS );
+		$end_of   = function ( \DateTimeImmutable $s ) use ( $e, $duration, $span, $end, $tz ): \DateTimeImmutable {
+			if ( $e['all_day'] ) {
+				return new \DateTimeImmutable( $s->modify( '+' . $span . ' days' )->format( 'Y-m-d' ) . ' ' . $end->format( 'H:i:s' ), $tz ); }
+			return $s->setTimestamp( $s->getTimestamp() + $duration );
+		};
 		$rule     = $e['rrule'];
 		if ( $e['exdates'] ) {
 			$rule .= ( $rule ? ';' : 'FREQ=;' ) . 'EXDATE=' . str_replace( '-', '', $e['exdates'] ); }
@@ -383,7 +409,7 @@ final class Events {
 		$n     = 0;
 		foreach ( $dates as $ymd ) {
 			$s      = new \DateTimeImmutable( $ymd . ' ' . $start->format( 'H:i:s' ), $tz );   // same local wall-clock time each occurrence (DST-safe)
-			$f      = $s->setTimestamp( $s->getTimestamp() + $duration );
+			$f      = $end_of( $s );
 			$status = 'scheduled';
 			$ov     = $e['overrides'][ $ymd ] ?? null;
 			if ( $ov && ( $ov['status'] ?? '' ) === 'cancelled' ) {
@@ -391,7 +417,7 @@ final class Events {
 			} elseif ( $ov && ! empty( $ov['start'] ) ) {
 				$status = 'moved';
 				$s      = new \DateTimeImmutable( $ov['start'], $tz );
-				$f      = ! empty( $ov['end'] ) ? new \DateTimeImmutable( $ov['end'], $tz ) : $s->setTimestamp( $s->getTimestamp() + $duration );
+				$f      = ! empty( $ov['end'] ) ? new \DateTimeImmutable( $ov['end'], $tz ) : $end_of( $s );
 				if ( $f < $s ) {
 					$f = $s; }
 			}

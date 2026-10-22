@@ -149,6 +149,16 @@ final class Onboarding {
 		self::back( 'added' );
 	}
 
+	/** True while make_samples() is creating the samples (their own saves must not count as user edits). */
+	private static $making = false;
+
+	public static function claim_edited_sample( $post_id, $post, $update ): void {
+		if ( self::$making || ! $update || wp_is_post_revision( (int) $post_id ) || wp_is_post_autosave( (int) $post_id ) ) {
+			return; }
+		if ( get_post_meta( (int) $post_id, '_beacon_import', true ) === self::SOURCE ) {
+			delete_post_meta( (int) $post_id, '_beacon_import' ); }
+	}
+
 	public static function make_samples(): void {
 		$today = new \DateTimeImmutable( 'today', wp_timezone() );
 		$at    = fn( string $rel, string $time ) => $today->modify( $rel )->format( 'Y-m-d' ) . ' ' . $time;
@@ -185,7 +195,8 @@ final class Onboarding {
 				$before[ $tax ][ $name ] = $t ? (int) $t->term_id : 0;
 			}
 		}
-		$state = Import::fresh_state( self::SOURCE );
+		$state        = Import::fresh_state( self::SOURCE );
+		self::$making = true;
 		foreach ( $events as $e ) {
 			Import::import_event(
 				array(
@@ -207,6 +218,7 @@ final class Onboarding {
 				$state
 			);
 		}
+		self::$making = false;
 		$created = array();
 		foreach ( $names as $tax => $list ) {
 			foreach ( $list as $name ) {
@@ -236,6 +248,11 @@ final class Onboarding {
 
 	public static function delete_samples(): void {
 		foreach ( self::sample_ids() as $id ) {
+			// edited after it was made (also before 0.28.5, which didn't clear the flag on edit): it's the user's now
+			$p = get_post( $id );
+			if ( $p && strtotime( $p->post_modified_gmt . ' UTC' ) - strtotime( $p->post_date_gmt . ' UTC' ) > 120 ) {
+				delete_post_meta( $id, '_beacon_import' );
+				continue; }
 			wp_delete_post( $id, true ); }
 		foreach ( (array) get_option( self::OPT_TERMS, array() ) as $tax => $ids ) {
 			foreach ( (array) $ids as $tid ) {

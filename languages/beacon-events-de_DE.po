@@ -27,271 +27,271 @@ msgid "Beacon Events"
 msgstr "Beacon Events"
 
 #: includes/class-admin.php:11
-#: includes/class-admin.php:57
+#: includes/class-admin.php:62
 #: includes/class-settings.php:50
-#: includes/class-views.php:1029
-#: assets/editor-panel.js:219
+#: includes/class-views.php:1067
+#: assets/editor-panel.js:251
 msgid "When"
 msgstr "Wann"
 
-#: includes/class-admin.php:58
-#: includes/class-admin.php:125
-#: includes/class-views.php:1031
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:63
+#: includes/class-admin.php:130
+#: includes/class-views.php:1069
+#: assets/editor-panel.js:260
 msgid "Repeats"
 msgstr "Wiederholung"
 
-#: includes/class-admin.php:71
+#: includes/class-admin.php:76
 msgid "No start date: not on the calendar"
 msgstr "Kein Startdatum: nicht im Kalender"
 
-#: includes/class-admin.php:88
+#: includes/class-admin.php:93
 msgid "Enjoying Beacon Events? A quick %s helps a new plugin more than you would think."
 msgstr "Gefällt dir Beacon Events? Eine kurze %s hilft einem neuen Plugin mehr, als du denkst."
 
-#: includes/class-admin.php:89
+#: includes/class-admin.php:94
 msgid "review"
 msgstr "Bewertung"
 
-#: includes/class-admin.php:111
-#: assets/editor-panel.js:107
+#: includes/class-admin.php:116
+#: assets/editor-panel.js:139
 msgid "Not saved yet: fill in every part of the date and time, including AM or PM if it shows."
 msgstr "Noch nicht gespeichert: Fülle Datum und Uhrzeit vollständig aus, auch AM oder PM, falls angezeigt."
 
-#: includes/class-admin.php:121
-#: assets/editor-panel.js:183
-#: assets/editor-panel.js:186
+#: includes/class-admin.php:126
+#: assets/editor-panel.js:215
+#: assets/editor-panel.js:218
 msgid "Starts"
 msgstr "Beginn"
 
-#: includes/class-admin.php:122
-#: assets/editor-panel.js:184
-#: assets/editor-panel.js:187
+#: includes/class-admin.php:127
+#: assets/editor-panel.js:216
+#: assets/editor-panel.js:219
 msgid "Ends"
 msgstr "Ende"
 
-#: includes/class-admin.php:123
+#: includes/class-admin.php:128
 #: includes/class-views.php:120
-#: includes/class-views.php:508
-#: includes/class-views.php:799
-#: assets/editor-panel.js:221
+#: includes/class-views.php:532
+#: includes/class-views.php:823
+#: assets/editor-panel.js:253
 msgid "All day"
 msgstr "Ganztägig"
 
-#: includes/class-admin.php:124
+#: includes/class-admin.php:129
 msgid "Timezone"
 msgstr "Zeitzone"
 
-#: includes/class-admin.php:127
-#: includes/class-recurrence.php:234
-#: assets/editor-panel.js:44
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:132
+#: includes/class-recurrence.php:243
+#: assets/editor-panel.js:63
+#: assets/editor-panel.js:260
 msgid "Does not repeat"
 msgstr "Keine Wiederholung"
 
-#: includes/class-admin.php:128
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:133
+#: assets/editor-panel.js:260
 msgid "Daily"
 msgstr "Täglich"
 
-#: includes/class-admin.php:129
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:134
+#: assets/editor-panel.js:260
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: includes/class-admin.php:130
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:135
+#: assets/editor-panel.js:260
 msgid "Monthly"
 msgstr "Monatlich"
 
-#: includes/class-admin.php:131
-#: assets/editor-panel.js:228
+#: includes/class-admin.php:136
+#: assets/editor-panel.js:260
 msgid "Yearly"
 msgstr "Jährlich"
 
-#: includes/class-admin.php:135
+#: includes/class-admin.php:140
 msgid "Every"
 msgstr "Alle"
 
-#: includes/class-admin.php:135
+#: includes/class-admin.php:140
 msgid "day(s) / week(s) / month(s) / year(s)"
 msgstr "Tag(e) / Woche(n) / Monat(e) / Jahr(e)"
 
-#: includes/class-admin.php:136
+#: includes/class-admin.php:141
 msgid "On (weekly)"
 msgstr "An (wöchentlich)"
 
-#: includes/class-admin.php:151
-#: assets/editor-panel.js:60
+#: includes/class-admin.php:156
+#: assets/editor-panel.js:92
 msgid "first"
 msgstr "ersten"
 
-#: includes/class-admin.php:152
-#: assets/editor-panel.js:60
+#: includes/class-admin.php:157
+#: assets/editor-panel.js:92
 msgid "second"
 msgstr "zweiten"
 
-#: includes/class-admin.php:153
-#: assets/editor-panel.js:60
+#: includes/class-admin.php:158
+#: assets/editor-panel.js:92
 msgid "third"
 msgstr "dritten"
 
-#: includes/class-admin.php:154
-#: assets/editor-panel.js:60
+#: includes/class-admin.php:159
+#: assets/editor-panel.js:92
 msgid "fourth"
 msgstr "vierten"
 
-#: includes/class-admin.php:156
-#: assets/editor-panel.js:194
+#: includes/class-admin.php:161
+#: assets/editor-panel.js:226
 msgid "Same day of the month as the start"
 msgstr "Am gleichen Tag im Monat wie der Beginn"
 
-#: includes/class-admin.php:163
-#: assets/editor-panel.js:194
+#: includes/class-admin.php:168
+#: assets/editor-panel.js:226
 msgid "Monthly on day %d"
 msgstr "Monatlich am %d."
 
-#: includes/class-admin.php:166
-#: assets/editor-panel.js:197
+#: includes/class-admin.php:171
+#: assets/editor-panel.js:229
 msgid "Monthly on the %1$s %2$s"
 msgstr "Monatlich am %1$s %2$s"
 
-#: includes/class-admin.php:169
-#: assets/editor-panel.js:199
+#: includes/class-admin.php:174
+#: assets/editor-panel.js:231
 msgid "Monthly on the %1$s and %2$s %3$s"
 msgstr "Monatlich am %1$s und %2$s %3$s"
 
-#: includes/class-admin.php:173
-#: assets/editor-panel.js:200
+#: includes/class-admin.php:178
+#: assets/editor-panel.js:232
 msgid "Monthly on the last %s"
 msgstr "Monatlich am letzten %s"
 
-#: includes/class-admin.php:178
+#: includes/class-admin.php:183
 msgid "Monthly on"
 msgstr "Monatlich am"
 
-#: includes/class-admin.php:182
+#: includes/class-admin.php:187
 msgid "Ends after (times)"
 msgstr "Endet nach (Mal)"
 
-#: includes/class-admin.php:183
+#: includes/class-admin.php:188
 msgid "Or ends on"
 msgstr "Oder endet am"
 
-#: includes/class-admin.php:184
-#: assets/editor-panel.js:241
+#: includes/class-admin.php:189
+#: assets/editor-panel.js:273
 msgid "Skip these dates"
 msgstr "Diese Termine auslassen"
 
-#: includes/class-admin.php:185
-#: assets/editor-panel.js:224
+#: includes/class-admin.php:190
+#: assets/editor-panel.js:256
 msgid "Online event"
 msgstr "Online-Veranstaltung"
 
-#: includes/class-admin.php:185
+#: includes/class-admin.php:190
 msgid "Meeting link, e.g. https://zoom.us/j/…"
 msgstr "Meeting-Link, z. B. https://zoom.us/j/…"
 
-#: includes/class-admin.php:186
-#: assets/editor-panel.js:226
+#: includes/class-admin.php:191
+#: assets/editor-panel.js:258
 msgid "Tickets & info link"
 msgstr "Link für Tickets & Infos"
 
-#: includes/class-admin.php:186
+#: includes/class-admin.php:191
 msgid "e.g. your Eventbrite or Square page"
 msgstr "z. B. deine Eventbrite- oder Square-Seite"
 
-#: includes/class-admin.php:187
-#: assets/editor-panel.js:227
+#: includes/class-admin.php:192
+#: assets/editor-panel.js:259
 msgid "Button text"
 msgstr "Button-Text"
 
-#: includes/class-admin.php:187
-#: includes/class-views.php:517
-#: assets/editor-panel.js:227
+#: includes/class-admin.php:192
+#: includes/class-views.php:541
+#: assets/editor-panel.js:259
 msgid "Tickets & info"
 msgstr "Tickets & Infos"
 
-#: includes/class-admin.php:192
-#: assets/editor-panel.js:143
+#: includes/class-admin.php:197
+#: assets/editor-panel.js:175
 msgid "Upcoming dates"
 msgstr "Nächste Termine"
 
-#: includes/class-admin.php:192
+#: includes/class-admin.php:197
 msgid "Cancel a single date (it stays listed as cancelled), move it to another time, or give it its own ticket link (when each date has its own registration page). Dates reflect the last save."
 msgstr "Sage einen einzelnen Termin ab (er bleibt als abgesagt sichtbar), verschiebe ihn auf eine andere Zeit oder gib ihm einen eigenen Ticket-Link (wenn jeder Termin eine eigene Anmeldeseite hat). Die Termine entsprechen dem letzten Speichern."
 
-#: includes/class-admin.php:193
+#: includes/class-admin.php:198
 msgid "Date"
 msgstr "Datum"
 
-#: includes/class-admin.php:193
+#: includes/class-admin.php:198
 msgid "Status"
 msgstr "Status"
 
-#: includes/class-admin.php:193
+#: includes/class-admin.php:198
 msgid "Moved to (start)"
 msgstr "Verschoben auf (Beginn)"
 
-#: includes/class-admin.php:193
+#: includes/class-admin.php:198
 msgid "Moved to (end)"
 msgstr "Verschoben auf (Ende)"
 
-#: includes/class-admin.php:193
-#: assets/editor-panel.js:158
+#: includes/class-admin.php:198
+#: assets/editor-panel.js:190
 msgid "Ticket link for this date"
 msgstr "Ticket-Link für diesen Termin"
 
-#: includes/class-admin.php:199
-#: assets/editor-panel.js:148
+#: includes/class-admin.php:204
+#: assets/editor-panel.js:180
 msgid "As scheduled"
 msgstr "Wie geplant"
 
-#: includes/class-admin.php:200
-#: includes/class-views.php:493
-#: assets/editor-panel.js:148
+#: includes/class-admin.php:205
+#: includes/class-views.php:517
+#: assets/editor-panel.js:180
 msgid "Cancelled"
 msgstr "Abgesagt"
 
-#: includes/class-admin.php:201
-#: assets/editor-panel.js:148
+#: includes/class-admin.php:206
+#: assets/editor-panel.js:180
 msgid "Moved"
 msgstr "Verschoben"
 
-#: includes/class-admin.php:204
-#: assets/editor-panel.js:158
+#: includes/class-admin.php:209
+#: assets/editor-panel.js:190
 msgid "Same as the event"
 msgstr "Wie bei der Veranstaltung"
 
-#: includes/class-admin.php:214
+#: includes/class-admin.php:219
 msgid "Duplicate"
 msgstr "Duplizieren"
 
-#: includes/class-admin.php:223
+#: includes/class-admin.php:228
 msgid "You cannot duplicate this event."
 msgstr "Du kannst diese Veranstaltung nicht duplizieren."
 
-#: includes/class-admin.php:257
+#: includes/class-admin.php:263
 msgid "Address"
 msgstr "Adresse"
 
-#: includes/class-admin.php:258
+#: includes/class-admin.php:264
 msgid "123 Main St, Springfield"
 msgstr "Hauptstraße 1, 12345 Musterstadt"
 
-#: includes/class-admin.php:259
+#: includes/class-admin.php:265
 msgid "Shown on the event page with a map link, and sent to calendar apps."
 msgstr "Wird auf der Veranstaltungsseite mit Karten-Link angezeigt und an Kalender-Apps übergeben."
 
-#: includes/class-admin.php:268
+#: includes/class-admin.php:274
 msgid "Colour"
 msgstr "Farbe"
 
-#: includes/class-admin.php:269
+#: includes/class-admin.php:275
 msgid "No colour"
 msgstr "Keine Farbe"
 
-#: includes/class-admin.php:270
+#: includes/class-admin.php:276
 msgid "Shown as a dot next to events in lists and a bar in the month grid."
 msgstr "Erscheint als Punkt neben Veranstaltungen in Listen und als Balken in der Monatsansicht."
 
@@ -327,7 +327,7 @@ msgid "Pattern"
 msgstr "Muster"
 
 #: includes/class-combine.php:463
-#: includes/class-views.php:1049
+#: includes/class-views.php:1087
 msgid "Dates"
 msgstr "Termine"
 
@@ -338,10 +338,10 @@ msgstr[0] "%d Termin ausgelassen"
 msgstr[1] "%d Termine ausgelassen"
 
 #: includes/class-combine.php:467
-msgid "%d listed twice"
-msgid_plural "%d listed twice"
-msgstr[0] "%d doppelt eingetragen"
-msgstr[1] "%d doppelt eingetragen"
+msgid "%d date listed twice"
+msgid_plural "%d dates listed twice"
+msgstr[0] "%d Termin doppelt eingetragen"
+msgstr[1] "%d Termine doppelt eingetragen"
 
 #: includes/class-combine.php:471
 msgid "%d date"
@@ -354,16 +354,16 @@ msgid "Combine the checked events"
 msgstr "Markierte Veranstaltungen zusammenfassen"
 
 #: includes/class-combine.php:480
-#: includes/class-onboarding.php:134
-#: includes/class-onboarding.php:146
-#: includes/class-onboarding.php:232
-#: includes/class-onboarding.php:254
+#: includes/class-onboarding.php:136
+#: includes/class-onboarding.php:148
+#: includes/class-onboarding.php:246
+#: includes/class-onboarding.php:273
 msgid "Sorry, you are not allowed to do that."
 msgstr "Du hast leider keine Berechtigung dafür."
 
 #: includes/class-events.php:49
 #: includes/class-events.php:53
-#: includes/class-import.php:127
+#: includes/class-import.php:128
 #: includes/elementor-widget.php:23
 #: assets/editor.js:5
 #: assets/editor.js:9
@@ -387,7 +387,7 @@ msgid "Venues"
 msgstr "Orte"
 
 #: includes/class-events.php:91
-#: includes/class-import.php:129
+#: includes/class-import.php:130
 msgid "Organizers"
 msgstr "Veranstalter"
 
@@ -399,444 +399,444 @@ msgstr "diese Adresse lieferte eine Webseite statt einer Kalenderdatei; es wurde
 msgid "(untitled)"
 msgstr "(ohne Titel)"
 
-#: includes/class-ics.php:458
+#: includes/class-ics.php:460
 msgid "Join online:"
 msgstr "Online teilnehmen:"
 
 #: includes/class-import.php:33
-#: includes/class-import.php:92
-#: includes/class-onboarding.php:112
+#: includes/class-import.php:93
+#: includes/class-onboarding.php:114
 msgid "Import / Export"
 msgstr "Import / Export"
 
-#: includes/class-import.php:102
+#: includes/class-import.php:103
 msgid "Importing from %s…"
 msgstr "Import aus %s …"
 
-#: includes/class-import.php:102
+#: includes/class-import.php:103
 msgid "Dry run: checking %s… (nothing is written)"
 msgstr "Probelauf: %s wird geprüft … (es wird nichts gespeichert)"
 
-#: includes/class-import.php:103
+#: includes/class-import.php:104
 msgid "%1$d of %2$d"
 msgstr "%1$d von %2$d"
 
-#: includes/class-import.php:108
+#: includes/class-import.php:109
 msgid "Continue"
 msgstr "Weiter"
 
-#: includes/class-import.php:117
+#: includes/class-import.php:118
 msgid "Nothing in the other plugin is changed or deleted. Events, venues, organizers, categories, featured images, timezones and recurring rules are copied over; anything imported earlier is updated, not duplicated. Both plugins can stay active while you check the result."
 msgstr "Im anderen Plugin wird nichts geändert oder gelöscht. Veranstaltungen, Orte, Veranstalter, Kategorien, Beitragsbilder, Zeitzonen und Wiederholungsregeln werden übernommen; was schon einmal importiert wurde, wird aktualisiert, nicht verdoppelt. Beide Plugins können aktiv bleiben, während du das Ergebnis prüfst."
 
-#: includes/class-import.php:124
+#: includes/class-import.php:125
 msgid "From %s"
 msgstr "Aus %s"
 
-#: includes/class-import.php:128
+#: includes/class-import.php:129
 msgid "Venues / locations"
 msgstr "Orte"
 
-#: includes/class-import.php:130
+#: includes/class-import.php:131
 msgid "Categories"
 msgstr "Kategorien"
 
-#: includes/class-import.php:131
+#: includes/class-import.php:132
 msgid "Tickets and RSVPs"
 msgstr "Tickets und Anmeldungen"
 
-#: includes/class-import.php:132
+#: includes/class-import.php:133
 msgid "Confirmed attendees"
 msgstr "Bestätigte Teilnehmer"
 
-#: includes/class-import.php:133
+#: includes/class-import.php:134
 msgid "Already imported"
 msgstr "Bereits importiert"
 
-#: includes/class-import.php:141
+#: includes/class-import.php:142
 msgid "Ticket prices, capacity and the confirmed attendee lists are imported too."
 msgstr "Ticketpreise, Kapazität und die Listen der bestätigten Teilnehmer werden mit importiert."
 
-#: includes/class-import.php:143
+#: includes/class-import.php:144
 msgid "Your tickets and attendee lists stay where they are. Beacon Events Pro (from $7 a month) imports them too: ticket price and capacity, every RSVP and every paid attendee."
 msgstr "Deine Tickets und Teilnehmerlisten bleiben, wo sie sind. Beacon Events Pro (ab 7 $ im Monat) importiert auch sie: Ticketpreis und Kapazität, jede Anmeldung und jeden zahlenden Teilnehmer."
 
-#: includes/class-import.php:143
+#: includes/class-import.php:144
 msgid "About Pro"
 msgstr "Über Pro"
 
-#: includes/class-import.php:147
+#: includes/class-import.php:148
 msgid "%d generated occurrence posts will be skipped; their parent events are imported with the rule."
 msgstr "%d automatisch erzeugte Einzeltermine werden übersprungen; ihre Hauptveranstaltungen werden mit der Regel importiert."
 
-#: includes/class-import.php:152
+#: includes/class-import.php:153
 msgid "Import again (update)"
 msgstr "Erneut importieren (aktualisieren)"
 
-#: includes/class-import.php:152
+#: includes/class-import.php:153
 msgid "Import %d events"
 msgstr "%d Veranstaltungen importieren"
 
-#: includes/class-import.php:154
+#: includes/class-import.php:155
 msgid "Dry run first"
 msgstr "Erst ein Probelauf"
 
-#: includes/class-import.php:154
+#: includes/class-import.php:155
 msgid "Shows what the import would create, update, skip or simplify, without writing anything."
 msgstr "Zeigt, was der Import anlegen, aktualisieren, überspringen oder vereinfachen würde, ohne etwas zu speichern."
 
-#: includes/class-import.php:159
+#: includes/class-import.php:160
 msgid "From a CSV file"
 msgstr "Aus einer CSV-Datei"
 
-#: includes/class-import.php:160
+#: includes/class-import.php:161
 msgid "One event per row. Columns (header row, any order; only title and start are required):"
 msgstr "Eine Veranstaltung pro Zeile. Spalten (Kopfzeile, beliebige Reihenfolge; nur title und start sind Pflicht):"
 
-#: includes/class-import.php:160
+#: includes/class-import.php:161
 msgid "Dates like 2026-10-06 18:00 (a bare date means all day). \"repeat\" is an iCalendar rule such as FREQ=WEEKLY;BYDAY=TU;COUNT=10. Separate several categories or organizers with |. Rows with a uid that was imported before are updated. Exporting first gives you a file in exactly this shape."
 msgstr "Datumsangaben wie 2026-10-06 18:00 (ein Datum ohne Uhrzeit bedeutet ganztägig). „repeat“ ist eine iCalendar-Regel wie FREQ=WEEKLY;BYDAY=TU;COUNT=10. Trenne mehrere Kategorien oder Veranstalter mit |. Zeilen mit einer uid, die schon importiert wurde, werden aktualisiert. Ein Export liefert dir eine Datei in genau diesem Format."
 
-#: includes/class-import.php:165
+#: includes/class-import.php:166
 msgid "Import CSV"
 msgstr "CSV importieren"
 
-#: includes/class-import.php:168
+#: includes/class-import.php:169
 #: includes/class-settings.php:39
 msgid "Export"
 msgstr "Export"
 
-#: includes/class-import.php:168
+#: includes/class-import.php:169
 msgid "Every event as a CSV file in the same columns, ready for a spreadsheet or another site."
 msgstr "Alle Veranstaltungen als CSV-Datei mit denselben Spalten, bereit für eine Tabellenkalkulation oder eine andere Website."
 
-#: includes/class-import.php:172
+#: includes/class-import.php:173
 msgid "Download events.csv"
 msgstr "events.csv herunterladen"
 
-#: includes/class-import.php:175
+#: includes/class-import.php:176
 msgid "Last import"
 msgstr "Letzter Import"
 
-#: includes/class-import.php:191
+#: includes/class-import.php:192
 msgid "Download the report, one row per event (CSV)"
 msgstr "Bericht herunterladen, eine Zeile pro Veranstaltung (CSV)"
 
-#: includes/class-import.php:196
+#: includes/class-import.php:197
 msgid "Dry run, nothing was written."
 msgstr "Probelauf, es wurde nichts gespeichert."
 
-#: includes/class-import.php:199
+#: includes/class-import.php:200
 msgid "%1$s: the import would create %2$d events and update %3$d (%4$d skipped), and add %5$d venues, %6$d organizers and %7$d categories. Checked %8$s."
 msgstr "%1$s: Der Import würde %2$d Veranstaltungen anlegen und %3$d aktualisieren (%4$d übersprungen) sowie %5$d Orte, %6$d Veranstalter und %7$d Kategorien hinzufügen. Geprüft am %8$s."
 
-#: includes/class-import.php:212
-#: includes/class-import.php:242
+#: includes/class-import.php:213
+#: includes/class-import.php:243
 msgid "Error:"
 msgstr "Fehler:"
 
-#: includes/class-import.php:214
+#: includes/class-import.php:215
 msgid "%d featured images would be downloaded."
 msgstr "%d Beitragsbilder würden heruntergeladen."
 
-#: includes/class-import.php:216
+#: includes/class-import.php:217
 msgid "%d events have fields Beacon has no place for yet (cost, website…); they would be kept in hidden meta (_beacon_import_extra)."
 msgstr "%d Veranstaltungen haben Felder, für die Beacon noch keinen Platz hat (Preis, Website …); sie würden in versteckten Metadaten (_beacon_import_extra) aufbewahrt."
 
-#: includes/class-import.php:218
+#: includes/class-import.php:219
 msgid "%d events have no usable named timezone; they would get the site timezone."
 msgstr "%d Veranstaltungen haben keine verwendbare Zeitzone; sie würden die Zeitzone der Website bekommen."
 
-#: includes/class-import.php:229
+#: includes/class-import.php:230
 msgid "%1$s: imported %2$d new events and updated %3$d (%4$d skipped); %5$d venues, %6$d organizers and %7$d categories created. Finished %8$s."
 msgstr "%1$s: %2$d neue Veranstaltungen importiert und %3$d aktualisiert (%4$d übersprungen); %5$d Orte, %6$d Veranstalter und %7$d Kategorien angelegt. Fertig am %8$s."
 
-#: includes/class-import.php:239
+#: includes/class-import.php:240
 msgid "See the events"
 msgstr "Veranstaltungen ansehen"
 
-#: includes/class-import.php:244
+#: includes/class-import.php:245
 msgid "%1$d events got their tickets and RSVPs; %2$d attendees were brought over."
 msgstr "%1$d Veranstaltungen haben ihre Tickets und Anmeldungen bekommen; %2$d Teilnehmer wurden übernommen."
 
-#: includes/class-import.php:246
+#: includes/class-import.php:247
 msgid "%d events had fields Beacon has no place for yet (cost, website…); those values were kept in hidden meta (_beacon_import_extra) and not shown."
 msgstr "%d Veranstaltungen hatten Felder, für die Beacon noch keinen Platz hat (Preis, Website …); diese Werte wurden in versteckten Metadaten (_beacon_import_extra) aufbewahrt und nicht angezeigt."
 
-#: includes/class-import.php:248
+#: includes/class-import.php:249
 msgid "%d events had no usable named timezone; they were set to the site timezone."
 msgstr "%d Veranstaltungen hatten keine verwendbare Zeitzone; sie haben die Zeitzone der Website bekommen."
 
-#: includes/class-import.php:300
+#: includes/class-import.php:301
 msgid "Unknown import source."
 msgstr "Unbekannte Import-Quelle."
 
-#: includes/class-import.php:402
+#: includes/class-import.php:437
 msgid "Combined into a repeating event earlier, left as it is."
 msgstr "Wurde schon zu einer wiederkehrenden Veranstaltung zusammengefasst, bleibt unverändert."
 
-#: includes/class-import.php:429
-#: includes/class-import.php:550
+#: includes/class-import.php:464
+#: includes/class-import.php:585
 msgid "Events you combined into repeating events were left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, blieben unverändert."
 
-#: includes/class-import.php:429
-#: includes/class-import.php:681
+#: includes/class-import.php:464
+#: includes/class-import.php:716
 msgid "Events you combined into repeating events would be left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, würden unverändert bleiben."
 
-#: includes/class-import.php:453
+#: includes/class-import.php:488
 msgid "would create"
 msgstr "würde anlegen"
 
-#: includes/class-import.php:453
+#: includes/class-import.php:488
 msgid "created"
 msgstr "angelegt"
 
-#: includes/class-import.php:454
+#: includes/class-import.php:489
 msgid "would update"
 msgstr "würde aktualisieren"
 
-#: includes/class-import.php:454
+#: includes/class-import.php:489
 msgid "updated"
 msgstr "aktualisiert"
 
-#: includes/class-import.php:455
+#: includes/class-import.php:490
 msgid "would skip"
 msgstr "würde überspringen"
 
-#: includes/class-import.php:455
+#: includes/class-import.php:490
 msgid "skipped"
 msgstr "übersprungen"
 
-#: includes/class-import.php:456
+#: includes/class-import.php:491
 msgid "error"
 msgstr "Fehler"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Result"
 msgstr "Ergebnis"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Source"
 msgstr "Quelle"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Source ID"
 msgstr "Quell-ID"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Title"
 msgstr "Titel"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Beacon event ID"
 msgstr "Beacon-Veranstaltungs-ID"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Start"
 msgstr "Beginn"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "End"
 msgstr "Ende"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Repeats (RRULE)"
 msgstr "Wiederholung (RRULE)"
 
-#: includes/class-import.php:458
+#: includes/class-import.php:493
 msgid "Notes"
 msgstr "Hinweise"
 
-#: includes/class-import.php:468
+#: includes/class-import.php:503
 msgid "The report lists the first %d events only."
 msgstr "Der Bericht enthält nur die ersten %d Veranstaltungen."
 
-#: includes/class-import.php:484
+#: includes/class-import.php:519
 msgid "There is no import report yet. Run an import or a dry run first."
 msgstr "Es gibt noch keinen Import-Bericht. Starte zuerst einen Import oder einen Probelauf."
 
-#: includes/class-import.php:732
+#: includes/class-import.php:767
 msgid "Tickets"
 msgstr "Tickets"
 
-#: includes/class-import.php:736
+#: includes/class-import.php:771
 msgid "Register"
 msgstr "Anmelden"
 
-#: includes/class-import.php:788
+#: includes/class-import.php:823
 msgid "recurrence rule could not be read; imported as a single event."
 msgstr "Wiederholungsregel konnte nicht gelesen werden; als Einzeltermin importiert."
 
-#: includes/class-import.php:809
+#: includes/class-import.php:844
 #: includes/import/class-source-sc.php:210
 msgid "recurrence rule was simplified (%s not supported); check its dates."
 msgstr "Wiederholungsregel wurde vereinfacht (%s wird nicht unterstützt); prüfe die Termine."
 
-#: includes/class-import.php:925
+#: includes/class-import.php:960
 msgid "Image %1$s could not be fetched: %2$s"
 msgstr "Bild %1$s konnte nicht geladen werden: %2$s"
 
-#: includes/class-onboarding.php:29
+#: includes/class-onboarding.php:31
 msgid "Get started"
 msgstr "Loslegen"
 
-#: includes/class-onboarding.php:81
+#: includes/class-onboarding.php:83
 msgid "The sample events are gone."
 msgstr "Die Beispielveranstaltungen sind entfernt."
 
-#: includes/class-onboarding.php:84
+#: includes/class-onboarding.php:86
 msgid "%d sample event is still on your calendar."
 msgid_plural "%d sample events are still on your calendar."
 msgstr[0] "%d Beispielveranstaltung ist noch in deinem Kalender."
 msgstr[1] "%d Beispielveranstaltungen sind noch in deinem Kalender."
 
-#: includes/class-onboarding.php:84
-#: includes/class-onboarding.php:109
+#: includes/class-onboarding.php:86
+#: includes/class-onboarding.php:111
 msgid "Remove sample events"
 msgstr "Beispielveranstaltungen entfernen"
 
-#: includes/class-onboarding.php:98
+#: includes/class-onboarding.php:100
 msgid "Get your calendar up in a minute"
 msgstr "Dein Kalender in einer Minute"
 
-#: includes/class-onboarding.php:100
+#: includes/class-onboarding.php:102
 msgid "Add your events"
 msgstr "Veranstaltungen hinzufügen"
 
-#: includes/class-onboarding.php:102
+#: includes/class-onboarding.php:104
 msgid "Found %1$d event in %2$s."
 msgid_plural "Found %1$d events in %2$s."
 msgstr[0] "%1$d Veranstaltung in %2$s gefunden."
 msgstr[1] "%1$d Veranstaltungen in %2$s gefunden."
 
-#: includes/class-onboarding.php:102
+#: includes/class-onboarding.php:104
 msgid "Import them"
 msgstr "Importieren"
 
-#: includes/class-onboarding.php:104
+#: includes/class-onboarding.php:106
 msgid "Add an event"
 msgstr "Veranstaltung hinzufügen"
 
-#: includes/class-onboarding.php:106
+#: includes/class-onboarding.php:108
 msgid "Add 5 sample events"
 msgstr "5 Beispielveranstaltungen hinzufügen"
 
-#: includes/class-onboarding.php:107
+#: includes/class-onboarding.php:109
 msgid "The samples are published so you can see the calendar working. Their titles start with \"Sample:\", and one click removes them all."
 msgstr "Die Beispiele werden veröffentlicht, damit du den Kalender in Aktion siehst. Ihre Titel beginnen mit „Sample:“, und ein Klick entfernt sie alle."
 
-#: includes/class-onboarding.php:112
+#: includes/class-onboarding.php:114
 msgid "Coming from another calendar plugin or a spreadsheet?"
 msgstr "Du kommst von einem anderen Kalender-Plugin oder einer Tabelle?"
 
-#: includes/class-onboarding.php:115
+#: includes/class-onboarding.php:117
 msgid "Show them on your site"
 msgstr "Auf deiner Website anzeigen"
 
-#: includes/class-onboarding.php:117
+#: includes/class-onboarding.php:119
 msgid "Your upcoming events are already live at"
 msgstr "Deine nächsten Veranstaltungen sind schon online unter"
 
-#: includes/class-onboarding.php:119
+#: includes/class-onboarding.php:121
 msgid "Your calendar page:"
 msgstr "Deine Kalenderseite:"
 
-#: includes/class-onboarding.php:119
+#: includes/class-onboarding.php:121
 msgid "edit"
 msgstr "bearbeiten"
 
-#: includes/class-onboarding.php:121
+#: includes/class-onboarding.php:123
 msgid "Create a calendar page"
 msgstr "Kalenderseite anlegen"
 
-#: includes/class-onboarding.php:122
+#: includes/class-onboarding.php:124
 msgid "A page called \"Calendar\" with a month view, filters and the next five events."
 msgstr "Eine Seite „Kalender“ mit Monatsansicht, Filtern und den nächsten fünf Veranstaltungen."
 
-#: includes/class-onboarding.php:124
+#: includes/class-onboarding.php:126
 msgid "Or add the \"Beacon Events\" block, or the [beacon_events] shortcode, to any page."
 msgstr "Oder füge den Block „Beacon Events“ bzw. den Shortcode [beacon_events] in eine beliebige Seite ein."
 
-#: includes/class-onboarding.php:126
+#: includes/class-onboarding.php:128
 msgid "Keep a Google Calendar in sync (optional)"
 msgstr "Einen Google-Kalender synchron halten (optional)"
 
-#: includes/class-onboarding.php:126
+#: includes/class-onboarding.php:128
 msgid "Paste its public iCal address and Beacon checks it every hour."
 msgstr "Füge seine öffentliche iCal-Adresse ein, und Beacon prüft sie stündlich."
 
-#: includes/class-onboarding.php:126
+#: includes/class-onboarding.php:128
 #: includes/class-settings.php:12
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: includes/class-onboarding.php:157
-#: includes/class-onboarding.php:223
+#: includes/class-onboarding.php:169
+#: includes/class-onboarding.php:237
 msgid "Main Studio"
 msgstr "Hauptstudio"
 
-#: includes/class-onboarding.php:158
+#: includes/class-onboarding.php:170
 msgid "123 Main Street"
 msgstr "Hauptstraße 1"
 
-#: includes/class-onboarding.php:161
-#: includes/class-onboarding.php:224
+#: includes/class-onboarding.php:173
+#: includes/class-onboarding.php:238
 msgid "Classes"
 msgstr "Kurse"
 
-#: includes/class-onboarding.php:165
-#: includes/class-onboarding.php:224
+#: includes/class-onboarding.php:177
+#: includes/class-onboarding.php:238
 msgid "Workshops"
 msgstr "Workshops"
 
-#: includes/class-onboarding.php:169
-#: includes/class-onboarding.php:224
+#: includes/class-onboarding.php:181
+#: includes/class-onboarding.php:238
 msgid "Community"
 msgstr "Gemeinschaft"
 
-#: includes/class-onboarding.php:172
+#: includes/class-onboarding.php:184
 msgid "This is a sample event from Beacon Events. Remove all the samples in one click from Events in your dashboard, or edit this one and make it yours."
 msgstr "Dies ist eine Beispielveranstaltung von Beacon Events. Entferne alle Beispiele mit einem Klick unter Veranstaltungen im Dashboard, oder bearbeite diese hier und mach sie zu deiner."
 
-#: includes/class-onboarding.php:174
+#: includes/class-onboarding.php:186
 msgid "Sample: Morning Yoga"
 msgstr "Sample: Yoga am Morgen"
 
-#: includes/class-onboarding.php:175
+#: includes/class-onboarding.php:187
 msgid "Sample: Beginner Pottery Workshop"
 msgstr "Sample: Töpferkurs für Anfänger"
 
-#: includes/class-onboarding.php:176
+#: includes/class-onboarding.php:188
 msgid "Sample: Community Potluck"
 msgstr "Sample: Gemeinsames Buffet"
 
-#: includes/class-onboarding.php:176
-#: includes/class-onboarding.php:178
-#: includes/class-onboarding.php:223
+#: includes/class-onboarding.php:188
+#: includes/class-onboarding.php:190
+#: includes/class-onboarding.php:237
 msgid "Riverside Park Pavilion"
 msgstr "Pavillon im Stadtpark"
 
-#: includes/class-onboarding.php:177
+#: includes/class-onboarding.php:189
 msgid "Sample: Online Q&A"
 msgstr "Sample: Online-Fragestunde"
 
-#: includes/class-onboarding.php:178
+#: includes/class-onboarding.php:190
 msgid "Sample: Holiday Market"
 msgstr "Sample: Weihnachtsmarkt"
 
-#: includes/class-onboarding.php:261
+#: includes/class-onboarding.php:280
 msgid "Calendar"
 msgstr "Kalender"
 
-#: includes/class-onboarding.php:262
+#: includes/class-onboarding.php:281
 msgid "Coming up"
 msgstr "Demnächst"
 
 #: includes/class-pro.php:24
 #: includes/class-pro.php:40
-#: assets/editor-panel.js:256
+#: assets/editor-panel.js:288
 msgid "Tickets & RSVP"
 msgstr "Tickets & Anmeldung"
 
@@ -928,103 +928,123 @@ msgstr "Demo-Website"
 msgid "14-day money-back guarantee. If your licence lapses, your events and tickets keep working — you just stop getting updates and support."
 msgstr "14 Tage Geld-zurück-Garantie. Wenn deine Lizenz ausläuft, funktionieren Veranstaltungen und Tickets weiter – du bekommst nur keine Updates und keinen Support mehr."
 
-#: includes/class-recurrence.php:241
+#: includes/class-recurrence.php:250
+#: assets/editor-panel.js:66
 msgid "Every day"
 msgstr "Jeden Tag"
 
-#: includes/class-recurrence.php:241
+#: includes/class-recurrence.php:250
+#: assets/editor-panel.js:66
 msgid "Every %d day"
 msgid_plural "Every %d days"
 msgstr[0] "Jeden %d. Tag"
 msgstr[1] "Alle %d Tage"
 
-#: includes/class-recurrence.php:245
+#: includes/class-recurrence.php:254
+#: assets/editor-panel.js:68
 msgid "Every week"
 msgstr "Jede Woche"
 
-#: includes/class-recurrence.php:245
+#: includes/class-recurrence.php:254
+#: assets/editor-panel.js:68
 msgid "Every %d week"
 msgid_plural "Every %d weeks"
 msgstr[0] "Jede %d. Woche"
 msgstr[1] "Alle %d Wochen"
 
-#: includes/class-recurrence.php:249
+#: includes/class-recurrence.php:258
+#: assets/editor-panel.js:70
+#: assets/editor-panel.js:235
 msgid "Every month"
 msgstr "Jeden Monat"
 
-#: includes/class-recurrence.php:249
+#: includes/class-recurrence.php:258
+#: assets/editor-panel.js:70
 msgid "Every %d month"
 msgid_plural "Every %d months"
 msgstr[0] "Jeden %d. Monat"
 msgstr[1] "Alle %d Monate"
 
-#: includes/class-recurrence.php:253
+#: includes/class-recurrence.php:262
+#: assets/editor-panel.js:72
 msgid "Every year"
 msgstr "Jedes Jahr"
 
-#: includes/class-recurrence.php:253
+#: includes/class-recurrence.php:262
+#: assets/editor-panel.js:72
 msgid "Every %d year"
 msgid_plural "Every %d years"
 msgstr[0] "Jedes %d. Jahr"
 msgstr[1] "Alle %d Jahre"
 
-#: includes/class-recurrence.php:262
+#: includes/class-recurrence.php:271
+#: assets/editor-panel.js:41
 msgid "%1$s and %2$s"
 msgstr "%1$s und %2$s"
 
-#: includes/class-recurrence.php:266
+#: includes/class-recurrence.php:275
+#: assets/editor-panel.js:45
 msgid "%1$s on %2$s"
 msgstr "%1$s am %2$s"
 
-#: includes/class-recurrence.php:278
+#: includes/class-recurrence.php:287
+#: assets/editor-panel.js:57
 msgid "the %1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: includes/class-recurrence.php:292
+#: includes/class-recurrence.php:301
 msgctxt "ordinal weekday"
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: includes/class-recurrence.php:300
+#: includes/class-recurrence.php:309
 msgid "%1$s on day %2$d"
 msgstr "%1$s am %2$d."
 
-#: includes/class-recurrence.php:304
+#: includes/class-recurrence.php:313
+#: assets/editor-panel.js:82
 msgid "%d time"
 msgid_plural "%d times"
 msgstr[0] "%d-mal"
 msgstr[1] "%d-mal"
 
-#: includes/class-recurrence.php:310
+#: includes/class-recurrence.php:319
+#: assets/editor-panel.js:84
 msgid "until %s"
 msgstr "bis %s"
 
-#: includes/class-recurrence.php:328
+#: includes/class-recurrence.php:337
+#: assets/editor-panel.js:16
 msgctxt "the first Monday of the month"
 msgid "first"
 msgstr "ersten"
 
-#: includes/class-recurrence.php:329
+#: includes/class-recurrence.php:338
+#: assets/editor-panel.js:16
 msgctxt "the second Monday of the month"
 msgid "second"
 msgstr "zweiten"
 
-#: includes/class-recurrence.php:330
+#: includes/class-recurrence.php:339
+#: assets/editor-panel.js:16
 msgctxt "the third Monday of the month"
 msgid "third"
 msgstr "dritten"
 
-#: includes/class-recurrence.php:331
+#: includes/class-recurrence.php:340
+#: assets/editor-panel.js:16
 msgctxt "the fourth Monday of the month"
 msgid "fourth"
 msgstr "vierten"
 
-#: includes/class-recurrence.php:332
+#: includes/class-recurrence.php:341
+#: assets/editor-panel.js:16
 msgctxt "the fifth Monday of the month"
 msgid "fifth"
 msgstr "fünften"
 
-#: includes/class-recurrence.php:333
+#: includes/class-recurrence.php:342
+#: assets/editor-panel.js:16
 msgctxt "the last Monday of the month"
 msgid "last"
 msgstr "letzten"
@@ -1118,7 +1138,7 @@ msgid "Categories: "
 msgstr "Kategorien: "
 
 #: includes/class-views.php:164
-#: includes/class-views.php:370
+#: includes/class-views.php:389
 msgid "Venue"
 msgstr "Ort"
 
@@ -1155,55 +1175,55 @@ msgstr "Die Seite /events/: nächste Veranstaltungen nach Tagen gruppiert."
 msgid "Upcoming events"
 msgstr "Nächste Veranstaltungen"
 
-#: includes/class-views.php:364
+#: includes/class-views.php:383
 msgid "Category"
 msgstr "Kategorie"
 
-#: includes/class-views.php:364
+#: includes/class-views.php:383
 msgid "All categories"
 msgstr "Alle Kategorien"
 
-#: includes/class-views.php:370
+#: includes/class-views.php:389
 msgid "All venues"
 msgstr "Alle Orte"
 
-#: includes/class-views.php:375
+#: includes/class-views.php:394
 msgid "Search events"
 msgstr "Veranstaltungen durchsuchen"
 
-#: includes/class-views.php:376
+#: includes/class-views.php:395
 #: includes/elementor-widget.php:27
 #: assets/editor.js:10
 msgid "View"
 msgstr "Ansicht"
 
-#: includes/class-views.php:376
+#: includes/class-views.php:395
 #: includes/elementor-widget.php:31
 #: assets/editor.js:10
 msgid "List"
 msgstr "Liste"
 
-#: includes/class-views.php:376
+#: includes/class-views.php:395
 #: includes/elementor-widget.php:32
 #: assets/editor.js:10
 msgid "Week"
 msgstr "Woche"
 
-#: includes/class-views.php:376
+#: includes/class-views.php:395
 #: includes/elementor-widget.php:33
 #: assets/editor.js:10
 msgid "Month"
 msgstr "Monat"
 
-#: includes/class-views.php:377
+#: includes/class-views.php:396
 msgid "Apply"
 msgstr "Anwenden"
 
-#: includes/class-views.php:495
+#: includes/class-views.php:519
 msgid "Rescheduled"
 msgstr "Verschoben"
 
-#: includes/class-views.php:548
+#: includes/class-views.php:572
 #: includes/import/class-source-etn.php:64
 #: includes/import/class-source-eventon.php:72
 #: includes/import/class-source-mec.php:80
@@ -1213,117 +1233,117 @@ msgstr "Verschoben"
 msgid "(Untitled event)"
 msgstr "(Veranstaltung ohne Titel)"
 
-#: includes/class-views.php:554
-#: includes/class-views.php:573
-#: includes/class-views.php:580
-#: includes/class-views.php:590
+#: includes/class-views.php:578
+#: includes/class-views.php:597
+#: includes/class-views.php:604
+#: includes/class-views.php:614
 msgid "Online"
 msgstr "Online"
 
-#: includes/class-views.php:590
+#: includes/class-views.php:614
 msgid "Join online"
 msgstr "Online teilnehmen"
 
-#: includes/class-views.php:591
+#: includes/class-views.php:615
 msgid "(the joining link is sent when you sign up)"
 msgstr "(den Link zur Teilnahme bekommst du nach der Anmeldung)"
 
-#: includes/class-views.php:601
-#: includes/class-views.php:1067
-#: includes/class-views.php:1092
+#: includes/class-views.php:625
+#: includes/class-views.php:1105
+#: includes/class-views.php:1130
 msgid "Map"
 msgstr "Karte"
 
-#: includes/class-views.php:618
+#: includes/class-views.php:642
 msgid "%s cancelled"
 msgstr "%s abgesagt"
 
-#: includes/class-views.php:620
+#: includes/class-views.php:644
 msgid "%1$s moved to %2$s"
 msgstr "%1$s verschoben auf %2$s"
 
-#: includes/class-views.php:674
+#: includes/class-views.php:698
 msgid "No upcoming events."
 msgstr "Keine anstehenden Veranstaltungen."
 
-#: includes/class-views.php:744
+#: includes/class-views.php:768
 msgid "Previous day"
 msgstr "Vorheriger Tag"
 
-#: includes/class-views.php:744
+#: includes/class-views.php:768
 msgid "Next day"
 msgstr "Nächster Tag"
 
-#: includes/class-views.php:746
+#: includes/class-views.php:770
 msgid "← Back to month"
 msgstr "← Zurück zum Monat"
 
-#: includes/class-views.php:748
+#: includes/class-views.php:772
 msgid "No events on this day."
 msgstr "An diesem Tag keine Veranstaltungen."
 
-#: includes/class-views.php:779
+#: includes/class-views.php:803
 msgid "Previous week"
 msgstr "Vorherige Woche"
 
-#: includes/class-views.php:779
+#: includes/class-views.php:803
 msgid "Next week"
 msgstr "Nächste Woche"
 
-#: includes/class-views.php:781
+#: includes/class-views.php:805
 msgid "This week"
 msgstr "Diese Woche"
 
-#: includes/class-views.php:783
+#: includes/class-views.php:807
 msgid "No events this week."
 msgstr "Diese Woche keine Veranstaltungen."
 
-#: includes/class-views.php:792
+#: includes/class-views.php:816
 msgid "No events"
 msgstr "Keine Termine"
 
-#: includes/class-views.php:841
+#: includes/class-views.php:865
 msgid "Previous month"
 msgstr "Vorheriger Monat"
 
-#: includes/class-views.php:841
+#: includes/class-views.php:865
 msgid "Next month"
 msgstr "Nächster Monat"
 
-#: includes/class-views.php:881
+#: includes/class-views.php:905
 msgid "Print this month"
 msgstr "Diesen Monat drucken"
 
-#: includes/class-views.php:927
+#: includes/class-views.php:951
 msgid "matching \"%s\""
 msgstr "passend zu „%s“"
 
-#: includes/class-views.php:950
+#: includes/class-views.php:974
 msgid "Print"
 msgstr "Drucken"
 
-#: includes/class-views.php:950
+#: includes/class-views.php:974
 msgid "← Back to the calendar"
 msgstr "← Zurück zum Kalender"
 
-#: includes/class-views.php:1034
+#: includes/class-views.php:1072
 msgid "Changes"
 msgstr "Änderungen"
 
-#: includes/class-views.php:1037
+#: includes/class-views.php:1075
 msgid "Where"
 msgstr "Wo"
 
-#: includes/class-views.php:1052
+#: includes/class-views.php:1090
 msgid "Add to calendar (.ics)"
 msgstr "Zum Kalender hinzufügen (.ics)"
 
-#: includes/class-views.php:1052
+#: includes/class-views.php:1090
 msgid "Add to Google Calendar"
 msgstr "Zu Google Kalender hinzufügen"
 
-#: includes/class-views.php:1071
-#: includes/class-views.php:1094
+#: includes/class-views.php:1109
+#: includes/class-views.php:1132
 msgid "Subscribe to these events (.ics)"
 msgstr "Diese Veranstaltungen abonnieren (.ics)"
 
@@ -1394,34 +1414,34 @@ msgstr "„%1$s“ (#%2$d) übersprungen: Es gibt kein Startdatum."
 msgid "Event tags were not imported: Beacon groups events by category only."
 msgstr "Schlagwörter wurden nicht importiert: Beacon gruppiert Veranstaltungen nur nach Kategorien."
 
-#: includes/import/class-source-ai1ec.php:176
+#: includes/import/class-source-ai1ec.php:177
 #: includes/import/class-source-em.php:214
 #: includes/import/class-source-eventon.php:220
 #: includes/import/class-source-mec.php:249
 msgid "repeats on a list of specific dates, which Beacon cannot express as a rule; only the first date was imported."
 msgstr "wiederholt sich an einer Liste bestimmter Termine, die Beacon nicht als Regel abbilden kann; nur der erste Termin wurde importiert."
 
-#: includes/import/class-source-ai1ec.php:189
+#: includes/import/class-source-ai1ec.php:190
 msgid "had a rule that excludes dates, which Beacon cannot express; single skipped dates were carried over, check the rest."
 msgstr "hatte eine Regel, die Termine ausschließt, was Beacon nicht abbilden kann; einzelne ausgelassene Termine wurden übernommen, prüfe den Rest."
 
-#: includes/import/class-source-ai1ec.php:306
+#: includes/import/class-source-ai1ec.php:307
 msgid "Some events came from calendar feeds. Add these under Events → Settings to keep them updating (the imported copies are matched, not duplicated): %s"
 msgstr "Einige Veranstaltungen stammen aus Kalender-Feeds. Füge diese unter Veranstaltungen → Einstellungen hinzu, damit sie aktuell bleiben (die importierten Kopien werden zugeordnet, nicht verdoppelt): %s"
 
-#: includes/import/class-source-ai1ec.php:315
+#: includes/import/class-source-ai1ec.php:316
 msgid "All-in-One Event Calendar drew its calendar into the page \"%1$s\" (%2$s). Once it is deactivated that page is empty: add the Beacon Events calendar block, or the shortcode [beacon_events view=\"month\"], to it."
 msgstr "All-in-One Event Calendar hat seinen Kalender in die Seite „%1$s“ (%2$s) gezeichnet. Sobald es deaktiviert ist, ist diese Seite leer: Füge dort den Kalender-Block von Beacon Events oder den Shortcode [beacon_events view=\"month\"] ein."
 
-#: includes/import/class-source-csv.php:21
+#: includes/import/class-source-csv.php:20
 msgid "CSV file"
 msgstr "CSV-Datei"
 
-#: includes/import/class-source-csv.php:38
+#: includes/import/class-source-csv.php:37
 msgid "Choose a CSV file first."
 msgstr "Wähle zuerst eine CSV-Datei aus."
 
-#: includes/import/class-source-csv.php:120
+#: includes/import/class-source-csv.php:123
 msgid "Row %d skipped: it needs at least a title and a start."
 msgstr "Zeile %d übersprungen: Sie braucht mindestens einen Titel und einen Beginn."
 
@@ -1555,107 +1575,107 @@ msgstr "WP Events Manager (ThimPress)"
 msgid "Once WP Events Manager is deactivated, its /events/…, /tp-event-category/… and /tp-event-type/… links are redirected to the imported events and categories."
 msgstr "Sobald WP Events Manager deaktiviert ist, werden seine Links /events/…, /tp-event-category/… und /tp-event-type/… auf die importierten Veranstaltungen und Kategorien weitergeleitet."
 
-#: assets/editor-panel.js:60
+#: assets/editor-panel.js:92
 msgid "fifth"
 msgstr "fünften"
 
-#: assets/editor-panel.js:60
+#: assets/editor-panel.js:92
 msgid "last"
 msgstr "letzten"
 
-#: assets/editor-panel.js:107
+#: assets/editor-panel.js:139
 msgid "Not saved yet: fill in the whole date."
 msgstr "Noch nicht gespeichert: Fülle das ganze Datum aus."
 
-#: assets/editor-panel.js:144
+#: assets/editor-panel.js:176
 msgid "Cancel one date (it stays listed as cancelled), move it, or give it its own ticket link. Dates reflect the last save."
 msgstr "Sage einen Termin ab (er bleibt als abgesagt sichtbar), verschiebe ihn oder gib ihm einen eigenen Ticket-Link. Die Termine entsprechen dem letzten Speichern."
 
-#: assets/editor-panel.js:155
+#: assets/editor-panel.js:187
 msgid "New start"
 msgstr "Neuer Beginn"
 
-#: assets/editor-panel.js:156
+#: assets/editor-panel.js:188
 msgid "New end"
 msgstr "Neues Ende"
 
-#: assets/editor-panel.js:184
+#: assets/editor-panel.js:216
 msgid "The last day. Leave it as the start for a one-day event."
 msgstr "Der letzte Tag. Bei einer eintägigen Veranstaltung gleich dem Beginn lassen."
 
-#: assets/editor-panel.js:218
+#: assets/editor-panel.js:250
 msgid "Site time zone (%s)"
 msgstr "Zeitzone der Website (%s)"
 
-#: assets/editor-panel.js:222
+#: assets/editor-panel.js:254
 msgid "Time zone"
 msgstr "Zeitzone"
 
-#: assets/editor-panel.js:222
+#: assets/editor-panel.js:254
 msgid "Change it only when this event happens somewhere else."
 msgstr "Nur ändern, wenn diese Veranstaltung woanders stattfindet."
 
-#: assets/editor-panel.js:223
+#: assets/editor-panel.js:255
 msgid "This event's times are in %1$s, not the site's time zone (%2$s). Pick \"Site time zone\" if that was a mistake."
 msgstr "Die Zeiten dieser Veranstaltung gelten in %1$s, nicht in der Zeitzone der Website (%2$s). Wähle „Zeitzone der Website“, falls das ein Versehen war."
 
-#: assets/editor-panel.js:225
+#: assets/editor-panel.js:257
 msgid "Meeting link"
 msgstr "Meeting-Link"
 
-#: assets/editor-panel.js:226
+#: assets/editor-panel.js:258
 msgid "Optional: a button to your Eventbrite, Square or other page."
 msgstr "Optional: ein Button zu deiner Eventbrite-, Square- oder anderen Seite."
 
-#: assets/editor-panel.js:230
+#: assets/editor-panel.js:262
 msgid "Every (interval)"
 msgstr "Alle (Intervall)"
 
-#: assets/editor-panel.js:232
+#: assets/editor-panel.js:264
 msgid "On"
 msgstr "Am"
 
-#: assets/editor-panel.js:233
+#: assets/editor-panel.js:265
 msgid "Repeat ends"
 msgstr "Wiederholung endet"
 
-#: assets/editor-panel.js:233
+#: assets/editor-panel.js:265
 msgid "Never"
 msgstr "Nie"
 
-#: assets/editor-panel.js:233
+#: assets/editor-panel.js:265
 msgid "After a number of times"
 msgstr "Nach einer Anzahl von Malen"
 
-#: assets/editor-panel.js:233
+#: assets/editor-panel.js:265
 msgid "On a date"
 msgstr "An einem Datum"
 
-#: assets/editor-panel.js:239
+#: assets/editor-panel.js:271
 msgid "Number of times"
 msgstr "Anzahl"
 
-#: assets/editor-panel.js:240
+#: assets/editor-panel.js:272
 msgid "Last date"
 msgstr "Letzter Termin"
 
-#: assets/editor-panel.js:241
+#: assets/editor-panel.js:273
 msgid "Separate dates with commas, e.g. 12/24/2026, Dec 31"
 msgstr "Termine mit Komma trennen, z. B. 24.12.2026, 31.12.2026"
 
-#: assets/editor-panel.js:242
+#: assets/editor-panel.js:274
 msgid "Skipping:"
 msgstr "Ausgelassen:"
 
-#: assets/editor-panel.js:243
+#: assets/editor-panel.js:275
 msgid "Couldn't read: %s. Use a date like 12/25/2026."
 msgstr "Nicht lesbar: %s. Nutze ein Datum wie 25.12.2026."
 
-#: assets/editor-panel.js:257
+#: assets/editor-panel.js:289
 msgid "Let people sign up for this event or buy tickets with Beacon Events Pro. Payments go through your own Stripe account or WooCommerce, with no per-ticket fee on top. Try it free for 14 days, no card needed."
 msgstr "Lass Leute sich mit Beacon Events Pro für diese Veranstaltung anmelden oder Tickets kaufen. Zahlungen laufen über dein eigenes Stripe-Konto oder WooCommerce, ohne Gebühr pro Ticket obendrauf. 14 Tage kostenlos testen, ohne Karte."
 
-#: assets/editor-panel.js:258
+#: assets/editor-panel.js:290
 msgid "See what Pro adds"
 msgstr "Sieh dir an, was Pro bietet"
 

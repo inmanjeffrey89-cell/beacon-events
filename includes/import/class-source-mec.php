@@ -69,7 +69,7 @@ final class Source_MEC {
 
 	public static function map( $post_id, array &$state ): ?array {
 		static $saved = false;
-		if ( ! $saved ) {
+		if ( ! $saved && empty( $state['dry'] ) ) { // a dry run writes nothing
 			update_option( self::OPT_LINKS, self::slugs(), false );
 			$saved = true;
 		}

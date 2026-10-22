@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Beacon\Events;
 use Beacon\Import;
-use Beacon\Views;
 
 /**
  * CSV in and out. The export writes one row per event in exactly the columns the import reads, so a file can go
@@ -38,15 +37,19 @@ final class Source_CSV {
 			return __( 'Choose a CSV file first.', 'beacon-events' ); }
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php'; }
+		Import::sweep_files(); // CSVs of earlier imports that were never finished
 		$file = wp_handle_upload(
 			$upload,
 			array(
-				'test_form' => false,
-				'mimes'     => array( 'csv' => 'text/csv' ),
+				'test_form'                => false,
+				'mimes'                    => array( 'csv' => 'text/csv' ),
+				// the file sits in the public uploads folder while the batches run: give it a name nobody can guess
+				'unique_filename_callback' => fn( $dir, $name, $ext ) => 'beacon-import-' . wp_generate_password( 24, false ) . $ext,
 			)
 		);
 		if ( ! empty( $file['error'] ) ) {
 			return (string) $file['error']; }
+		Import::track_file( $file['file'] );
 		$state['file']  = $file['file'];
 		$state['total'] = max( 0, self::row_count( $file['file'] ) );
 		return null;

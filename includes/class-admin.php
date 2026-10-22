@@ -13,7 +13,7 @@ final class Admin {
 			'enqueue_block_editor_assets',
 			function () {
 				if ( get_current_screen() && get_current_screen()->post_type === Events::CPT ) {
-					wp_enqueue_script( 'beacon-events-panel', BEACON_URL . 'assets/editor-panel.js', array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n', 'wp-api-fetch' ), BEACON_VERSION, true );
+					wp_enqueue_script( 'beacon-events-panel', BEACON_URL . 'assets/editor-panel.js', array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n', 'wp-api-fetch', 'wp-date' ), BEACON_VERSION, true );
 					wp_set_script_translations( 'beacon-events-panel', 'beacon-events', BEACON_DIR . 'languages' );
 					wp_add_inline_script(
 						'beacon-events-panel',
@@ -25,6 +25,11 @@ final class Admin {
 								'dmy'    => (bool) preg_match( '/^[dj]/', (string) get_option( 'date_format' ) ),
 								'siteTz' => wp_timezone_string(),
 								'zones'  => timezone_identifiers_list(),
+								// the repeat sentence in the editor's language: weekday names, date format, first day of the week
+								'days'       => self::weekdays( false ),
+								'dabbr'      => self::weekdays( true ),
+								'dateFormat' => (string) get_option( 'date_format', 'F j, Y' ),
+								'weekStart'  => (int) get_option( 'start_of_week', 1 ),
 							)
 						) . ';',
 						'before'
@@ -234,7 +239,8 @@ final class Admin {
 		);
 		if ( is_wp_error( $new ) ) {
 			wp_die( esc_html( $new->get_error_message() ) ); }
-		$skip = array( '_edit_lock', '_edit_last', '_beacon_uid', '_beacon_feed', '_beacon_tec_id', '_thumbnail_id' );
+		// never copy where an event came from (sample, import, feed, combine) or the refresh horizon: the copy is new and the user's own
+		$skip = array( '_edit_lock', '_edit_last', '_beacon_uid', '_beacon_feed', '_beacon_tec_id', '_thumbnail_id', '_beacon_import', '_beacon_combined', '_beacon_horizon' );
 		foreach ( (array) get_post_meta( $id ) as $key => $values ) {
 			if ( in_array( $key, $skip, true ) ) {
 				continue; }
@@ -355,5 +361,16 @@ final class Admin {
 				unset( $ov[ $ymd ] ); }
 		}
 		update_post_meta( $post_id, Events::META['overrides'], Events::sanitize_overrides( $ov ) );
+	}
+
+	/** Weekday names by RRULE code (SU…SA) in the current admin language. */
+	private static function weekdays( bool $abbrev ): array {
+		global $wp_locale;
+		$out = array();
+		foreach ( array( 'SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA' ) as $i => $code ) {
+			$name         = $wp_locale->get_weekday( $i );
+			$out[ $code ] = $abbrev ? $wp_locale->get_weekday_abbrev( $name ) : $name;
+		}
+		return $out;
 	}
 }

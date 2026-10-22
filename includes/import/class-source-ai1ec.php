@@ -116,7 +116,8 @@ final class Source_AI1EC {
 		$uid = self::KEY . '-' . (int) $post_id;
 		if ( $g( 'ical_feed_url' ) !== '' && $g( 'ical_uid' ) !== '' && ! in_array( $g( 'ical_uid' ), self::shared_uids(), true ) ) {
 			$uid = $g( 'ical_uid' ); } // the feed's own UID: re-adding that feed in Beacon adopts the event instead of copying it again
-		update_option( self::OPT_LINKS, '1' );
+		if ( empty( $state['dry'] ) ) { // a dry run writes nothing
+			update_option( self::OPT_LINKS, '1' ); }
 		return array(
 			'uid'          => $uid,
 			'src_id'       => (int) $post_id,

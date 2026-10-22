@@ -216,8 +216,10 @@ final class Ics {
 				// "Community Hall, 410 Oak St, Springfield" → venue "Community Hall" with the rest as its address.
 				$parts = array_map( 'trim', explode( ',', self::unescape( $ev['LOCATION']['value'] ), 2 ) );
 				$set   = wp_set_object_terms( $id, $parts[0], 'beacon_venue' );
-				if ( ! empty( $parts[1] ) && is_array( $set ) && $set && ! get_term_meta( (int) $set[0], 'beacon_address', true ) ) {
-					update_term_meta( (int) $set[0], 'beacon_address', sanitize_text_field( $parts[1] ) ); }
+				// wp_set_object_terms() returns term_taxonomy_ids; term meta is keyed by term_id
+				$venue = ( is_array( $set ) && $set ) ? get_term_by( 'term_taxonomy_id', (int) $set[0], 'beacon_venue' ) : false;
+				if ( ! empty( $parts[1] ) && $venue instanceof \WP_Term && ! get_term_meta( $venue->term_id, 'beacon_address', true ) ) {
+					update_term_meta( $venue->term_id, 'beacon_address', sanitize_text_field( $parts[1] ) ); }
 			}
 			if ( ! empty( $feed['category'] ) ) {
 				wp_set_object_terms( $id, sanitize_title( $feed['category'] ), 'beacon_category' ); }
