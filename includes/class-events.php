@@ -490,7 +490,6 @@ final class Events {
 			$wpdb->delete( Schema::table(), array( 'event_id' => $post_id ), array( '%d' ) ); } // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- own table
 	}
 
-	/** Upcoming occurrences joined to their events, for views. */
 	/** Occurrences of published events starting in [ $from_utc, $to_utc ), in time order; $offset pages through them. */
 	public static function upcoming( string $from_utc, string $to_utc, int $limit = 200, array $tax = array(), int $offset = 0 ): array {
 		global $wpdb;

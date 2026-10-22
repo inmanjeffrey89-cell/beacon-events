@@ -497,7 +497,6 @@ final class Views {
 		);
 	}
 
-	/** `category` accepts one slug or several separated by commas; an event matching any of them is shown. */
 	/** "a, b,c" → array( 'a', 'b', 'c' ) as term slugs. */
 	private static function slugs( string $csv ): array {
 		return array_values( array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $csv ) ) ) ) );
@@ -579,7 +578,6 @@ final class Views {
 		return $v && ! is_wp_error( $v ) ? esc_html( $v[0]->name ) : '';
 	}
 
-	/** Venue name and address as one plain string ("Community Hall, 123 Main St"), for calendar apps. */
 	/**
 	 * Plain text for places that are not HTML (.ics files, calendar links, JSON-LD, emails). Titles, venue names and
 	 * the site name come out of WordPress HTML-encoded ("Paint &#038; Sip", "Smith &amp; Sons"), which those places
