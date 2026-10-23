@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.28.6 =
+* After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
+
 = 0.28.5 =
 * Fix: an all-day event that repeats ended at 00:59 the next day on the date the clocks go forward, so that date showed two days on its page, in the .ics feed and in search results. All-day dates now keep their own day.
 * Fix: "Remove sample events" deleted a sample you had edited to make your own. An edited sample now stays (also ones edited before this update), and a copy made with Duplicate is never treated as a sample, an import or a combined event.

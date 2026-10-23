@@ -22,6 +22,7 @@ final class Onboarding {
 		add_action( 'admin_post_beacon_sample_add', array( __CLASS__, 'add_samples' ) );
 		add_action( 'admin_post_beacon_sample_remove', array( __CLASS__, 'remove_samples' ) );
 		add_action( 'admin_post_beacon_calendar_page', array( __CLASS__, 'create_page' ) );
+		add_action( 'admin_post_beacon_calendar_hint_hide', array( __CLASS__, 'hide_calendar_hint' ) );
 	}
 
 	public static function action_links( $links ): array {
@@ -35,7 +36,7 @@ final class Onboarding {
 			return; }
 		wp_register_style( 'beacon-onboarding', false, array(), BEACON_VERSION );
 		wp_enqueue_style( 'beacon-onboarding' );
-		wp_add_inline_style( 'beacon-onboarding', '.beacon-start{background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2271b1;padding:4px 20px 16px;margin:12px 0 8px;max-width:60em}.beacon-start h2{margin:14px 0 6px}.beacon-start ol{margin:0 0 0 1.4em}.beacon-start li{margin:10px 0}.beacon-start li strong{display:block;margin-bottom:4px}.beacon-start form{display:inline}.beacon-start .button{margin:2px 6px 2px 0}.beacon-start-samples{margin:8px 0}' );
+		wp_add_inline_style( 'beacon-onboarding', '.beacon-start{background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2271b1;padding:4px 20px 16px;margin:12px 0 8px;max-width:60em}.beacon-start h2{margin:14px 0 6px}.beacon-start ol{margin:0 0 0 1.4em}.beacon-start li{margin:10px 0}.beacon-start li strong{display:block;margin-bottom:4px}.beacon-start form{display:inline}.beacon-start .button{margin:2px 6px 2px 0}.beacon-start-samples{margin:8px 0}.beacon-start-samples form{display:inline}' );
 	}
 
 	/** Events the user made or imported, not counting samples, trash or auto-drafts. */
@@ -83,6 +84,11 @@ final class Onboarding {
 			if ( $samples ) {
 				echo '<p class="beacon-start-samples">' . esc_html( sprintf( /* translators: %d: number of sample events */ _n( '%d sample event is still on your calendar.', '%d sample events are still on your calendar.', count( $samples ), 'beacon-events' ), count( $samples ) ) ) . ' ' . self::button( 'beacon_sample_remove', __( 'Remove sample events', 'beacon-events' ), 'button-link' ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- button() escapes
 			}
+			// Someone who adds an event first would otherwise never see "Create a calendar page" again (the panel above
+			// only shows while there are no events): one line until there is a calendar page, or they say no thanks.
+			if ( self::wants_calendar_hint() ) {
+				echo '<p class="beacon-start-samples">' . esc_html__( 'Want your events on a page of their own?', 'beacon-events' ) . ' ' . self::button( 'beacon_calendar_page', __( 'Create a calendar page', 'beacon-events' ), 'button button-primary' ) . ' ' . self::button( 'beacon_calendar_hint_hide', __( 'No thanks', 'beacon-events' ), 'button-link' ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- button() escapes
+			}
 			return $views;
 		}
 		$page    = self::calendar_page();
@@ -126,6 +132,24 @@ final class Onboarding {
 		echo '<li><strong>' . esc_html__( 'Keep a Google Calendar in sync (optional)', 'beacon-events' ) . '</strong>' . esc_html__( 'Paste its public iCal address and Beacon checks it every hour.', 'beacon-events' ) . ' <a href="' . esc_url( admin_url( 'edit.php?post_type=' . Events::CPT . '&page=beacon-settings' ) ) . '">' . esc_html__( 'Settings', 'beacon-events' ) . '</a></li>';
 		echo '</ol></div>';
 		return $views;
+	}
+
+	const META_HIDE_HINT = 'beacon_hide_calendar_hint'; // user meta: said "No thanks" to the calendar page line
+
+	/** No calendar page yet, none of the site's pages shows Beacon's block or shortcode, and the user may publish pages. */
+	private static function wants_calendar_hint(): bool {
+		if ( self::calendar_page() || ! current_user_can( 'publish_pages' ) || get_user_meta( get_current_user_id(), self::META_HIDE_HINT, true ) ) {
+			return false; }
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one lookup, only on the Events screen while the line could show
+		$found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM %i WHERE post_status = 'publish' AND post_type IN ('page','post','wp_template','wp_block') AND ( post_content LIKE %s OR post_content LIKE %s ) LIMIT 1", $wpdb->posts, '%' . $wpdb->esc_like( '<!-- wp:beacon/events' ) . '%', '%' . $wpdb->esc_like( '[beacon_events' ) . '%' ) );
+		return ! $found;
+	}
+
+	public static function hide_calendar_hint(): void {
+		self::guard( 'beacon_calendar_hint_hide' );
+		update_user_meta( get_current_user_id(), self::META_HIDE_HINT, '1' );
+		self::back( 'hint' );
 	}
 
 	private static function guard( string $action ): void {

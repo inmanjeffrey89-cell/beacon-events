@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.28.5
+Stable tag: 0.28.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -203,6 +203,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.28.6 =
+* After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
+
 = 0.28.5 =
 * Fix: an all-day event that repeats ended at 00:59 the next day on the date the clocks go forward, so that date showed two days on its page, in the .ics feed and in search results. All-day dates now keep their own day.
 * Fix: "Remove sample events" deleted a sample you had edited to make your own. An edited sample now stays (also ones edited before this update), and a copy made with Duplicate is never treated as a sample, an import or a combined event.
@@ -233,8 +236,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.27.0 =
 * New: a per-event import report. After a dry run or an import, Events → Import / Export offers a CSV with one row per event (created, updated or skipped and why, errors, the new event ID, dates and repeat rule), and `wp beacon import <source> --report=file.csv` writes the same file. Also asked for on Reddit.
-
-= 0.26.0 =
-* New: "Dry run first" for every import (Events → Import / Export, or `wp beacon import <source> --dry-run`). It reports what the import would create, update, skip or simplify, and the venues, organizers and categories it would add, without writing anything. Asked for on Reddit; thanks.
 
 Earlier versions are listed in changelog.txt in the plugin folder.
