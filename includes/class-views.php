@@ -198,6 +198,7 @@ final class Views {
 	}
 
 	public static function register_blocks(): void {
+		self::register_assets(); // the editor is an iframe on current WordPress: the block's preview needs the stylesheet there too
 		$attrs = array(
 			'view'     => array(
 				'type'    => 'string',
@@ -247,8 +248,16 @@ final class Views {
 			array(
 				'api_version'     => 3,
 				'editor_script'   => 'beacon-events-editor',
-				'attributes'      => $attrs,
-				'render_callback' => fn( $a ) => self::render( $a ),
+				'editor_style'    => 'beacon-events',
+				'attributes'      => $attrs + array(
+					'align' => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+				),
+				// Wide / Full width: a block theme's content column (~650px) is too narrow for a 7-column week timetable
+				'supports'        => array( 'align' => array( 'wide', 'full' ) ),
+				'render_callback' => fn( $a ) => '<div ' . get_block_wrapper_attributes() . '>' . self::render( $a ) . '</div>',
 			)
 		);
 		// Venue address + map link, category description + subscribe link: the header of a venue/category/organizer page.
@@ -256,6 +265,7 @@ final class Views {
 			'beacon/term-details',
 			array(
 				'api_version'     => 3,
+				'editor_style'    => 'beacon-events',
 				'editor_script'   => 'beacon-events-editor',
 				'render_callback' => fn() => self::term_details(),
 			)

@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.28.6
+Stable tag: 0.28.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,10 @@ Click **Get started** under the plugin's name on the Plugins screen. The Events 
 3. Moving from another plugin? Events → Import / Export. Have a Google Calendar? Events → Settings → paste its iCal address.
 
 That is the whole setup. Everything else — colours, venues with maps, online events, per-date changes — is optional.
+
+The same steps as a 90-second video:
+
+https://www.youtube.com/watch?v=AsMpg-RBY8w
 
 = Roadmap =
 
@@ -203,6 +207,11 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.28.7 =
+* The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
+* Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.
+* The block's description and filter bar setting mention the week and day views.
+
 = 0.28.6 =
 * After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
 
@@ -229,12 +238,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 = 0.28.1 =
 * Fix: on themes that build their own single-post templates (Greyd, and theme builders such as Elementor's or Divi's), an event's page could show its text but not the When / Repeats / Where box, and Pro's booking form was missing too. They now appear on those themes as well, once each.
 * New: the `[beacon_event_details]` shortcode prints that box anywhere, for templates that leave the page content out entirely.
-
-= 0.28.0 =
-* New: German translation (de_DE): the calendar views, event pages, the editor and every admin screen. The line that says how an event repeats ("Every week on Monday and Thursday") can now be translated at all; it used to be English only.
-* Fix: the Time zone field in the block editor saved "Africa/Abidjan", the first zone in its list, when you clicked into it and pressed Enter. The event then showed "19:00 GMT" and its times were off in Google Calendar and search results. The list now starts with the site's own time zone, and an event set to a different zone says so under the field. Found on a real site; check your events' time zones if you saw a zone name next to a time.
-
-= 0.27.0 =
-* New: a per-event import report. After a dry run or an import, Events → Import / Export offers a CSV with one row per event (created, updated or skipped and why, errors, the new event ID, dates and repeat rule), and `wp beacon import <source> --report=file.csv` writes the same file. Also asked for on Reddit.
 
 Earlier versions are listed in changelog.txt in the plugin folder.

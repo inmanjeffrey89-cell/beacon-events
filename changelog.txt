@@ -1,5 +1,10 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.28.7 =
+* The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
+* Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.
+* The block's description and filter bar setting mention the week and day views.
+
 = 0.28.6 =
 * After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
 

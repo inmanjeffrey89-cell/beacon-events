@@ -29,14 +29,14 @@ msgstr "Beacon Events"
 #: includes/class-admin.php:11
 #: includes/class-admin.php:62
 #: includes/class-settings.php:50
-#: includes/class-views.php:1065
+#: includes/class-views.php:1075
 #: assets/editor-panel.js:251
 msgid "When"
 msgstr "Wann"
 
 #: includes/class-admin.php:63
 #: includes/class-admin.php:130
-#: includes/class-views.php:1067
+#: includes/class-views.php:1077
 #: assets/editor-panel.js:260
 msgid "Repeats"
 msgstr "Wiederholung"
@@ -72,8 +72,8 @@ msgstr "Ende"
 
 #: includes/class-admin.php:128
 #: includes/class-views.php:120
-#: includes/class-views.php:531
-#: includes/class-views.php:821
+#: includes/class-views.php:541
+#: includes/class-views.php:831
 #: assets/editor-panel.js:253
 msgid "All day"
 msgstr "Ganztägig"
@@ -207,7 +207,7 @@ msgid "Button text"
 msgstr "Button-Text"
 
 #: includes/class-admin.php:192
-#: includes/class-views.php:540
+#: includes/class-views.php:550
 #: assets/editor-panel.js:259
 msgid "Tickets & info"
 msgstr "Tickets & Infos"
@@ -248,7 +248,7 @@ msgid "As scheduled"
 msgstr "Wie geplant"
 
 #: includes/class-admin.php:205
-#: includes/class-views.php:516
+#: includes/class-views.php:526
 #: assets/editor-panel.js:180
 msgid "Cancelled"
 msgstr "Abgesagt"
@@ -327,7 +327,7 @@ msgid "Pattern"
 msgstr "Muster"
 
 #: includes/class-combine.php:463
-#: includes/class-views.php:1085
+#: includes/class-views.php:1095
 msgid "Dates"
 msgstr "Termine"
 
@@ -1147,7 +1147,7 @@ msgid "Categories: "
 msgstr "Kategorien: "
 
 #: includes/class-views.php:164
-#: includes/class-views.php:389
+#: includes/class-views.php:399
 msgid "Venue"
 msgstr "Ort"
 
@@ -1184,55 +1184,55 @@ msgstr "Die Seite /events/: nächste Veranstaltungen nach Tagen gruppiert."
 msgid "Upcoming events"
 msgstr "Nächste Veranstaltungen"
 
-#: includes/class-views.php:383
+#: includes/class-views.php:393
 msgid "Category"
 msgstr "Kategorie"
 
-#: includes/class-views.php:383
+#: includes/class-views.php:393
 msgid "All categories"
 msgstr "Alle Kategorien"
 
-#: includes/class-views.php:389
+#: includes/class-views.php:399
 msgid "All venues"
 msgstr "Alle Orte"
 
-#: includes/class-views.php:394
+#: includes/class-views.php:404
 msgid "Search events"
 msgstr "Veranstaltungen durchsuchen"
 
-#: includes/class-views.php:395
+#: includes/class-views.php:405
 #: includes/elementor-widget.php:27
 #: assets/editor.js:10
 msgid "View"
 msgstr "Ansicht"
 
-#: includes/class-views.php:395
+#: includes/class-views.php:405
 #: includes/elementor-widget.php:31
 #: assets/editor.js:10
 msgid "List"
 msgstr "Liste"
 
-#: includes/class-views.php:395
+#: includes/class-views.php:405
 #: includes/elementor-widget.php:32
 #: assets/editor.js:10
 msgid "Week"
 msgstr "Woche"
 
-#: includes/class-views.php:395
+#: includes/class-views.php:405
 #: includes/elementor-widget.php:33
 #: assets/editor.js:10
 msgid "Month"
 msgstr "Monat"
 
-#: includes/class-views.php:396
+#: includes/class-views.php:406
 msgid "Apply"
 msgstr "Anwenden"
 
-#: includes/class-views.php:518
+#: includes/class-views.php:528
 msgid "Rescheduled"
 msgstr "Verschoben"
 
-#: includes/class-views.php:571
+#: includes/class-views.php:581
 #: includes/import/class-source-etn.php:64
 #: includes/import/class-source-eventon.php:72
 #: includes/import/class-source-mec.php:80
@@ -1242,117 +1242,117 @@ msgstr "Verschoben"
 msgid "(Untitled event)"
 msgstr "(Veranstaltung ohne Titel)"
 
-#: includes/class-views.php:577
-#: includes/class-views.php:595
-#: includes/class-views.php:602
+#: includes/class-views.php:587
+#: includes/class-views.php:605
 #: includes/class-views.php:612
+#: includes/class-views.php:622
 msgid "Online"
 msgstr "Online"
 
-#: includes/class-views.php:612
+#: includes/class-views.php:622
 msgid "Join online"
 msgstr "Online teilnehmen"
 
-#: includes/class-views.php:613
+#: includes/class-views.php:623
 msgid "(the joining link is sent when you sign up)"
 msgstr "(den Link zur Teilnahme bekommst du nach der Anmeldung)"
 
-#: includes/class-views.php:623
-#: includes/class-views.php:1103
-#: includes/class-views.php:1128
+#: includes/class-views.php:633
+#: includes/class-views.php:1113
+#: includes/class-views.php:1138
 msgid "Map"
 msgstr "Karte"
 
-#: includes/class-views.php:640
+#: includes/class-views.php:650
 msgid "%s cancelled"
 msgstr "%s abgesagt"
 
-#: includes/class-views.php:642
+#: includes/class-views.php:652
 msgid "%1$s moved to %2$s"
 msgstr "%1$s verschoben auf %2$s"
 
-#: includes/class-views.php:696
+#: includes/class-views.php:706
 msgid "No upcoming events."
 msgstr "Keine anstehenden Veranstaltungen."
 
-#: includes/class-views.php:766
+#: includes/class-views.php:776
 msgid "Previous day"
 msgstr "Vorheriger Tag"
 
-#: includes/class-views.php:766
+#: includes/class-views.php:776
 msgid "Next day"
 msgstr "Nächster Tag"
 
-#: includes/class-views.php:768
+#: includes/class-views.php:778
 msgid "← Back to month"
 msgstr "← Zurück zum Monat"
 
-#: includes/class-views.php:770
+#: includes/class-views.php:780
 msgid "No events on this day."
 msgstr "An diesem Tag keine Veranstaltungen."
 
-#: includes/class-views.php:801
+#: includes/class-views.php:811
 msgid "Previous week"
 msgstr "Vorherige Woche"
 
-#: includes/class-views.php:801
+#: includes/class-views.php:811
 msgid "Next week"
 msgstr "Nächste Woche"
 
-#: includes/class-views.php:803
+#: includes/class-views.php:813
 msgid "This week"
 msgstr "Diese Woche"
 
-#: includes/class-views.php:805
+#: includes/class-views.php:815
 msgid "No events this week."
 msgstr "Diese Woche keine Veranstaltungen."
 
-#: includes/class-views.php:814
+#: includes/class-views.php:824
 msgid "No events"
 msgstr "Keine Termine"
 
-#: includes/class-views.php:863
+#: includes/class-views.php:873
 msgid "Previous month"
 msgstr "Vorheriger Monat"
 
-#: includes/class-views.php:863
+#: includes/class-views.php:873
 msgid "Next month"
 msgstr "Nächster Monat"
 
-#: includes/class-views.php:903
+#: includes/class-views.php:913
 msgid "Print this month"
 msgstr "Diesen Monat drucken"
 
-#: includes/class-views.php:949
+#: includes/class-views.php:959
 msgid "matching \"%s\""
 msgstr "passend zu „%s“"
 
-#: includes/class-views.php:972
+#: includes/class-views.php:982
 msgid "Print"
 msgstr "Drucken"
 
-#: includes/class-views.php:972
+#: includes/class-views.php:982
 msgid "← Back to the calendar"
 msgstr "← Zurück zum Kalender"
 
-#: includes/class-views.php:1070
+#: includes/class-views.php:1080
 msgid "Changes"
 msgstr "Änderungen"
 
-#: includes/class-views.php:1073
+#: includes/class-views.php:1083
 msgid "Where"
 msgstr "Wo"
 
-#: includes/class-views.php:1088
+#: includes/class-views.php:1098
 msgid "Add to calendar (.ics)"
 msgstr "Zum Kalender hinzufügen (.ics)"
 
-#: includes/class-views.php:1088
+#: includes/class-views.php:1098
 msgid "Add to Google Calendar"
 msgstr "Zu Google Kalender hinzufügen"
 
-#: includes/class-views.php:1107
-#: includes/class-views.php:1130
+#: includes/class-views.php:1117
+#: includes/class-views.php:1140
 msgid "Subscribe to these events (.ics)"
 msgstr "Diese Veranstaltungen abonnieren (.ics)"
 
@@ -1689,12 +1689,12 @@ msgid "See what Pro adds"
 msgstr "Sieh dir an, was Pro bietet"
 
 #: assets/editor.js:5
-msgid "Upcoming events as a list or a month grid."
-msgstr "Nächste Veranstaltungen als Liste oder Monatsraster."
+msgid "Your events as a list, a week timetable, a month grid or one day."
+msgstr "Deine Veranstaltungen als Liste, Wochenplan, Monatsraster oder einzelner Tag."
 
 #: assets/editor.js:12
-msgid "Filter bar (category, venue, search, list/month)"
-msgstr "Filterleiste (Kategorie, Ort, Suche, Liste/Monat)"
+msgid "Filter bar (category, venue, search, view)"
+msgstr "Filterleiste (Kategorie, Ort, Suche, Ansicht)"
 
 #: assets/editor.js:13
 msgid "\"Print this month\" link"
