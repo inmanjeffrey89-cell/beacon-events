@@ -1,5 +1,9 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.28.8 =
+* The import summary now says how many events got a "Tickets & info" button from their website or ticket address, and names the fields that are only kept in hidden meta (for The Events Calendar, the cost). Before, it said the website was not shown, although since 0.15.0 it has been the event's button.
+* The FAQ links a browser demo of the move from The Events Calendar: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. Nothing to install.
+
 = 0.28.7 =
 * The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
 * Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.

@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.28.7
+Stable tag: 0.28.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,8 @@ Watch the import from The Events Calendar, tickets and attendees included:
 
 https://www.youtube.com/watch?v=_4tAJjVqA-Y
 
+Or try the whole move in your browser on a throwaway site, with nothing to install: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/inmanjeffrey89-cell/beacon-events/main/blueprints/tec-move.json
+
 = Can I see what an import will do before it runs? =
 Yes. Every source under Events → Import / Export has a "Dry run first" button (and `wp beacon import <source> --dry-run` on the command line). It goes through all the events exactly as the import would and reports how many would be created, how many updated, which would be skipped and why, which repeating rules would be simplified, and how many venues, organizers and categories would be added, without writing anything. Running the real import afterwards does exactly that, and running it again later updates instead of duplicating. Both the dry run and the import can be downloaded as a CSV with one row per event: created, updated or skipped and why, its new event ID, dates and repeat rule, which is handy for checking a large move event by event (`--report=file.csv` on the command line).
 
@@ -211,6 +213,10 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.28.8 =
+* The import summary now says how many events got a "Tickets & info" button from their website or ticket address, and names the fields that are only kept in hidden meta (for The Events Calendar, the cost). Before, it said the website was not shown, although since 0.15.0 it has been the event's button.
+* The FAQ links a browser demo of the move from The Events Calendar: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. Nothing to install.
+
 = 0.28.7 =
 * The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
 * Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.

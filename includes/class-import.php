@@ -213,8 +213,12 @@ final class Import {
 			$lines = array_merge( array_map( fn( $e ) => __( 'Error:', 'beacon-events' ) . ' ' . $e, $r['errors'] ), $r['notes'] );
 			if ( ! empty( $r['images'] ) ) {
 				$lines[] = sprintf( /* translators: %d: count */ __( '%d featured images would be downloaded.', 'beacon-events' ), $r['images'] ); }
+			if ( ! empty( $r['links'] ) ) {
+				/* translators: %d: number of events */
+				$lines[] = sprintf( _n( '%d event has a website or ticket address; it would become the event\'s "Tickets & info" button.', '%d events have a website or ticket address; it would become each event\'s "Tickets & info" button.', (int) $r['links'], 'beacon-events' ), (int) $r['links'] ); }
 			if ( ! empty( $r['extras'] ) ) {
-				$lines[] = sprintf( /* translators: %d: count */ __( '%d events have fields Beacon has no place for yet (cost, website…); they would be kept in hidden meta (_beacon_import_extra).', 'beacon-events' ), $r['extras'] ); }
+				/* translators: 1: number of events, 2: field names, e.g. "cost" */
+				$lines[] = sprintf( _n( '%1$d event has fields Beacon doesn\'t show (%2$s); they would be kept in hidden meta (_beacon_import_extra).', '%1$d events have fields Beacon doesn\'t show (%2$s); they would be kept in hidden meta (_beacon_import_extra).', (int) $r['extras'], 'beacon-events' ), (int) $r['extras'], self::extra_names( $r ) ); }
 			if ( ! empty( $r['tz_fallbacks'] ) ) {
 				$lines[] = sprintf( /* translators: %d: count */ __( '%d events have no usable named timezone; they would get the site timezone.', 'beacon-events' ), $r['tz_fallbacks'] ); }
 			if ( $lines ) {
@@ -243,8 +247,12 @@ final class Import {
 		$lines = array_merge( array_map( fn( $e ) => __( 'Error:', 'beacon-events' ) . ' ' . $e, $r['errors'] ), $r['notes'] );
 		if ( ! empty( $r['tickets'] ) || ! empty( $r['attendees'] ) ) {
 			$lines[] = sprintf( /* translators: 1: ticket count, 2: attendee count */ __( '%1$d events got their tickets and RSVPs; %2$d attendees were brought over.', 'beacon-events' ), (int) ( $r['tickets'] ?? 0 ), (int) ( $r['attendees'] ?? 0 ) ); }
+		if ( ! empty( $r['links'] ) ) {
+			/* translators: %d: number of events */
+			$lines[] = sprintf( _n( '%d event got a "Tickets & info" button from its website or ticket address.', '%d events got a "Tickets & info" button from their website or ticket address.', (int) $r['links'], 'beacon-events' ), (int) $r['links'] ); }
 		if ( ! empty( $r['extras'] ) ) {
-			$lines[] = sprintf( /* translators: %d: count */ __( '%d events had fields Beacon has no place for yet (cost, website…); those values were kept in hidden meta (_beacon_import_extra) and not shown.', 'beacon-events' ), $r['extras'] ); }
+			/* translators: 1: number of events, 2: field names, e.g. "cost" */
+			$lines[] = sprintf( _n( '%1$d event had fields Beacon doesn\'t show (%2$s); they were kept in hidden meta (_beacon_import_extra).', '%1$d events had fields Beacon doesn\'t show (%2$s); they were kept in hidden meta (_beacon_import_extra).', (int) $r['extras'], 'beacon-events' ), (int) $r['extras'], self::extra_names( $r ) ); }
 		if ( ! empty( $r['tz_fallbacks'] ) ) {
 			$lines[] = sprintf( /* translators: %d: count */ __( '%d events had no usable named timezone; they were set to the site timezone.', 'beacon-events' ), $r['tz_fallbacks'] ); }
 		if ( $lines ) {
@@ -270,6 +278,8 @@ final class Import {
 			'organizers'   => 0,
 			'categories'   => 0,
 			'extras'       => 0,
+			'extra_keys'   => array(),
+			'links'        => 0,
 			'tz_fallbacks' => 0,
 			'tickets'      => 0,
 			'attendees'    => 0,
@@ -655,9 +665,8 @@ final class Import {
 		}
 		wp_set_object_terms( $id, $cats, 'beacon_category' );
 		if ( ! empty( $n['extra'] ) ) {
-			update_post_meta( $id, '_beacon_import_extra', $n['extra'] );
-			++$state['extras'];
-		}
+			update_post_meta( $id, '_beacon_import_extra', $n['extra'] ); }
+		self::count_extras( $n, $state );
 		if ( $n['note'] ) {
 			$state['notes'][] = sprintf( '"%s" (#%s): %s', $n['title'], $n['src_id'], $n['note'] ); }
 		if ( $data['post_status'] === 'publish' ) {
@@ -745,8 +754,7 @@ final class Import {
 			$cat( (array) $c ); }
 		if ( ! $n['thumbnail_id'] && $n['image_url'] && ! ( $existing && has_post_thumbnail( (int) $existing[0] ) ) ) {
 			++$state['images']; }
-		if ( ! empty( $n['extra'] ) ) {
-			++$state['extras']; }
+		self::count_extras( $n, $state );
 		if ( $n['note'] ) {
 			$state['notes'][] = sprintf( '"%s" (#%s): %s', $n['title'], $n['src_id'], $n['note'] ); }
 	}
@@ -758,6 +766,34 @@ final class Import {
 	 * Calendar's event website, All-in-One's ticket URL, MEC's "more info", EventON's external link, WP Event Manager's
 	 * registration link). Visitors used these as the "buy tickets" button, so they must survive a migration.
 	 */
+	/**
+	 * Counts what the summary says about a source event's extra fields: whether it got a "Tickets & info" button, and
+	 * which fields Beacon keeps only in hidden meta (the address that became the button is not one of them).
+	 */
+	private static function count_extras( array $n, array &$state ): void {
+		[ $link ] = self::link_from( $n );
+		if ( $link ) {
+			$state['links'] = (int) ( $state['links'] ?? 0 ) + 1; }
+		$left = array();
+		foreach ( (array) ( $n['extra'] ?? array() ) as $k => $v ) {
+			if ( is_scalar( $v ) ? '' === trim( (string) $v ) : empty( $v ) ) {
+				continue; }
+			if ( $link && is_string( $v ) && esc_url_raw( trim( $v ) ) === $link ) {
+				continue; }
+			$left[] = str_replace( '_', ' ', (string) $k );
+		}
+		if ( $left ) {
+			++$state['extras'];
+			$state['extra_keys'] = array_slice( array_values( array_unique( array_merge( (array) ( $state['extra_keys'] ?? array() ), $left ) ) ), 0, 8 );
+		}
+	}
+
+	/** The leftover field names for the summary; runs saved before 0.28.8 have none recorded. */
+	private static function extra_names( array $r ): string {
+		$k = (array) ( $r['extra_keys'] ?? array() );
+		return $k ? implode( ', ', $k ) : __( 'cost and similar', 'beacon-events' );
+	}
+
 	private static function link_from( array $n ): array {
 		$ok = fn( $u ) => is_string( $u ) && preg_match( '#^https?://#i', trim( $u ) ) ? esc_url_raw( trim( $u ) ) : '';
 		if ( $ok( $n['link'] ?? '' ) ) {
