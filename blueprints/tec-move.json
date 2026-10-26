@@ -1,0 +1,62 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Move off The Events Calendar with Beacon Events",
+		"description": "A small site on The Events Calendar (venues, an organizer, categories, a weekly class entered as copies), switched off, with Beacon Events ready to import it.",
+		"author": "inmanjeffrey89-cell"
+	},
+	"landingPage": "/wp-admin/edit.php?post_type=beacon_event&page=beacon-import",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"permalink_structure": "/%postname%/",
+				"blogname": "Riverside Arts (moving off The Events Calendar)"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "the-events-calendar"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\n// Seeds a small The Events Calendar site for the \"try the move\" Playground (blueprints/tec-move.json).\n// Runs inside Playground after TEC is activated; dates are relative to today so they are always upcoming.\nrequire_once '/wordpress/wp-load.php';\nupdate_option( 'timezone_string', 'America/New_York' );\n$tz  = 'America/New_York';\n$v1  = tribe_venues()->set_args( array( 'venue' => 'Riverside Studio', 'address' => '120 Main St', 'city' => 'Hudson', 'state' => 'NY', 'zip' => '12534', 'country' => 'United States' ) )->create();\n$v2  = tribe_venues()->set_args( array( 'venue' => 'Hudson Area Library', 'address' => '51 N 5th St', 'city' => 'Hudson', 'state' => 'NY', 'zip' => '12534', 'country' => 'United States' ) )->create();\n$org = tribe_organizers()->set_args( array( 'organizer' => 'Riverside Arts Council', 'email' => 'hello@example.org' ) )->create();\n$cat = array();\nforeach ( array( 'Classes', 'Kids', 'Community' ) as $c ) { $t = wp_insert_term( $c, 'tribe_events_cat' ); $cat[ $c ] = is_wp_error( $t ) ? 0 : (int) $t['term_id']; }\n$made = 0;\n$ev = function ( $title, $start, $end, $venue, $c, $extra = array() ) use ( $tz, $org, $cat, &$made ) {\n\t$e = tribe_events()->set_args( array_merge( array( 'title' => $title, 'status' => 'publish', 'start_date' => $start, 'end_date' => $end, 'timezone' => $tz, 'venue' => $venue ? $venue->ID : 0, 'organizer' => $org->ID ), $extra ) )->create();\n\tif ( $e ) { wp_set_object_terms( $e->ID, array( $cat[ $c ] ), 'tribe_events_cat' ); $made++; }\n\treturn $e;\n};\n// A weekly class entered one date at a time (free TEC has no repeats): Beacon offers to combine these.\n$tue = strtotime( 'next tuesday', current_time( 'timestamp' ) );\nfor ( $i = 0; $i < 6; $i++ ) { $d = gmdate( 'Y-m-d', $tue + $i * WEEK_IN_SECONDS ); $ev( 'Drop-in Yoga', \"$d 18:00:00\", \"$d 19:00:00\", $v1, 'Classes' ); }\n$sat = strtotime( 'next saturday', current_time( 'timestamp' ) );\nfor ( $i = 0; $i < 4; $i++ ) { $d = gmdate( 'Y-m-d', $sat + $i * WEEK_IN_SECONDS ); $ev( 'Family Story Hour', \"$d 10:00:00\", \"$d 11:00:00\", $v2, 'Kids' ); }\n$fair = gmdate( 'Y-m-d', $sat + 2 * WEEK_IN_SECONDS );\n$ev( 'Fall Craft Fair', \"$fair 00:00:00\", \"$fair 23:59:59\", $v1, 'Community', array( 'all_day' => true ) );\n$jazz = gmdate( 'Y-m-d', $sat + WEEK_IN_SECONDS - DAY_IN_SECONDS );\n$ev( 'Jazz Night with the Riverside Trio', \"$jazz 19:30:00\", \"$jazz 21:30:00\", $v1, 'Community', array( 'cost' => '15', 'url' => 'https://example.org/jazz-night-tickets' ) );\nupdate_option( 'beacon_playground_seeded', $made );\n"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; deactivate_plugins( 'the-events-calendar/the-events-calendar.php' );"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "beacon-events"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; flush_rewrite_rules();"
+		}
+	]
+}
