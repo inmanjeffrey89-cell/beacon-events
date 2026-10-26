@@ -90,7 +90,7 @@ Next, in this order: a CSV import for attendees, per-event reminder settings, an
 Yes. That's the point.
 
 = How is Beacon Events different from The Events Calendar? =
-Recurring events and a week view: free here. In The Events Calendar the free version has month, list and day views, and recurring events and the other views come with a paid plan; the cheapest, Essentials, was $259 a year when we checked in September 2026. Tickets: Beacon Events Pro is $7 a month or $49 a year and sells through your own Stripe account or WooCommerce, with no per-ticket fee from us. Moving: the importer brings your events, venues, organizers, categories and repeat rules across in one click (and with Pro, tickets and attendees), and redirects the old links.
+Recurring events and a week view: free here. In The Events Calendar the free version has month, list and day views, and recurring events and the other views come with a paid plan; the cheapest is now Pro at $399 a year (liquidweb.com, checked October 2026; the $259 Essentials plan is gone). Tickets: Beacon Events Pro is $7 a month or $49 a year and sells through your own Stripe account or WooCommerce, with no per-ticket fee from us. Moving: the importer brings your events, venues, organizers, categories and repeat rules across in one click (and with Pro, tickets and attendees), and redirects the old links.
 
 What The Events Calendar does that Beacon doesn't, so you can decide honestly: seven calendar views including photo and map (Beacon has list, week, month and day), Square and PayPal payments without WooCommerce, built-in coupons and fees, and add-ons such as its Event Aggregator for pulling in Meetup and Eventbrite events. If you rely on those, stay where you are.
 
@@ -103,6 +103,10 @@ Yes. Every month view has a "Print this month" link under the grid. It opens tha
 = Can I show a weekly class schedule (timetable)? =
 
 Yes. Put the Events block on a page and choose **Week**, or use `[beacon_events view="week"]`. Each day of the week gets a column with its classes in time order, all-day events first; on a phone, or in a narrow column, the days stack into rows and empty days are hidden. Enter each class once as a repeating event ("every Monday and Thursday at 6 pm"), cancel a holiday or move one class without touching the rest, and add `filters="1"` so visitors can pick a category (yoga, spin, kids) or a studio. Each class can carry a "Book" button to the booking system you already use.
+
+On block themes such as Twenty Twenty-Five, set the block to **Wide width** so all seven days fit side by side. The whole thing in 90 seconds:
+
+https://www.youtube.com/watch?v=86vlAmBedcg
 
 = Can people sign up for gym, yoga or fitness classes? =
 
