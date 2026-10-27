@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.28.9
+Stable tag: 0.29.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -101,7 +101,7 @@ Yes. Turn on **Online event** and paste the meeting link. The event page shows a
 Yes. Every month view has a "Print this month" link under the grid. It opens that month on its own page, without your theme's header and menus, sized for one landscape sheet (a very busy month carries on to a second page), with times first, full titles, your category colours and a key to them. It prints what the view shows, so a calendar filtered to one category prints just that category. To hide the link, switch off "Print this month" link in the block's settings, add `print="no"` to the shortcode, or use the `beacon_print_link` filter to turn it off everywhere.
 
 = Does it work on WordPress multisite? =
-Yes. Activate it on a single site or network-activate it; each site gets its own calendar, events and settings. A main site can show the other sites' events by adding their iCal feeds (each calendar has one) under Events → Settings, and they sync on a schedule.
+Yes. Activate it on a single site or network-activate it; each site gets its own calendar, events and settings, and its own choice about deleting its data when the plugin is deleted. A main site can show the other sites' events by adding their iCal feeds (each calendar has one) under Events → Settings, and they sync on a schedule.
 
 = Can I show a weekly class schedule (timetable)? =
 
@@ -216,6 +216,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.0 =
+* Multisite: deleting the plugin now removes Beacon's data on every site that turned on "delete all data on uninstall", each by its own setting. Before, WordPress ran the clean-up once, for the main site only, so the other sites kept their events, venues and table.
+
 = 0.28.9 =
 * Fix for WordPress multisite: when Beacon Events was network-activated, every site that already existed in the network showed "Page not found" for its event pages and the events archive until someone re-saved that site's permalinks. Each site now refreshes its links the first time it loads Beacon.
 
@@ -247,6 +250,3 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.28.3 =
 * A repeating event's page now shows its next date under "When", not the date the series began. A weekly class that started in September shows next week's class, skipping cancelled dates and following moved ones. A finished series still shows its first date.
-
-= 0.28.2 =
-* Pro can now be paid monthly ($7 a month for one site), as well as yearly. The Pro page and the import screen say so.
