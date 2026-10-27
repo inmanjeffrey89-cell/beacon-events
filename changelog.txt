@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.28.9 =
+* Fix for WordPress multisite: when Beacon Events was network-activated, every site that already existed in the network showed "Page not found" for its event pages and the events archive until someone re-saved that site's permalinks. Each site now refreshes its links the first time it loads Beacon.
+
 = 0.28.8 =
 * The import summary now says how many events got a "Tickets & info" button from their website or ticket address, and names the fields that are only kept in hidden meta (for The Events Calendar, the cost). Before, it said the website was not shown, although since 0.15.0 it has been the event's button.
 * The FAQ links a browser demo of the move from The Events Calendar: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. Nothing to install.

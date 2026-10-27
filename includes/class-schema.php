@@ -21,7 +21,12 @@ final class Schema {
 
 	public static function maybe_upgrade(): void {
 		if ( get_option( 'beacon_schema_version' ) !== self::VERSION ) {
-			self::install(); }
+			self::install();
+			// The activation hook only runs on the site that activated the plugin. When it is network-activated on a
+			// multisite, every other site meets Beacon here first, with rewrite rules saved before Beacon existed, so
+			// its event pages 404. Ask for the same deferred flush the activation hook asks for.
+			update_option( 'beacon_flush_rewrites', '1' );
+		}
 	}
 
 	private static function install(): void {

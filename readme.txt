@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.28.8
+Stable tag: 0.28.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,9 @@ Yes. Turn on **Online event** and paste the meeting link. The event page shows a
 
 = Can people print the calendar? =
 Yes. Every month view has a "Print this month" link under the grid. It opens that month on its own page, without your theme's header and menus, sized for one landscape sheet (a very busy month carries on to a second page), with times first, full titles, your category colours and a key to them. It prints what the view shows, so a calendar filtered to one category prints just that category. To hide the link, switch off "Print this month" link in the block's settings, add `print="no"` to the shortcode, or use the `beacon_print_link` filter to turn it off everywhere.
+
+= Does it work on WordPress multisite? =
+Yes. Activate it on a single site or network-activate it; each site gets its own calendar, events and settings. A main site can show the other sites' events by adding their iCal feeds (each calendar has one) under Events → Settings, and they sync on a schedule.
 
 = Can I show a weekly class schedule (timetable)? =
 
@@ -213,6 +216,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.28.9 =
+* Fix for WordPress multisite: when Beacon Events was network-activated, every site that already existed in the network showed "Page not found" for its event pages and the events archive until someone re-saved that site's permalinks. Each site now refreshes its links the first time it loads Beacon.
+
 = 0.28.8 =
 * The import summary now says how many events got a "Tickets & info" button from their website or ticket address, and names the fields that are only kept in hidden meta (for The Events Calendar, the cost). Before, it said the website was not shown, although since 0.15.0 it has been the event's button.
 * The FAQ links a browser demo of the move from The Events Calendar: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. Nothing to install.
@@ -244,9 +250,3 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.28.2 =
 * Pro can now be paid monthly ($7 a month for one site), as well as yearly. The Pro page and the import screen say so.
-
-= 0.28.1 =
-* Fix: on themes that build their own single-post templates (Greyd, and theme builders such as Elementor's or Divi's), an event's page could show its text but not the When / Repeats / Where box, and Pro's booking form was missing too. They now appear on those themes as well, once each.
-* New: the `[beacon_event_details]` shortcode prints that box anywhere, for templates that leave the page content out entirely.
-
-Earlier versions are listed in changelog.txt in the plugin folder.
