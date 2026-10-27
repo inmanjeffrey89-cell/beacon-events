@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.29.1 =
+* Moving from Events Calendar Pro: its series pages (/series/weekly-yoga/) now redirect to the event that series became after the import, instead of showing "Page not found". A series link the import doesn't know goes to your calendar page.
+
 = 0.29.0 =
 * Multisite: deleting the plugin now removes Beacon's data on every site that turned on "delete all data on uninstall", each by its own setting. Before, WordPress ran the clean-up once, for the main site only, so the other sites kept their events, venues and table.
 

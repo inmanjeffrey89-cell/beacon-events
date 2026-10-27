@@ -135,7 +135,24 @@ final class Source_TEC {
 			'thumbnail_id' => (int) get_post_thumbnail_id( $tec_id ),
 			'extra'        => $extra,
 			'note'         => $note,
+			'series'       => self::series_slug( (int) $tec_id ),
 		);
+	}
+
+	/** Events Calendar Pro (6+) groups events into series (tribe_event_series, /series/<slug>/) through its own relationship table. */
+	private static function series_slug( int $tec_id ): string {
+		static $has = null;
+		global $wpdb;
+		$table = $wpdb->prefix . 'tec_series_relationships';
+		if ( null === $has ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- schema probe of another plugin's table, once per request
+			$has = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table;
+		}
+		if ( ! $has ) {
+			return ''; }
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- reading Events Calendar Pro's own table
+		$series = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT series_post_id FROM %i WHERE event_post_id = %d LIMIT 1', $table, $tec_id ) );
+		return $series ? (string) get_post_field( 'post_name', $series ) : '';
 	}
 
 	/** TEC 6 Pro keeps an iCalendar rule set in {prefix}tec_events.rset (Free has the table without the column); TEC 5 kept a serialized array in meta. */

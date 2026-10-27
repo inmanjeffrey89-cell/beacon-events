@@ -667,6 +667,8 @@ final class Import {
 		if ( ! empty( $n['extra'] ) ) {
 			update_post_meta( $id, '_beacon_import_extra', $n['extra'] ); }
 		self::count_extras( $n, $state );
+		if ( ! empty( $n['series'] ) ) {
+			self::remember_series( (string) $n['series'], (int) $id ); }
 		if ( $n['note'] ) {
 			$state['notes'][] = sprintf( '"%s" (#%s): %s', $n['title'], $n['src_id'], $n['note'] ); }
 		if ( $data['post_status'] === 'publish' ) {
@@ -785,6 +787,18 @@ final class Import {
 		if ( $left ) {
 			++$state['extras'];
 			$state['extra_keys'] = array_slice( array_values( array_unique( array_merge( (array) ( $state['extra_keys'] ?? array() ), $left ) ) ), 0, 8 );
+		}
+	}
+
+	const OPT_SERIES = 'beacon_tec_series'; // Events Calendar Pro series slug => the Beacon event it became (not autoloaded; read on /series/ 404s only)
+
+	/** Remembers the first imported event of an Events Calendar Pro series, so the old /series/<slug>/ page can redirect to it. */
+	private static function remember_series( string $slug, int $event_id ): void {
+		$slug = sanitize_title( $slug );
+		$map  = (array) get_option( self::OPT_SERIES, array() );
+		if ( '' !== $slug && $event_id && empty( $map[ $slug ] ) ) {
+			$map[ $slug ] = $event_id;
+			update_option( self::OPT_SERIES, $map, false );
 		}
 	}
 
@@ -1061,6 +1075,10 @@ final class Import {
 			$to = 'category' === $m[1] ? self::term_link_by_slug( 'beacon_category', sanitize_title( $m[2] ) ) : self::calendar_url();
 		} elseif ( ! class_exists( 'Wpeventin' ) && is_404() && preg_match( '#^etn/?$#', $path ) ) {
 			$to = self::calendar_url();
+		} elseif ( preg_match( '#^series/([^/]+)/?$#', $path, $m ) && ! class_exists( 'Tribe__Events__Pro__Main' ) && is_404() && ( $series_map = (array) get_option( self::OPT_SERIES, array() ) ) ) {
+			// Events Calendar Pro's series pages: the event that series became, else the calendar
+			$series_id = (int) ( $series_map[ sanitize_title( $m[1] ) ] ?? 0 );
+			$to        = $series_id && 'publish' === get_post_status( $series_id ) ? get_permalink( $series_id ) : self::calendar_url();
 		} elseif ( preg_match( '#^locations/([^/]+)/?$#', $path, $m ) && ! class_exists( 'EM_Location' ) ) {
 			$to = self::term_link_by_slug( 'beacon_venue', sanitize_title( $m[1] ) );
 		} elseif ( preg_match( '#^events/([^/]+)/?$#', $path, $m ) && ! in_array( $m[1], array( 'page', 'feed' ), true ) && ! class_exists( 'EM_Event' ) && ! is_singular( array( 'mec-events', 'ajde_events', 'tp_event', 'sc_event' ) ) ) {

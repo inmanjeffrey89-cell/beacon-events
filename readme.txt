@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.29.0
+Stable tag: 0.29.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,7 +135,7 @@ No. The stylesheet only does layout. Colours, fonts and spacing inherit from you
 Yes. After an import (or any time), Events → Import / Export lists the events that look like one series entered date by date: same title, time, length and venue, on a regular pattern such as every Tuesday, every other Saturday, the second Tuesday of the month or three days in a row. Copies that carry their own date in the title ("Pick Your Own Project – October 1, 2026", "Chef's Table Class 10/2/26") count as the same title, and the repeating event is named without the date. Tick the ones you want and click Combine. The earliest copy becomes the repeating event, a missing week becomes a skipped date, the other copies go to the trash, and their old links redirect to the new event. Events with tickets or RSVPs are left alone. From the command line: `wp beacon combine --dry-run`, then `wp beacon combine`.
 
 = Can I move my events from The Events Calendar or Events Manager? =
-Yes, and the migration is one click. Events → Import / Export finds what either plugin stored in your database (it works even if that plugin is already deactivated) and copies events, venues with addresses, organizers, categories, featured images, timezones and recurring rules across. Nothing is deleted. Run it again later and it updates what it imported instead of making duplicates. Old event, venue and category links are redirected to the imported items, including Events Calendar Pro's page for each date of a series (/event/yoga/2026-10-06/) and its week, photo, map and summary views, which go to your calendar page.
+Yes, and the migration is one click. Events → Import / Export finds what either plugin stored in your database (it works even if that plugin is already deactivated) and copies events, venues with addresses, organizers, categories, featured images, timezones and recurring rules across. Nothing is deleted. Run it again later and it updates what it imported instead of making duplicates. Old event, venue and category links are redirected to the imported items, including Events Calendar Pro's page for each date of a series (/event/yoga/2026-10-06/), its series pages (/series/yoga/), and its week, photo, map and summary views, which go to your calendar page.
 
 Watch the import from The Events Calendar, tickets and attendees included:
 
@@ -216,6 +216,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.1 =
+* Moving from Events Calendar Pro: its series pages (/series/weekly-yoga/) now redirect to the event that series became after the import, instead of showing "Page not found". A series link the import doesn't know goes to your calendar page.
+
 = 0.29.0 =
 * Multisite: deleting the plugin now removes Beacon's data on every site that turned on "delete all data on uninstall", each by its own setting. Before, WordPress ran the clean-up once, for the main site only, so the other sites kept their events, venues and table.
 
@@ -247,6 +250,3 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.28.4 =
 * Fix: a calendar limited to some categories (for example a class timetable with category="yoga,spin") listed every category on the site in its filter bar, and picking one of the others showed those events instead. The filter bar now offers only the calendar's own categories, and the venues those events use, and a pick can only narrow the calendar. The same goes for a calendar limited to some venues.
-
-= 0.28.3 =
-* A repeating event's page now shows its next date under "When", not the date the series began. A weekly class that started in September shows next week's class, skipping cancelled dates and following moved ones. A finished series still shows its first date.

@@ -42,7 +42,7 @@ function beacon_events_uninstall_site(): bool {
 		) as $beacon_term_id ) {
 			wp_delete_term( $beacon_term_id, $beacon_tax ); }
 	}
-	foreach ( array( 'beacon_feeds', 'beacon_sync_log', 'beacon_import_log', 'beacon_import_report', 'beacon_ai1ec_links', 'beacon_mec_links', 'beacon_delete_on_uninstall', 'beacon_schema_version', 'beacon_flush_rewrites', 'beacon_calendar_page', 'beacon_sample_terms', 'beacon_combined', 'beacon_import_files' ) as $beacon_option ) {
+	foreach ( array( 'beacon_feeds', 'beacon_sync_log', 'beacon_import_log', 'beacon_import_report', 'beacon_ai1ec_links', 'beacon_mec_links', 'beacon_delete_on_uninstall', 'beacon_schema_version', 'beacon_flush_rewrites', 'beacon_calendar_page', 'beacon_sample_terms', 'beacon_combined', 'beacon_import_files', 'beacon_tec_series' ) as $beacon_option ) {
 		delete_option( $beacon_option ); }
 	// Importer progress is kept per user as beacon_import_<user id> transients.
 	$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_beacon_import_' ) . '%', $wpdb->esc_like( '_transient_timeout_beacon_import_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
