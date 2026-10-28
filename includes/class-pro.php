@@ -45,8 +45,8 @@ final class Pro {
 		echo '</ul>';
 		echo '<table class="widefat" style="max-width:46em;margin:1.5em 0"><thead><tr><th>' . esc_html__( 'Licence', 'beacon-events' ) . '</th><th>' . esc_html__( 'Price', 'beacon-events' ) . '</th></tr></thead><tbody>';
 		foreach ( array(
-			__( '1 site', 'beacon-events' )          => '$7/mo or $49/yr',
-			__( 'Up to 5 sites', 'beacon-events' )   => '$99/yr',
+			__( '1 site', 'beacon-events' )          => '$7/mo, $49/yr or $149 once',
+			__( 'Up to 5 sites', 'beacon-events' )   => '$99/yr or $299 once',
 			__( 'Unlimited sites', 'beacon-events' ) => '$149/yr',
 		) as $label => $price ) {
 			echo '<tr><td>' . esc_html( $label ) . '</td><td>' . esc_html( $price ) . '</td></tr>'; }

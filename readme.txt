@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.29.1
+Stable tag: 0.29.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,7 +90,7 @@ Next, in this order: a CSV import for attendees, per-event reminder settings, an
 Yes. That's the point.
 
 = How is Beacon Events different from The Events Calendar? =
-Recurring events and a week view: free here. In The Events Calendar the free version has month, list and day views, and recurring events and the other views come with a paid plan; the cheapest is now Pro at $399 a year (liquidweb.com, checked October 2026; the $259 Essentials plan is gone). Tickets: Beacon Events Pro is $7 a month or $49 a year and sells through your own Stripe account or WooCommerce, with no per-ticket fee from us. Moving: the importer brings your events, venues, organizers, categories and repeat rules across in one click (and with Pro, tickets and attendees), and redirects the old links.
+Recurring events and a week view: free here. In The Events Calendar the free version has month, list and day views, and recurring events and the other views come with a paid plan; the cheapest is now Pro at $399 a year (liquidweb.com, checked October 2026; the $259 Essentials plan is gone). Tickets: Beacon Events Pro is $7 a month, $49 a year or $149 once and sells through your own Stripe account or WooCommerce, with no per-ticket fee from us. Moving: the importer brings your events, venues, organizers, categories and repeat rules across in one click (and with Pro, tickets and attendees), and redirects the old links.
 
 What The Events Calendar does that Beacon doesn't, so you can decide honestly: seven calendar views including photo and map (Beacon has list, week, month and day), Square and PayPal payments without WooCommerce, built-in coupons and fees, and add-ons such as its Event Aggregator for pulling in Meetup and Eventbrite events. If you rely on those, stay where you are.
 
@@ -113,7 +113,7 @@ https://www.youtube.com/watch?v=86vlAmBedcg
 
 = Can people sign up for gym, yoga or fitness classes? =
 
-Yes, with Beacon Events Pro ($7 a month or $49 a year). Turn on sign-ups for a class and set the places per class date, for example 25 for a spin class: each date fills up on its own, the form shows how many places are left, and a full class offers a waitlist that moves up when someone cancels. People get a confirmation email with a calendar file and a reminder before class, and can cancel themselves. Classes can be free, or paid through your own Stripe account or WooCommerce, with no fee per booking on top. You see who is coming per class, can print a door list or check people in with the QR code on their booking, and if your staff live in Outlook, Pro keeps each class in your Microsoft 365 calendar with the names of who signed up; cancel a class there and everyone booked on it is told. The class timetable itself (week view, repeating classes) is free. A sample studio timetable with sign-ups is on the demo site: https://beacon-events.duckdns.org/demo/studio/
+Yes, with Beacon Events Pro ($7 a month, $49 a year or $149 once). Turn on sign-ups for a class and set the places per class date, for example 25 for a spin class: each date fills up on its own, the form shows how many places are left, and a full class offers a waitlist that moves up when someone cancels. People get a confirmation email with a calendar file and a reminder before class, and can cancel themselves. Classes can be free, or paid through your own Stripe account or WooCommerce, with no fee per booking on top. You see who is coming per class, can print a door list or check people in with the QR code on their booking, and if your staff live in Outlook, Pro keeps each class in your Microsoft 365 calendar with the names of who signed up; cancel a class there and everyone booked on it is told. The class timetable itself (week view, repeating classes) is free. A sample studio timetable with sign-ups is on the demo site: https://beacon-events.duckdns.org/demo/studio/
 
 = Can it run a senior living community's activity calendar? =
 Yes. Enter each repeating activity once (chair yoga every Monday and Wednesday, bingo on the first Friday, a birthday party on the last Thursday of the month), give each kind of activity a category colour, and put a month view on a page. Families see the calendar online, and the "Print this month" link gives staff a landscape page with the colours and a key for the noticeboard. One date can be cancelled or moved without touching the rest, and a community with several locations can give each one its own venue and let visitors filter by it.
@@ -192,7 +192,7 @@ Yes, in Beacon Events Pro. Every ticket email links to a ticket page with a QR c
 Yes. Every event has an optional "Tickets & info" link with its own button text ("Buy on Eventbrite", "Book on Square", "Register"). It shows as a button on the event page, next to the event in lists, and in the calendar feed. When you import from The Events Calendar, All-in-One Event Calendar, Modern Events Calendar, EventON or WP Event Manager, the ticket or website link each event had comes across as this button, so nothing your visitors clicked goes missing.
 
 = Can I sell tickets without Eventbrite's per-ticket fees? =
-Yes, with Beacon Events Pro, as an Eventbrite alternative for tickets you sell from your own site. Buyers pay through your own Stripe account or your WooCommerce checkout, so the only fee is your payment provider's card fee. Eventbrite's US pricing adds a service fee of 3.7% + $1.79 to every paid ticket. Pro is $7 a month or $49 a year for one site and includes a capacity per date, a waitlist, reminder emails, an attendee list, QR tickets you scan at the door with a phone, and a printable door list. Each event can have several ticket types, like early bird and VIP, with their own prices and capacities. There is no reserved seating, so it suits classes, workshops and small events.
+Yes, with Beacon Events Pro, as an Eventbrite alternative for tickets you sell from your own site. Buyers pay through your own Stripe account or your WooCommerce checkout, so the only fee is your payment provider's card fee. Eventbrite's US pricing adds a service fee of 3.7% + $1.79 to every paid ticket. Pro is $7 a month, $49 a year or $149 once for one site and includes a capacity per date, a waitlist, reminder emails, an attendee list, QR tickets you scan at the door with a phone, and a printable door list. Each event can have several ticket types, like early bird and VIP, with their own prices and capacities. There is no reserved seating, so it suits classes, workshops and small events.
 
 = What's in the paid version? =
 Tickets and RSVPs with card payments, attendee export, and priority support. You can try it free for 14 days without a card. Nothing in the free version moves behind a paywall.
@@ -216,6 +216,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.2 =
+* Beacon Events Pro can now also be bought once, with no renewal: $149 for one site or $299 for up to five. The Pro page lists it next to the monthly and yearly prices.
+
 = 0.29.1 =
 * Moving from Events Calendar Pro: its series pages (/series/weekly-yoga/) now redirect to the event that series became after the import, instead of showing "Page not found". A series link the import doesn't know goes to your calendar page.
 
@@ -248,5 +251,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 * The uploaded file of a CSV import that was never finished is deleted after a day, and uploads get a name nobody can guess.
 * The repeat summary in the block editor ("Every week on Tuesday and Thursday") and the weekday and "Monthly on" choices are now in your language, and the editor panel uses the current WordPress editor APIs (no more deprecation notices in the browser console on WordPress 6.6 and later).
 
-= 0.28.4 =
-* Fix: a calendar limited to some categories (for example a class timetable with category="yoga,spin") listed every category on the site in its filter bar, and picking one of the others showed those events instead. The filter bar now offers only the calendar's own categories, and the venues those events use, and a pick can only narrow the calendar. The same goes for a calendar limited to some venues.
+Older versions: see changelog.txt in the plugin folder.
