@@ -13,6 +13,7 @@ use Beacon\Import\Source_SC;
 use Beacon\Import\Source_ETN;
 use Beacon\Import\Source_EO;
 use Beacon\Import\Source_EP;
+use Beacon\Import\Source_MC;
 use Beacon\Import\Source_TEC;
 use Beacon\Import\Source_WPEM;
 use Beacon\Import\Source_WPEMS;
@@ -57,6 +58,7 @@ final class Import {
 			Source_ETN::KEY   => Source_ETN::class,
 			Source_EO::KEY    => Source_EO::class,
 			Source_EP::KEY    => Source_EP::class,
+			Source_MC::KEY    => Source_MC::class,
 			Source_CSV::KEY   => Source_CSV::class,
 		);
 	}
@@ -1118,6 +1120,8 @@ final class Import {
 		// WordPress answer these URLs with something other than a 404. A redirect happens only when the target exists.
 		if ( preg_match( '#^events/categor(?:y|ies)/([^/]+)#', $path, $m ) && ! class_exists( 'Tribe__Events__Main' ) && ! class_exists( 'EM_Event' ) && ! defined( 'EVENT_ORGANISER_VER' ) ) {
 			$to = self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) );
+		} elseif ( ! function_exists( 'mc_get_version' ) && ( $to = self::mc_redirect( $path ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+			// My Calendar: ?mc_id=<date> links on any page, and on a 404 its /mc-events/, /mc-locations/, /mc-event-category/ pages
 		} elseif ( ! defined( 'EVENTPRIME_VERSION' ) && ( $to = self::ep_redirect( $path ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			// EventPrime: ?event= / ?venue= / ?organizer= / ?event_type= links on its calendar pages, and a further date's own
 			// /event/<slug>/ (its SEO addresses otherwise already match Beacon's /event/, /venue/, /organizer/)
@@ -1208,6 +1212,32 @@ final class Import {
 		}
 	}
 
+	/** Where an old My Calendar link goes after a My Calendar import; '' when it isn't one (or nothing matches). */
+	private static function mc_redirect( string $path ): string {
+		$raw = isset( $_GET['mc_id'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['mc_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only lookup of where an old link now lives
+		$occ = '' !== $raw && ctype_digit( $raw ) ? (int) $raw : 0;
+		if ( ! $occ && ! is_404() ) {
+			return ''; }
+		$bases = get_option( Source_MC::OPT_LINKS );
+		if ( ! is_array( $bases ) ) {
+			return ''; }
+		if ( $occ ) {
+			$src   = Source_MC::event_of_occurrence( $occ );
+			$found = $src ? get_posts( array( 'post_type' => Events::CPT, 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids', 'meta_key' => '_beacon_uid', 'meta_value' => Source_MC::KEY . '-' . $src ) ) : array(); // phpcs:ignore WordPress.DB.SlowDBQuery -- only for an old My Calendar link
+			return $found ? (string) get_permalink( (int) $found[0] ) : '';
+		}
+		$q = fn( string $k ) => preg_quote( trim( (string) ( $bases[ $k ] ?? '' ), '/' ), '#' );
+		if ( '' !== $q( 'event' ) && preg_match( '#^' . $q( 'event' ) . '/([^/]+)/?$#', $path, $m ) ) {
+			$p = get_page_by_path( sanitize_title( $m[1] ), OBJECT, Events::CPT );
+			return $p && 'publish' === $p->post_status ? (string) get_permalink( $p ) : '';
+		}
+		if ( '' !== $q( 'location' ) && preg_match( '#^' . $q( 'location' ) . '/([^/]+)#', $path, $m ) ) {
+			return self::term_link_by_slug( 'beacon_venue', sanitize_title( $m[1] ) ); }
+		if ( preg_match( '#^mc-event-category/([^/]+)#', $path, $m ) ) {
+			return self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) ); }
+		return '';
+	}
+
 	/** Where an old EventPrime link goes after an EventPrime import; '' when it isn't one (or nothing matches). */
 	private static function ep_redirect( string $path ): string {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only lookup of where an old link now lives
@@ -1281,7 +1311,7 @@ final class Import {
 	private static function term_link_by_slug( string $taxonomy, string $slug ): string {
 		$term = get_term_by( 'slug', $slug, $taxonomy );
 		if ( ! $term ) {
-			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_eventorganiser_slug', '_beacon_eventprime_slug', '_beacon_csv_slug' ) as $key ) {
+			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_eventorganiser_slug', '_beacon_eventprime_slug', '_beacon_mycalendar_slug', '_beacon_csv_slug' ) as $key ) {
 				$found = get_terms(
 					array(
 						'taxonomy'   => $taxonomy,
