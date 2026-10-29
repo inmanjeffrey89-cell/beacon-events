@@ -22,9 +22,11 @@ final class Events {
 	);
 	const HORIZON = '_beacon_horizon';              // last date a series was materialised to (Y-m-d)
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
+	const HEAL    = 'beacon_rules_heal';            // transient: Beacon rebuilt lost rewrite rules recently, wait
 
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ) );
+		add_filter( 'do_parse_request', array( __CLASS__, 'heal_rules' ), 1 );
 		add_action( 'save_post_' . self::CPT, array( __CLASS__, 'on_save' ), 20, 2 );
 		// The block editor saves meta over REST AFTER save_post fires; rebuild occurrences once the meta is actually written.
 		add_action( 'rest_after_insert_' . self::CPT, fn( $post ) => self::on_save( $post->ID, $post ), 20, 1 );
@@ -39,6 +41,74 @@ final class Events {
 					wp_schedule_event( time() + 600, 'daily', self::REFRESH );
 				} }
 		);
+	}
+
+	/**
+	 * Put Beacon's rewrite rules back when the saved set has lost them.
+	 *
+	 * Seen on a live site after a move from EventON: every /event/<slug>/ was "Page not found" until someone
+	 * re-saved permalinks, because the rules WordPress had stored were built without Beacon's. This runs just
+	 * before WordPress matches the request against those rules (front end and REST), so the page that notices
+	 * is already served with the rebuilt set. A healthy site pays one loop over rules it holds in memory anyway.
+	 * Only addresses that contain one of Beacon's slugs are checked, so other pages don't pay for reading the
+	 * rules twice. At most one rebuild an hour; a day's wait when the rebuild didn't bring them back (another
+	 * plugin owns /event/, or filters our rules out), so nothing rebuilds on every request.
+	 *
+	 * @param bool $go Whether WordPress parses this request; passed through untouched.
+	 * @return bool
+	 */
+	public static function heal_rules( $go ) {
+		$uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$pt  = get_post_type_object( self::CPT );
+		if ( '' === $uri || ! $pt ) {
+			return $go;
+		}
+		$slugs = array( $pt->rewrite['slug'] ?? '', is_string( $pt->has_archive ) ? $pt->has_archive : '' );
+		foreach ( array( 'beacon_category', 'beacon_venue', 'beacon_organizer' ) as $tax ) {
+			$t       = get_taxonomy( $tax );
+			$slugs[] = $t && ! empty( $t->rewrite['slug'] ) ? $t->rewrite['slug'] : '';
+		}
+		$ours = false;
+		foreach ( array_filter( $slugs ) as $slug ) {
+			if ( false !== strpos( $uri, $slug ) ) {
+				$ours = true;
+				break;
+			}
+		}
+		if ( $ours && self::rules_lost() && false === get_transient( self::HEAL ) ) {
+			set_transient( self::HEAL, time(), HOUR_IN_SECONDS );
+			flush_rewrite_rules( false );
+			if ( self::rules_lost() ) {
+				set_transient( self::HEAL, time(), DAY_IN_SECONDS );
+			}
+		}
+		return $go;
+	}
+
+	/** True when pretty permalinks are on and the saved rules have no single-event rule of ours. */
+	public static function rules_lost(): bool {
+		global $wp_rewrite;
+		$pt = get_post_type_object( self::CPT );
+		if ( ! $pt || empty( $pt->rewrite ) || ! $wp_rewrite instanceof \WP_Rewrite || ! $wp_rewrite->using_permalinks() ) {
+			return false;
+		}
+		$rules = get_option( 'rewrite_rules' );
+		if ( ! is_array( $rules ) || ! $rules ) {
+			return false; // an empty set is rebuilt by WordPress itself on this request
+		}
+		$needle = ( $pt->query_var ? $pt->query_var . '=' : 'post_type=' . self::CPT . '&name=' ) . '$matches[';
+		// The usual case in one lookup: the single-event rule WordPress builds for our permastruct.
+		$front = empty( $pt->rewrite['with_front'] ) ? '' : ltrim( $wp_rewrite->front, '/' );
+		$key   = $front . $pt->rewrite['slug'] . '/([^/]+)(?:/([0-9]+))?/?$';
+		if ( isset( $rules[ $key ] ) && is_string( $rules[ $key ] ) && false !== strpos( $rules[ $key ], $needle ) ) {
+			return false;
+		}
+		foreach ( $rules as $query ) {
+			if ( is_string( $query ) && false !== strpos( $query, $needle ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static function register(): void {

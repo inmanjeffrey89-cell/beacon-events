@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.29.3 =
+* Fix: event pages could all show "Page not found" when the link rules WordPress keeps had been saved without Beacon's (reported after a move from EventON). Beacon now notices on the next visit to an event, venue or calendar page and puts its links back, at most once an hour. Before, the only fix was Settings → Permalinks → Save Changes.
+
 = 0.29.2 =
 * Beacon Events Pro can now also be bought once, with no renewal: $149 for one site or $299 for up to five. The Pro page lists it next to the monthly and yearly prices.
 

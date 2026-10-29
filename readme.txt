@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.29.2
+Stable tag: 0.29.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,10 @@ https://www.youtube.com/watch?v=86vlAmBedcg
 
 Yes, with Beacon Events Pro ($7 a month, $49 a year or $149 once). Turn on sign-ups for a class and set the places per class date, for example 25 for a spin class: each date fills up on its own, the form shows how many places are left, and a full class offers a waitlist that moves up when someone cancels. People get a confirmation email with a calendar file and a reminder before class, and can cancel themselves. Classes can be free, or paid through your own Stripe account or WooCommerce, with no fee per booking on top. You see who is coming per class, can print a door list or check people in with the QR code on their booking, and if your staff live in Outlook, Pro keeps each class in your Microsoft 365 calendar with the names of who signed up; cancel a class there and everyone booked on it is told. The class timetable itself (week view, repeating classes) is free. A sample studio timetable with sign-ups is on the demo site: https://beacon-events.duckdns.org/demo/studio/
 
+A class set up and booked, start to finish:
+
+https://www.youtube.com/watch?v=1RFtn9ILK_4
+
 = Can it run a senior living community's activity calendar? =
 Yes. Enter each repeating activity once (chair yoga every Monday and Wednesday, bingo on the first Friday, a birthday party on the last Thursday of the month), give each kind of activity a category colour, and put a month view on a page. Families see the calendar online, and the "Print this month" link gives staff a landscape page with the colours and a key for the noticeboard. One date can be cancelled or moved without touching the rest, and a community with several locations can give each one its own venue and let visitors filter by it.
 
@@ -137,7 +141,11 @@ Yes. After an import (or any time), Events → Import / Export lists the events 
 = Can I move my events from The Events Calendar or Events Manager? =
 Yes, and the migration is one click. Events → Import / Export finds what either plugin stored in your database (it works even if that plugin is already deactivated) and copies events, venues with addresses, organizers, categories, featured images, timezones and recurring rules across. Nothing is deleted. Run it again later and it updates what it imported instead of making duplicates. Old event, venue and category links are redirected to the imported items, including Events Calendar Pro's page for each date of a series (/event/yoga/2026-10-06/), its series pages (/series/yoga/), and its week, photo, map and summary views, which go to your calendar page.
 
-Watch the import from The Events Calendar, tickets and attendees included:
+Watch the whole move, step by step (two minutes):
+
+https://www.youtube.com/watch?v=lz4JRMI3xxs
+
+With Pro, tickets and attendees come across too:
 
 https://www.youtube.com/watch?v=_4tAJjVqA-Y
 
@@ -197,6 +205,10 @@ Yes, with Beacon Events Pro, as an Eventbrite alternative for tickets you sell f
 = What's in the paid version? =
 Tickets and RSVPs with card payments, attendee export, and priority support. You can try it free for 14 days without a card. Nothing in the free version moves behind a paywall.
 
+= Every event page says "Page not found" =
+
+WordPress keeps a saved list of link rules, and sometimes another plugin, a cache or a site move saves it without Beacon's. Since 0.29.3 Beacon rebuilds it by itself the next time someone opens an event. On older versions, or if it keeps happening, go to Settings → Permalinks and click Save Changes (no need to change anything). If event pages still 404 after that, another plugin is using /event/ for its own pages.
+
 = My theme's event page doesn't show the date, place or booking form =
 
 Some themes and theme builders draw single pages with their own template. Since 0.28.1 Beacon adds its When / Where box (and Pro's booking form) there too. If your template leaves the page content out entirely, put the `[beacon_event_details]` shortcode in it (and `[beacon_rsvp]` for Pro's booking form).
@@ -216,6 +228,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.3 =
+* Fix: event pages could all show "Page not found" when the link rules WordPress keeps had been saved without Beacon's (reported after a move from EventON). Beacon now notices on the next visit to an event, venue or calendar page and puts its links back, at most once an hour. Before, the only fix was Settings → Permalinks → Save Changes.
+
 = 0.29.2 =
 * Beacon Events Pro can now also be bought once, with no renewal: $149 for one site or $299 for up to five. The Pro page lists it next to the monthly and yearly prices.
 
@@ -239,16 +254,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.28.6 =
 * After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
-
-= 0.28.5 =
-* Fix: an all-day event that repeats ended at 00:59 the next day on the date the clocks go forward, so that date showed two days on its page, in the .ics feed and in search results. All-day dates now keep their own day.
-* Fix: "Remove sample events" deleted a sample you had edited to make your own. An edited sample now stays (also ones edited before this update), and a copy made with Duplicate is never treated as a sample, an import or a combined event.
-* Fix: "Delete all data on uninstall" left venues, categories and organizers behind, and events in the trash. They are removed now.
-* Fix: a Google or iCal feed could save a venue's address on the wrong venue.
-* Fix: a yearly event on February 29 moved to March 1 in other years. It now happens only in leap years, as calendar apps do.
-* Fix: a start or end date that isn't a real date, saved by another tool over the REST API, made the event's page fail to load. Such a value now counts as no date.
-* Fix: a dry run of the All-in-One Event Calendar or Modern Events Calendar import saved a setting although a dry run writes nothing.
-* The uploaded file of a CSV import that was never finished is deleted after a day, and uploads get a name nobody can guess.
-* The repeat summary in the block editor ("Every week on Tuesday and Thursday") and the weekday and "Monthly on" choices are now in your language, and the editor panel uses the current WordPress editor APIs (no more deprecation notices in the browser console on WordPress 6.6 and later).
 
 Older versions: see changelog.txt in the plugin folder.
