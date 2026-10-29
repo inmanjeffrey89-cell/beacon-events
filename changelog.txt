@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.30.0 =
+* New: import from Event Organiser. Events, all-day events, venues with their addresses, categories with their colours, featured images and repeating schedules come over; each repeat rule is checked against every date Event Organiser saved, so skipped dates stay skipped. A schedule that can't be written as a rule comes over on its first date and the report lists the rest. Once Event Organiser is deactivated, its old event, venue and category links redirect to the new ones. From the command line: wp beacon import eventorganiser.
+
 = 0.29.5 =
 * After an import that worked, the results screen has one line asking for a short review on wordpress.org. Nothing is shown anywhere else, and nothing after a dry run or an import with errors.
 

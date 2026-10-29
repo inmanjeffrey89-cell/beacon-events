@@ -11,6 +11,7 @@ use Beacon\Import\Source_EVENTON;
 use Beacon\Import\Source_MEC;
 use Beacon\Import\Source_SC;
 use Beacon\Import\Source_ETN;
+use Beacon\Import\Source_EO;
 use Beacon\Import\Source_TEC;
 use Beacon\Import\Source_WPEM;
 use Beacon\Import\Source_WPEMS;
@@ -53,6 +54,7 @@ final class Import {
 			Source_WPEMS::KEY => Source_WPEMS::class,
 			Source_SC::KEY    => Source_SC::class,
 			Source_ETN::KEY   => Source_ETN::class,
+			Source_EO::KEY    => Source_EO::class,
 			Source_CSV::KEY   => Source_CSV::class,
 		);
 	}
@@ -1112,8 +1114,11 @@ final class Import {
 		$to = '';
 		// Not only on a 404: Events Manager leaves placeholder pages named "events" / "locations" behind, which make
 		// WordPress answer these URLs with something other than a 404. A redirect happens only when the target exists.
-		if ( preg_match( '#^events/categor(?:y|ies)/([^/]+)#', $path, $m ) && ! class_exists( 'Tribe__Events__Main' ) && ! class_exists( 'EM_Event' ) ) {
+		if ( preg_match( '#^events/categor(?:y|ies)/([^/]+)#', $path, $m ) && ! class_exists( 'Tribe__Events__Main' ) && ! class_exists( 'EM_Event' ) && ! defined( 'EVENT_ORGANISER_VER' ) ) {
 			$to = self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) );
+		} elseif ( ! defined( 'EVENT_ORGANISER_VER' ) && is_404() && is_array( $eo = get_option( Source_EO::OPT_LINKS ) ) && ( $to = self::eo_redirect( $path, $eo ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+			// Event Organiser: /events/event/<slug>/, /events/venue/<slug>/, its categories, tags and date archives (its URL
+			// bases as recorded at import); looked up only on a 404 after an Event Organiser import, so other sites pay nothing
 		} elseif ( preg_match( '#^event/([^/]+)/?$#', $path, $m ) && is_404() && ( $series = Combine::series_for_slug( sanitize_title( $m[1] ) ) ) ) {
 			// a single copy that was combined into a repeating event; links from emails keep their query (a cancel or
 			// payment-return link carries its token there)
@@ -1198,6 +1203,22 @@ final class Import {
 		}
 	}
 
+	/** Where an old Event Organiser address goes, given its URL bases; '' when nothing matches. */
+	private static function eo_redirect( string $path, array $bases ): string {
+		$q = fn( string $k ) => preg_quote( trim( (string) ( $bases[ $k ] ?? '' ), '/' ), '#' );
+		if ( '' !== $q( 'event' ) && preg_match( '#^' . $q( 'event' ) . '/([^/]+)/?$#', $path, $m ) && ! in_array( $m[1], array( 'on', 'page', 'feed' ), true ) ) {
+			$p = get_page_by_path( sanitize_title( $m[1] ), OBJECT, Events::CPT );
+			return $p && 'publish' === $p->post_status ? (string) get_permalink( $p ) : '';
+		}
+		if ( '' !== $q( 'venue' ) && preg_match( '#^' . $q( 'venue' ) . '/([^/]+)#', $path, $m ) ) {
+			return self::term_link_by_slug( 'beacon_venue', sanitize_title( $m[1] ) ); }
+		if ( '' !== $q( 'category' ) && preg_match( '#^' . $q( 'category' ) . '/([^/]+)#', $path, $m ) ) {
+			return self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) ); }
+		if ( ( '' !== $q( 'event' ) && preg_match( '#^' . $q( 'event' ) . '(?:/on/.*|/page/\d+)?/?$#', $path ) ) || ( '' !== $q( 'tag' ) && preg_match( '#^' . $q( 'tag' ) . '/#', $path ) ) ) {
+			return self::calendar_url(); } // its events archive, day/month archives and tag pages
+		return '';
+	}
+
 	/** The calendar page made from the Events screen, when there is one; else the events archive. */
 	private static function calendar_url(): string {
 		$page = (int) get_option( 'beacon_calendar_page', 0 );
@@ -1215,7 +1236,7 @@ final class Import {
 	private static function term_link_by_slug( string $taxonomy, string $slug ): string {
 		$term = get_term_by( 'slug', $slug, $taxonomy );
 		if ( ! $term ) {
-			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_csv_slug' ) as $key ) {
+			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_eventorganiser_slug', '_beacon_csv_slug' ) as $key ) {
 				$found = get_terms(
 					array(
 						'taxonomy'   => $taxonomy,
