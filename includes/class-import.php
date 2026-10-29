@@ -12,6 +12,7 @@ use Beacon\Import\Source_MEC;
 use Beacon\Import\Source_SC;
 use Beacon\Import\Source_ETN;
 use Beacon\Import\Source_EO;
+use Beacon\Import\Source_EP;
 use Beacon\Import\Source_TEC;
 use Beacon\Import\Source_WPEM;
 use Beacon\Import\Source_WPEMS;
@@ -55,6 +56,7 @@ final class Import {
 			Source_SC::KEY    => Source_SC::class,
 			Source_ETN::KEY   => Source_ETN::class,
 			Source_EO::KEY    => Source_EO::class,
+			Source_EP::KEY    => Source_EP::class,
 			Source_CSV::KEY   => Source_CSV::class,
 		);
 	}
@@ -1116,6 +1118,9 @@ final class Import {
 		// WordPress answer these URLs with something other than a 404. A redirect happens only when the target exists.
 		if ( preg_match( '#^events/categor(?:y|ies)/([^/]+)#', $path, $m ) && ! class_exists( 'Tribe__Events__Main' ) && ! class_exists( 'EM_Event' ) && ! defined( 'EVENT_ORGANISER_VER' ) ) {
 			$to = self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) );
+		} elseif ( ! defined( 'EVENTPRIME_VERSION' ) && ( $to = self::ep_redirect( $path ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+			// EventPrime: ?event= / ?venue= / ?organizer= / ?event_type= links on its calendar pages, and a further date's own
+			// /event/<slug>/ (its SEO addresses otherwise already match Beacon's /event/, /venue/, /organizer/)
 		} elseif ( ! defined( 'EVENT_ORGANISER_VER' ) && is_404() && is_array( $eo = get_option( Source_EO::OPT_LINKS ) ) && ( $to = self::eo_redirect( $path, $eo ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			// Event Organiser: /events/event/<slug>/, /events/venue/<slug>/, its categories, tags and date archives (its URL
 			// bases as recorded at import); looked up only on a 404 after an Event Organiser import, so other sites pay nothing
@@ -1173,8 +1178,8 @@ final class Import {
 			$p = get_page_by_path( sanitize_title( $m[1] ), OBJECT, Events::CPT );
 			if ( $p && $p->post_status === 'publish' ) {
 				$to = (string) get_permalink( $p ); }
-		} elseif ( ! class_exists( 'WP_Event_Manager' ) && ! class_exists( 'EventON' ) && preg_match( '#^event-type(?:_\d+)?/([^/]+)#', $path, $m ) ) {
-			// WP Event Manager / EventON event types were imported as categories
+		} elseif ( ! class_exists( 'WP_Event_Manager' ) && ! class_exists( 'EventON' ) && ! defined( 'EVENTPRIME_VERSION' ) && preg_match( '#^event-type(?:_\d+)?/([^/]+)#', $path, $m ) ) {
+			// WP Event Manager / EventON / EventPrime event types were imported as categories
 			$to = self::term_link_by_slug( 'beacon_category', sanitize_title( $m[1] ) );
 		} elseif ( ! class_exists( 'EventON' ) && preg_match( '#^event-(location|organizer)/([^/]+)#', $path, $m ) ) {
 			$to = self::term_link_by_slug( 'location' === $m[1] ? 'beacon_venue' : 'beacon_organizer', sanitize_title( $m[2] ) );
@@ -1201,6 +1206,46 @@ final class Import {
 			wp_safe_redirect( $to, 301 );
 			exit;
 		}
+	}
+
+	/** Where an old EventPrime link goes after an EventPrime import; '' when it isn't one (or nothing matches). */
+	private static function ep_redirect( string $path ): string {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only lookup of where an old link now lives
+		$q     = array_intersect_key( wp_unslash( $_GET ), array_flip( array( 'event', 'venue', 'organizer', 'event_type' ) ) );
+		$child = is_404() && preg_match( '#^event/([^/]+)/?$#', $path, $m ) ? sanitize_title( $m[1] ) : '';
+		if ( ( ! $q && '' === $child ) || ! get_option( Source_EP::OPT_LINKS ) ) {
+			return ''; }
+		$event = function ( int $src ) {
+			$found = get_posts( array( 'post_type' => Events::CPT, 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids', 'meta_key' => '_beacon_uid', 'meta_value' => Source_EP::KEY . '-' . Source_EP::parent_of( $src ) ) ); // phpcs:ignore WordPress.DB.SlowDBQuery -- only for an old EventPrime link
+			return $found ? (string) get_permalink( (int) $found[0] ) : '';
+		};
+		$term  = function ( string $tax, int $src ) {
+			$found = get_terms( array( 'taxonomy' => $tax, 'hide_empty' => false, 'number' => 1, 'meta_key' => '_beacon_' . Source_EP::KEY . '_id', 'meta_value' => $src ) ); // phpcs:ignore WordPress.DB.SlowDBQuery -- only for an old EventPrime link
+			$link  = $found && ! is_wp_error( $found ) ? get_term_link( $found[0] ) : '';
+			return is_string( $link ) ? $link : '';
+		};
+		foreach ( $q as $k => $v ) {
+			if ( ! is_string( $v ) || ! ctype_digit( $v ) ) {
+				continue; }
+			if ( 'event' === $k ) {
+				$to = $event( (int) $v );
+			} elseif ( 'venue' === $k ) {
+				$to = $term( 'beacon_venue', (int) $v );
+			} elseif ( 'organizer' === $k ) {
+				$to = $term( 'beacon_organizer', (int) $v );
+			} else {
+				$c  = self::term_chain( (int) $v, 'em_event_type' );
+				$to = $c ? self::term_link_by_slug( 'beacon_category', sanitize_title( $c['slug'] ) ) : '';
+			}
+			if ( $to ) {
+				return $to; }
+		}
+		if ( '' !== $child ) {
+			$src = get_posts( array( 'name' => $child, 'post_type' => Source_EP::CPT, 'post_status' => 'any', 'numberposts' => 1 ) );
+			if ( $src && $src[0]->post_parent ) {
+				return $event( (int) $src[0]->ID ); }
+		}
+		return '';
 	}
 
 	/** Where an old Event Organiser address goes, given its URL bases; '' when nothing matches. */
@@ -1236,7 +1281,7 @@ final class Import {
 	private static function term_link_by_slug( string $taxonomy, string $slug ): string {
 		$term = get_term_by( 'slug', $slug, $taxonomy );
 		if ( ! $term ) {
-			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_eventorganiser_slug', '_beacon_csv_slug' ) as $key ) {
+			foreach ( array( '_beacon_tec_slug', '_beacon_em_slug', '_beacon_ai1ec_slug', '_beacon_mec_slug', '_beacon_wpem_slug', '_beacon_eventon_slug', '_beacon_wpems_slug', '_beacon_sugarcalendar_slug', '_beacon_eventin_slug', '_beacon_eventorganiser_slug', '_beacon_eventprime_slug', '_beacon_csv_slug' ) as $key ) {
 				$found = get_terms(
 					array(
 						'taxonomy'   => $taxonomy,

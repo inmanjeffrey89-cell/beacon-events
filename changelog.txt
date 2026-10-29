@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.31.0 =
+* New: import from EventPrime. Events, all-day events, venues with their addresses, event types as categories with their colours, organizers, featured images and the outside booking link (as the "Tickets & info" button) come over. A repeating event becomes one repeating event when a rule gives its dates; a date EventPrime left out becomes a skipped date. Lists of hand-picked dates come over as one event per date, for Combine. Once EventPrime is deactivated, its old ?event= / ?venue= links and SEO addresses redirect to the new ones. Bookings and tickets are not imported.
+
 = 0.30.0 =
 * New: import from Event Organiser. Events, all-day events, venues with their addresses, categories with their colours, featured images and repeating schedules come over; each repeat rule is checked against every date Event Organiser saved, so skipped dates stay skipped. A schedule that can't be written as a rule comes over on its first date and the report lists the rest. Once Event Organiser is deactivated, its old event, venue and category links redirect to the new ones. From the command line: wp beacon import eventorganiser.
 

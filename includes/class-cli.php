@@ -100,7 +100,7 @@ final class CLI {
 	 * ## OPTIONS
 	 *
 	 * <source>
-	 * : Where from: tec, em, ai1ec, mec, wpem, eventon, wpems, sugarcalendar, eventin or eventorganiser (see `wp beacon sources`).
+	 * : Where from: tec, em, ai1ec, mec, wpem, eventon, wpems, sugarcalendar, eventin, eventorganiser or eventprime (see `wp beacon sources`).
 	 *
 	 * [--batch=<number>]
 	 * : Events per batch.

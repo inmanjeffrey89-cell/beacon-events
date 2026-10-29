@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.30.0
+Stable tag: 0.31.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 * **Search engines understand your events.** schema.org Event markup on every event page, one entry per upcoming date.
 * **Venues with addresses.** Each venue has a street address, shown on the event with a map link — no API key, no embedded map slowing the page down.
 * **Export.** Every event has "Add to calendar (.ics)" and "Add to Google Calendar" links, and your whole calendar has a subscribable feed.
-* **Moving from The Events Calendar, Events Manager, Event Organiser, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar?** Events → Import / Export copies events, venues, organizers, categories, images and recurring rules in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
+* **Moving from The Events Calendar, Events Manager, Event Organiser, EventPrime, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar?** Events → Import / Export copies events, venues, organizers, categories, images and recurring rules in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
 * **Uninstalls clean.** Turn on "delete all data on uninstall" and the plugin removes everything it created — events, venues, categories, settings, its table.
 
 = External services =
@@ -157,6 +157,9 @@ Yes. Every source under Events → Import / Export has a "Dry run first" button 
 = Can I move my events from Sugar Calendar? =
 Yes, from Sugar Calendar Lite or Pro, with it still active or already deactivated. Events → Import / Export copies events with their times and timezones, all-day and multi-day events, locations (the location box becomes a venue, with the address when there is one), calendars (they become categories with their colours), featured images, online events with their Zoom or custom links, and repeats: daily, weekly on one or several days, every other week, monthly by date or by "fourth Tuesday", and yearly, with their end date or count. Repeating events are free in Beacon Events. A joining link Sugar Calendar showed to attendees only is not put on the public page; the import report lists those links so you can decide. Once Sugar Calendar is deactivated, its /events/… and calendar links are redirected to the imported events and categories.
 
+= Can I move my events from EventPrime? =
+Yes, with EventPrime still active or already deactivated. Events → Import / Export copies events with their dates and times, all-day events, venues with their address, event types as categories with their colours, organizers, featured images and the outside booking link (it becomes the "Tickets & info" button). A repeating event (daily, weekly on chosen days, monthly on a date or on "the second Tuesday", yearly) becomes one repeating event: Beacon checks the rule against every date EventPrime made, and a date EventPrime left out stays left out. A list of hand-picked dates, or EventPrime's "advanced" repeats, come over as one event per date, which Combine can join later. EventPrime's bookings and tickets are not imported. Once EventPrime is deactivated, its old event, venue, organizer and event type links (the ?event= links on its calendar pages, and its SEO addresses) redirect to the imported ones.
+
 = Can I move my events from Event Organiser? =
 Yes, with Event Organiser still active or already deactivated. Events → Import / Export copies events with their dates and times, all-day events, venues with the address from Event Organiser's venue settings, categories with their colours, featured images and descriptions. A repeating event (daily, weekly on chosen days, monthly on a date or on "the second Tuesday", yearly) keeps its schedule: Beacon rebuilds the rule from Event Organiser's settings and checks it against every date Event Organiser saved, so dates you skipped stay skipped. A schedule that can't be written as a rule (a list of hand-picked dates, or a weekly event with an extra date added) comes over on its first date, and the import report lists the other dates so you can add them. Tags are not imported. Once Event Organiser is deactivated, its old event, venue and category links (from the addresses in its settings) redirect to the imported ones.
 
@@ -226,11 +229,14 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 2. The list view, grouped by day.
 3. Editing an event: when, how often, where — in one box.
 4. Feeds and the sync log.
-5. Import from The Events Calendar, Events Manager, Event Organiser, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar, or a CSV file: one click, nothing deleted.
+5. Import from The Events Calendar, Events Manager, Event Organiser, EventPrime, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar, or a CSV file: one click, nothing deleted.
 6. The week view as a class timetable, with the filter bar. On a phone the days stack into rows.
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.31.0 =
+* New: import from EventPrime. Events, all-day events, venues with their addresses, event types as categories with their colours, organizers, featured images and the outside booking link (as the "Tickets & info" button) come over. A repeating event becomes one repeating event when a rule gives its dates; a date EventPrime left out becomes a skipped date. Lists of hand-picked dates come over as one event per date, for Combine. Once EventPrime is deactivated, its old ?event= / ?venue= links and SEO addresses redirect to the new ones. Bookings and tickets are not imported.
+
 = 0.30.0 =
 * New: import from Event Organiser. Events, all-day events, venues with their addresses, categories with their colours, featured images and repeating schedules come over; each repeat rule is checked against every date Event Organiser saved, so skipped dates stay skipped. A schedule that can't be written as a rule comes over on its first date and the report lists the rest. Once Event Organiser is deactivated, its old event, venue and category links redirect to the new ones. From the command line: wp beacon import eventorganiser.
 
@@ -251,8 +257,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.29.0 =
 * Multisite: deleting the plugin now removes Beacon's data on every site that turned on "delete all data on uninstall", each by its own setting. Before, WordPress ran the clean-up once, for the main site only, so the other sites kept their events, venues and table.
-
-= 0.28.9 =
-* Fix for WordPress multisite: when Beacon Events was network-activated, every site that already existed in the network showed "Page not found" for its event pages and the events archive until someone re-saved that site's permalinks. Each site now refreshes its links the first time it loads Beacon.
 
 Older versions: see changelog.txt in the plugin folder.
