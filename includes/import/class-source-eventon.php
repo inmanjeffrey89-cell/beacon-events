@@ -130,10 +130,14 @@ final class Source_EVENTON {
 			}
 		}
 		$online = 'movedonline' === $status || 'yes' === (string) $m( '_virtual' );
+		// evcal_exlink is an outside address only when the event's click setting is "External Link" (2), or unset on old
+		// events. "Open Event Page" (4) stores the event's own permalink there, which would make a button back to itself.
+		$exlink = in_array( (string) $m( '_evcal_exlink_option' ), array( '2', '' ), true ) ? (string) $m( 'evcal_exlink' ) : '';
 		$extra  = array_filter(
 			array(
-				'subtitle' => (string) $m( 'evcal_subtitle' ),
-				'link'     => (string) $m( 'evcal_exlink' ),
+				'subtitle'  => (string) $m( 'evcal_subtitle' ),
+				'url'       => $exlink, // where clicking the event goes, so it wins over Learn More for the button
+				'more_info' => (string) $m( 'evcal_lmlink' ), // the event card's "Learn More" link
 			),
 			'strlen'
 		);

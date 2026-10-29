@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.29.4 =
+* Fix: events moved from EventON could get a "Tickets & info" button that just opened the same event again. EventON's "Open Event Page" setting saves the event's own address as its link. The importer now leaves out any link that points back at the event and uses EventON's "Learn More" link when there is one. Events imported before this update are cleaned up once, by themselves.
+
 = 0.29.3 =
 * Fix: event pages could all show "Page not found" when the link rules WordPress keeps had been saved without Beacon's (reported after a move from EventON). Beacon now notices on the next visit to an event, venue or calendar page and puts its links back, at most once an hour. Before, the only fix was Settings → Permalinks → Save Changes.
 

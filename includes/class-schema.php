@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** One row per occurrence so "what's on this week" is a cheap indexed query, not RRULE math at request time. */
 final class Schema {
-	const VERSION = '2';
+	const VERSION = '3'; // 3 = 0.29.4's clean-up of imported links that point back at the event itself
 	public static function table(): string {
 		global $wpdb;
 		return $wpdb->prefix . 'beacon_occurrences'; }
@@ -20,12 +20,15 @@ final class Schema {
 	}
 
 	public static function maybe_upgrade(): void {
-		if ( get_option( 'beacon_schema_version' ) !== self::VERSION ) {
+		$was = get_option( 'beacon_schema_version' );
+		if ( self::VERSION !== $was ) {
 			self::install();
 			// The activation hook only runs on the site that activated the plugin. When it is network-activated on a
 			// multisite, every other site meets Beacon here first, with rewrite rules saved before Beacon existed, so
 			// its event pages 404. Ask for the same deferred flush the activation hook asks for.
 			update_option( 'beacon_flush_rewrites', '1' );
+			if ( false !== $was && (int) $was < 3 ) {
+				Import::drop_self_links(); }
 		}
 	}
 

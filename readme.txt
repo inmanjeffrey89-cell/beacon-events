@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.29.3
+Stable tag: 0.29.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -228,6 +228,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.4 =
+* Fix: events moved from EventON could get a "Tickets & info" button that just opened the same event again. EventON's "Open Event Page" setting saves the event's own address as its link. The importer now leaves out any link that points back at the event and uses EventON's "Learn More" link when there is one. Events imported before this update are cleaned up once, by themselves.
+
 = 0.29.3 =
 * Fix: event pages could all show "Page not found" when the link rules WordPress keeps had been saved without Beacon's (reported after a move from EventON). Beacon now notices on the next visit to an event, venue or calendar page and puts its links back, at most once an hour. Before, the only fix was Settings → Permalinks → Save Changes.
 
@@ -251,8 +254,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 * The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
 * Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.
 * The block's description and filter bar setting mention the week and day views.
-
-= 0.28.6 =
-* After you add your first event, the Events screen keeps a one-line offer to create a calendar page until you have one (or click "No thanks"). Before, the getting-started box disappeared with your first event and took that button with it. A page that already shows the Beacon Events block or shortcode counts as having one.
 
 Older versions: see changelog.txt in the plugin folder.

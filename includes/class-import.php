@@ -782,6 +782,8 @@ final class Import {
 				continue; }
 			if ( $link && is_string( $v ) && esc_url_raw( trim( $v ) ) === $link ) {
 				continue; }
+			if ( is_string( $v ) && self::is_self_link( $v, (string) ( $n['slug'] ?? '' ), (int) ( $n['src_id'] ?? 0 ) ) ) {
+				continue; } // the event's own old address: nothing was lost
 			$left[] = str_replace( '_', ' ', (string) $k );
 		}
 		if ( $left ) {
@@ -809,7 +811,13 @@ final class Import {
 	}
 
 	private static function link_from( array $n ): array {
-		$ok = fn( $u ) => is_string( $u ) && preg_match( '#^https?://#i', trim( $u ) ) ? esc_url_raw( trim( $u ) ) : '';
+		$slug = (string) ( $n['slug'] ?? '' );
+		$src  = (int) ( $n['src_id'] ?? 0 );
+		$ok   = function ( $u ) use ( $slug, $src ) {
+			if ( ! is_string( $u ) || ! preg_match( '#^https?://#i', trim( $u ) ) || self::is_self_link( $u, $slug, $src ) ) {
+				return ''; }
+			return esc_url_raw( trim( $u ) );
+		};
 		if ( $ok( $n['link'] ?? '' ) ) {
 			return array( $ok( $n['link'] ), sanitize_text_field( (string) ( $n['link_label'] ?? '' ) ) ); }
 		$x = (array) ( $n['extra'] ?? array() );
@@ -824,6 +832,60 @@ final class Import {
 				return array( $ok( $x[ $k ] ), $label ); }
 		}
 		return array( '', '' );
+	}
+
+	/**
+	 * True when $url is this site's own address for the event: EventON's "Open Event Page" setting saves the event's
+	 * permalink as its link, and other plugins' website fields sometimes hold it too. As a "Tickets & info" button it
+	 * only sends visitors back to the page they are on (On Rotation, 2026-10-29: 307 of 366 imported events).
+	 * Same host (www or not) and either the slug as the last path part (a date, number or "all" after it allowed, for
+	 * per-date pages), ?p= / ?page_id= equal to the source id, or a query value equal to the slug (?ajde_events=slug).
+	 */
+	public static function is_self_link( string $url, string $slug, int $src_id = 0 ): bool {
+		$u    = wp_parse_url( trim( $url ) );
+		$home = wp_parse_url( home_url( '/' ) );
+		$host = fn( $a ) => is_array( $a ) ? preg_replace( '/^www\./', '', strtolower( (string) ( $a['host'] ?? '' ) ) ) : '';
+		if ( '' === $host( $u ) || $host( $u ) !== $host( $home ) ) {
+			return false; }
+		$slug  = strtolower( $slug );
+		$parts = array_values( array_filter( explode( '/', (string) ( $u['path'] ?? '' ) ), 'strlen' ) );
+		if ( count( $parts ) > 1 && preg_match( '/^(\d{4}-\d{2}-\d{2}|\d+|all)$/', (string) end( $parts ) ) ) {
+			array_pop( $parts ); }
+		if ( '' !== $slug && $parts && strtolower( rawurldecode( (string) end( $parts ) ) ) === $slug ) {
+			return true; }
+		parse_str( (string) ( $u['query'] ?? '' ), $q );
+		foreach ( $q as $k => $v ) {
+			if ( ! is_string( $v ) ) {
+				continue; }
+			if ( $src_id && in_array( $k, array( 'p', 'page_id', 'post' ), true ) && (int) $v === $src_id ) {
+				return true; }
+			if ( '' !== $slug && strtolower( $v ) === $slug ) {
+				return true; }
+		}
+		return false;
+	}
+
+	/**
+	 * One-time clean-up on the update to 0.29.4: imported events whose "Tickets & info" link is the event's own old
+	 * address lose it (link and label). Only events an importer made (their uid starts with a source key), so a link
+	 * someone typed in by hand is never touched. Returns how many were cleared.
+	 */
+	public static function drop_self_links(): int {
+		global $wpdb;
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT p.ID, p.post_name, l.meta_value AS link, u.meta_value AS uid FROM %i p JOIN %i l ON l.post_id = p.ID AND l.meta_key = %s JOIN %i u ON u.post_id = p.ID AND u.meta_key = %s WHERE p.post_type = %s AND l.meta_value <> %s', $wpdb->posts, $wpdb->postmeta, Events::META['link'], $wpdb->postmeta, '_beacon_uid', Events::CPT, '' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$keys = implode( '|', array_map( 'preg_quote', array_keys( self::sources() ) ) );
+		$n    = 0;
+		foreach ( (array) $rows as $r ) {
+			if ( ! preg_match( '/^(' . $keys . ')-(.+)$/', (string) $r->uid, $m ) ) {
+				continue; }
+			$src = ctype_digit( $m[2] ) ? (int) $m[2] : 0;
+			if ( self::is_self_link( (string) $r->link, (string) $r->post_name, $src ) ) {
+				update_post_meta( (int) $r->ID, Events::META['link'], '' );
+				update_post_meta( (int) $r->ID, Events::META['link_label'], '' );
+				++$n;
+			}
+		}
+		return $n;
 	}
 
 	/** "2026-10-06 18:00:00" → "2026-10-06 18:00"; anything else → "". */
