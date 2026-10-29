@@ -318,7 +318,7 @@ msgid "Events with tickets or RSVPs are left out."
 msgstr "Veranstaltungen mit Tickets oder Anmeldungen werden ausgelassen."
 
 #: includes/class-combine.php:463
-#: includes/class-events.php:50
+#: includes/class-events.php:120
 msgid "Event"
 msgstr "Veranstaltung"
 
@@ -361,8 +361,8 @@ msgstr "Markierte Veranstaltungen zusammenfassen"
 msgid "Sorry, you are not allowed to do that."
 msgstr "Du hast leider keine Berechtigung dafür."
 
-#: includes/class-events.php:49
-#: includes/class-events.php:53
+#: includes/class-events.php:119
+#: includes/class-events.php:123
 #: includes/class-import.php:128
 #: includes/elementor-widget.php:23
 #: assets/editor.js:5
@@ -370,23 +370,23 @@ msgstr "Du hast leider keine Berechtigung dafür."
 msgid "Events"
 msgstr "Veranstaltungen"
 
-#: includes/class-events.php:51
+#: includes/class-events.php:121
 msgid "Add New Event"
 msgstr "Neue Veranstaltung"
 
-#: includes/class-events.php:52
+#: includes/class-events.php:122
 msgid "Edit Event"
 msgstr "Veranstaltung bearbeiten"
 
-#: includes/class-events.php:71
+#: includes/class-events.php:141
 msgid "Event Categories"
 msgstr "Veranstaltungskategorien"
 
-#: includes/class-events.php:81
+#: includes/class-events.php:151
 msgid "Venues"
 msgstr "Orte"
 
-#: includes/class-events.php:91
+#: includes/class-events.php:161
 #: includes/class-import.php:130
 msgid "Organizers"
 msgstr "Veranstalter"
@@ -531,7 +531,7 @@ msgid "%1$s: the import would create %2$d events and update %3$d (%4$d skipped),
 msgstr "%1$s: Der Import würde %2$d Veranstaltungen anlegen und %3$d aktualisieren (%4$d übersprungen) sowie %5$d Orte, %6$d Veranstalter und %7$d Kategorien hinzufügen. Geprüft am %8$s."
 
 #: includes/class-import.php:213
-#: includes/class-import.php:247
+#: includes/class-import.php:258
 msgid "Error:"
 msgstr "Fehler:"
 
@@ -563,138 +563,150 @@ msgstr "%1$s: %2$d neue Veranstaltungen importiert und %3$d aktualisiert (%4$d �
 msgid "See the events"
 msgstr "Veranstaltungen ansehen"
 
-#: includes/class-import.php:249
+#: includes/class-import.php:250
+msgid "Did the import go smoothly? A short review on wordpress.org helps other sites find Beacon Events."
+msgstr "Hat der Import gut geklappt? Eine kurze Bewertung auf wordpress.org hilft anderen Websites, Beacon Events zu finden."
+
+#: includes/class-import.php:253
+msgid "Did the move go smoothly? A short review on wordpress.org helps other sites leaving %s find Beacon Events."
+msgstr "Hat der Umzug gut geklappt? Eine kurze Bewertung auf wordpress.org hilft anderen Websites, die von %s wechseln, Beacon Events zu finden."
+
+#: includes/class-import.php:256
+msgid "Write a review"
+msgstr "Bewertung schreiben"
+
+#: includes/class-import.php:260
 msgid "%1$d events got their tickets and RSVPs; %2$d attendees were brought over."
 msgstr "%1$d Veranstaltungen haben ihre Tickets und Anmeldungen bekommen; %2$d Teilnehmer wurden übernommen."
 
-#: includes/class-import.php:252
+#: includes/class-import.php:263
 msgid "%d event got a \"Tickets & info\" button from its website or ticket address."
 msgid_plural "%d events got a \"Tickets & info\" button from their website or ticket address."
 msgstr[0] "%d Veranstaltung hat aus ihrer Website- oder Ticket-Adresse einen Button „Tickets & Infos“ bekommen."
 msgstr[1] "%d Veranstaltungen haben aus ihrer Website- oder Ticket-Adresse einen Button „Tickets & Infos“ bekommen."
 
-#: includes/class-import.php:255
+#: includes/class-import.php:266
 msgid "%1$d event had fields Beacon doesn't show (%2$s); they were kept in hidden meta (_beacon_import_extra)."
 msgid_plural "%1$d events had fields Beacon doesn't show (%2$s); they were kept in hidden meta (_beacon_import_extra)."
 msgstr[0] "%1$d Veranstaltung hatte Felder, die Beacon nicht anzeigt (%2$s); sie wurden in versteckten Metadaten (_beacon_import_extra) aufbewahrt."
 msgstr[1] "%1$d Veranstaltungen hatten Felder, die Beacon nicht anzeigt (%2$s); sie wurden in versteckten Metadaten (_beacon_import_extra) aufbewahrt."
 
-#: includes/class-import.php:257
+#: includes/class-import.php:268
 msgid "%d events had no usable named timezone; they were set to the site timezone."
 msgstr "%d Veranstaltungen hatten keine verwendbare Zeitzone; sie haben die Zeitzone der Website bekommen."
 
-#: includes/class-import.php:311
+#: includes/class-import.php:322
 msgid "Unknown import source."
 msgstr "Unbekannte Import-Quelle."
 
-#: includes/class-import.php:447
+#: includes/class-import.php:458
 msgid "Combined into a repeating event earlier, left as it is."
 msgstr "Wurde schon zu einer wiederkehrenden Veranstaltung zusammengefasst, bleibt unverändert."
 
-#: includes/class-import.php:474
-#: includes/class-import.php:595
+#: includes/class-import.php:485
+#: includes/class-import.php:606
 msgid "Events you combined into repeating events were left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, blieben unverändert."
 
-#: includes/class-import.php:474
-#: includes/class-import.php:725
+#: includes/class-import.php:485
+#: includes/class-import.php:738
 msgid "Events you combined into repeating events would be left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, würden unverändert bleiben."
 
-#: includes/class-import.php:498
+#: includes/class-import.php:509
 msgid "would create"
 msgstr "würde anlegen"
 
-#: includes/class-import.php:498
+#: includes/class-import.php:509
 msgid "created"
 msgstr "angelegt"
 
-#: includes/class-import.php:499
+#: includes/class-import.php:510
 msgid "would update"
 msgstr "würde aktualisieren"
 
-#: includes/class-import.php:499
+#: includes/class-import.php:510
 msgid "updated"
 msgstr "aktualisiert"
 
-#: includes/class-import.php:500
+#: includes/class-import.php:511
 msgid "would skip"
 msgstr "würde überspringen"
 
-#: includes/class-import.php:500
+#: includes/class-import.php:511
 msgid "skipped"
 msgstr "übersprungen"
 
-#: includes/class-import.php:501
+#: includes/class-import.php:512
 msgid "error"
 msgstr "Fehler"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Result"
 msgstr "Ergebnis"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Source"
 msgstr "Quelle"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Source ID"
 msgstr "Quell-ID"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Title"
 msgstr "Titel"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Beacon event ID"
 msgstr "Beacon-Veranstaltungs-ID"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Start"
 msgstr "Beginn"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "End"
 msgstr "Ende"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Repeats (RRULE)"
 msgstr "Wiederholung (RRULE)"
 
-#: includes/class-import.php:503
+#: includes/class-import.php:514
 msgid "Notes"
 msgstr "Hinweise"
 
-#: includes/class-import.php:513
+#: includes/class-import.php:524
 msgid "The report lists the first %d events only."
 msgstr "Der Bericht enthält nur die ersten %d Veranstaltungen."
 
-#: includes/class-import.php:529
+#: includes/class-import.php:540
 msgid "There is no import report yet. Run an import or a dry run first."
 msgstr "Es gibt noch keinen Import-Bericht. Starte zuerst einen Import oder einen Probelauf."
 
-#: includes/class-import.php:794
+#: includes/class-import.php:821
 msgid "cost and similar"
 msgstr "Preis und Ähnliches"
 
-#: includes/class-import.php:803
+#: includes/class-import.php:836
 msgid "Tickets"
 msgstr "Tickets"
 
-#: includes/class-import.php:807
+#: includes/class-import.php:840
 msgid "Register"
 msgstr "Anmelden"
 
-#: includes/class-import.php:859
+#: includes/class-import.php:946
 msgid "recurrence rule could not be read; imported as a single event."
 msgstr "Wiederholungsregel konnte nicht gelesen werden; als Einzeltermin importiert."
 
-#: includes/class-import.php:880
+#: includes/class-import.php:967
 #: includes/import/class-source-sc.php:210
 msgid "recurrence rule was simplified (%s not supported); check its dates."
 msgstr "Wiederholungsregel wurde vereinfacht (%s wird nicht unterstützt); prüfe die Termine."
 
-#: includes/class-import.php:996
+#: includes/class-import.php:1083
 msgid "Image %1$s could not be fetched: %2$s"
 msgstr "Bild %1$s konnte nicht geladen werden: %2$s"
 
@@ -1445,7 +1457,7 @@ msgstr "Schlagwörter wurden nicht importiert: Beacon gruppiert Veranstaltungen 
 
 #: includes/import/class-source-ai1ec.php:177
 #: includes/import/class-source-em.php:214
-#: includes/import/class-source-eventon.php:220
+#: includes/import/class-source-eventon.php:224
 #: includes/import/class-source-mec.php:249
 msgid "repeats on a list of specific dates, which Beacon cannot express as a rule; only the first date was imported."
 msgstr "wiederholt sich an einer Liste bestimmter Termine, die Beacon nicht als Regel abbilden kann; nur der erste Termin wurde importiert."
@@ -1483,8 +1495,8 @@ msgid "Once you deactivate Events Manager, its /events/… and /locations/… li
 msgstr "Sobald du Events Manager deaktivierst, werden seine Links /events/… und /locations/… auf die importierten Veranstaltungen und Orte weitergeleitet."
 
 #: includes/import/class-source-em.php:190
-#: includes/import/class-source-tec.php:171
-#: includes/import/class-source-tec.php:254
+#: includes/import/class-source-tec.php:188
+#: includes/import/class-source-tec.php:271
 msgid "had more than one recurrence rule; only the first was carried over."
 msgstr "hatte mehr als eine Wiederholungsregel; nur die erste wurde übernommen."
 
@@ -1493,7 +1505,7 @@ msgid "is a repeating event whose rule could not be read; imported as a single e
 msgstr "ist eine wiederkehrende Veranstaltung, deren Regel nicht gelesen werden konnte; als Einzeltermin importiert."
 
 #: includes/import/class-source-em.php:216
-#: includes/import/class-source-eventon.php:221
+#: includes/import/class-source-eventon.php:225
 #: includes/import/class-source-mec.php:254
 #: includes/import/class-source-sc.php:183
 msgid "repeats \"%s\", which is not supported; imported as a single event."
@@ -1527,7 +1539,7 @@ msgstr "Gilt für EventON und EventON Lite. Sobald EventON deaktiviert ist, werd
 msgid "was marked cancelled in EventON; check whether it should still be published."
 msgstr "war in EventON als abgesagt markiert; prüfe, ob sie noch veröffentlicht sein soll."
 
-#: includes/import/class-source-eventon.php:235
+#: includes/import/class-source-eventon.php:239
 msgid "repeats in a pattern that could not be matched exactly; only the first date was imported, so check its other dates."
 msgstr "wiederholt sich in einem Muster, das nicht genau abgebildet werden konnte; nur der erste Termin wurde importiert, prüfe also die anderen."
 
@@ -1567,15 +1579,15 @@ msgstr "The Events Calendar"
 msgid "Deactivate The Events Calendar when you are happy: event, venue and organizer links keep the same addresses, and old category and calendar-view links are redirected."
 msgstr "Deaktiviere The Events Calendar, wenn du zufrieden bist: Links zu Veranstaltungen, Orten und Veranstaltern behalten ihre Adressen, und alte Kategorie- und Kalenderansicht-Links werden weitergeleitet."
 
-#: includes/import/class-source-tec.php:180
+#: includes/import/class-source-tec.php:197
 msgid "had extra dates or exclusion rules; those are not supported and were not carried over."
 msgstr "hatte zusätzliche Termine oder Ausschlussregeln; diese werden nicht unterstützt und wurden nicht übernommen."
 
-#: includes/import/class-source-tec.php:209
+#: includes/import/class-source-tec.php:226
 msgid "recurrence rule type is not supported; imported as a single event."
 msgstr "Art der Wiederholungsregel wird nicht unterstützt; als Einzeltermin importiert."
 
-#: includes/import/class-source-tec.php:251
+#: includes/import/class-source-tec.php:268
 msgid "some exclusions were rules rather than dates; those were not carried over."
 msgstr "einige Ausschlüsse waren Regeln statt Termine; diese wurden nicht übernommen."
 

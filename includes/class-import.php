@@ -244,6 +244,17 @@ final class Import {
 		) . ' <a href="' . esc_url( admin_url( 'edit.php?post_type=' . Events::CPT ) ) . '">' . esc_html__( 'See the events', 'beacon-events' ) . '</a>';
 		self::report_link( $r );
 		echo '</p></div>';
+		// The one moment a review ask fits: a move that just worked. One line on this screen, nothing elsewhere.
+		if ( (int) $r['created'] > 0 && empty( $r['errors'] ) ) {
+			$ask = Source_CSV::KEY === ( $r['source'] ?? '' )
+				? __( 'Did the import go smoothly? A short review on wordpress.org helps other sites find Beacon Events.', 'beacon-events' )
+				: sprintf(
+					/* translators: %s: the plugin the events came from, e.g. "The Events Calendar" */
+					__( 'Did the move go smoothly? A short review on wordpress.org helps other sites leaving %s find Beacon Events.', 'beacon-events' ),
+					self::label( (string) ( $r['source'] ?? '' ) )
+				);
+			echo '<p class="beacon-import-review">' . esc_html( $ask ) . ' <a href="https://wordpress.org/support/plugin/beacon-events/reviews/#new-post" target="_blank" rel="noopener">' . esc_html__( 'Write a review', 'beacon-events' ) . '</a></p>';
+		}
 		$lines = array_merge( array_map( fn( $e ) => __( 'Error:', 'beacon-events' ) . ' ' . $e, $r['errors'] ), $r['notes'] );
 		if ( ! empty( $r['tickets'] ) || ! empty( $r['attendees'] ) ) {
 			$lines[] = sprintf( /* translators: 1: ticket count, 2: attendee count */ __( '%1$d events got their tickets and RSVPs; %2$d attendees were brought over.', 'beacon-events' ), (int) ( $r['tickets'] ?? 0 ), (int) ( $r['attendees'] ?? 0 ) ); }

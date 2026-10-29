@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.29.4
+Stable tag: 0.29.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -228,6 +228,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.29.5 =
+* After an import that worked, the results screen has one line asking for a short review on wordpress.org. Nothing is shown anywhere else, and nothing after a dry run or an import with errors.
+
 = 0.29.4 =
 * Fix: events moved from EventON could get a "Tickets & info" button that just opened the same event again. EventON's "Open Event Page" setting saves the event's own address as its link. The importer now leaves out any link that points back at the event and uses EventON's "Learn More" link when there is one. Events imported before this update are cleaned up once, by themselves.
 
@@ -249,10 +252,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 = 0.28.8 =
 * The import summary now says how many events got a "Tickets & info" button from their website or ticket address, and names the fields that are only kept in hidden meta (for The Events Calendar, the cost). Before, it said the website was not shown, although since 0.15.0 it has been the event's button.
 * The FAQ links a browser demo of the move from The Events Calendar: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. Nothing to install.
-
-= 0.28.7 =
-* The Events block can be set to Wide or Full width. On block themes such as Twenty Twenty-Five the normal content column is too narrow for the week view, so a class timetable showed one row per day even on a computer; at Wide width it is a proper 7-day timetable.
-* Fix: in the block editor the Events block's preview was unstyled on current WordPress (the editor runs in a frame that didn't get the plugin's stylesheet). The preview now looks like the page.
-* The block's description and filter bar setting mention the week and day views.
 
 Older versions: see changelog.txt in the plugin folder.
