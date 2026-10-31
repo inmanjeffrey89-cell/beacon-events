@@ -361,6 +361,18 @@ msgstr "Markierte Veranstaltungen zusammenfassen"
 msgid "Sorry, you are not allowed to do that."
 msgstr "Du hast leider keine Berechtigung dafür."
 
+#: includes/class-compat-widget.php:26
+msgid "Upcoming events (old %s widget)"
+msgstr "Kommende Veranstaltungen (altes %s-Widget)"
+
+#: includes/class-compat-widget.php:28
+msgid "Kept from your previous calendar plugin; Beacon Events fills it with your upcoming events."
+msgstr "Aus deinem vorherigen Kalender-Plugin übernommen; Beacon Events füllt es mit deinen kommenden Veranstaltungen."
+
+#: includes/class-compat-widget.php:89
+msgid "This widget came from %s. Beacon Events now shows your upcoming events in it, with its title and number of events. To change it, replace it with the Events block."
+msgstr "Dieses Widget stammt aus %s. Beacon Events zeigt darin jetzt deine kommenden Veranstaltungen, mit seinem Titel und seiner Anzahl. Um es zu ändern, ersetze es durch den Block „Veranstaltungen“."
+
 #: includes/class-events.php:119
 #: includes/class-events.php:123
 #: includes/class-import.php:134

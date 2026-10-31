@@ -29,6 +29,73 @@ final class Compat {
 		'mec'            => array( 'MEC' ),
 	);
 
+	/**
+	 * Import source => [ widget id_base => the old class (so page builders calling the_widget() by class find it too),
+	 * and which saved-instance keys hold the title, count, category, "hide when empty", "each event once" ].
+	 */
+	const WIDGETS = array(
+		'tec'            => array(
+			'tribe-widget-events-list'     => array( 'class' => 'Tribe\\Events\\Views\\V2\\Widgets\\Widget_List', 'title' => array( 'title' ), 'limit' => array( 'limit' ), 'hide' => array( 'no_upcoming_events' ) ),
+			'tribe-events-list-widget'     => array( 'class' => 'Tribe__Events__List_Widget', 'title' => array( 'title' ), 'limit' => array( 'limit' ), 'hide' => array( 'no_upcoming_events' ) ),
+			'tribe-events-adv-list-widget' => array( 'class' => 'Tribe__Events__Pro__Advanced_List_Widget', 'title' => array( 'title' ), 'limit' => array( 'limit' ), 'hide' => array( 'no_upcoming_events' ) ),
+			'tribe-mini-calendar'          => array( 'class' => 'Tribe__Events__Pro__Mini_Calendar_Widget', 'title' => array( 'title' ), 'limit' => array( 'count' ) ),
+			'tribe-widget-events-month'    => array( 'class' => 'Tribe\\Events\\Pro\\Views\\V2\\Widgets\\Widget_Month', 'title' => array( 'title' ) ),
+			'tribe-widget-events-week'     => array( 'class' => 'Tribe\\Events\\Pro\\Views\\V2\\Widgets\\Widget_Week', 'title' => array( 'title' ) ),
+		),
+		'eventon'        => array(
+			'evcalwidget'            => array( 'class' => 'EvcalWidget', 'title' => array( 'ev_title', 'evo_title', 'title' ), 'limit' => array( 'ev_count' ) ),
+			'evcalwidget_next_month' => array( 'class' => 'EvcalWidget_next_month', 'title' => array( 'ev_title', 'evo_title', 'title' ), 'limit' => array( 'ev_count' ) ),
+			'evcalwidget_three'      => array( 'class' => 'EvcalWidget_three', 'title' => array( 'ev_title', 'evo_title', 'title' ), 'limit' => array( 'ev_count' ) ),
+			'evcalwidget_four'       => array( 'class' => 'EvcalWidget_four', 'title' => array( 'ev_title', 'evo_title', 'title' ), 'limit' => array( 'ev_count' ) ),
+		),
+		'em'             => array(
+			'em_widget'   => array( 'class' => 'EM_Widget', 'title' => array( 'title' ), 'limit' => array( 'limit' ), 'cat' => array( 'category' ) ),
+			'em_calendar' => array( 'class' => 'EM_Widget_Calendar', 'title' => array( 'title' ), 'cat' => array( 'category' ) ),
+		),
+		'eventorganiser' => array(
+			'eo_event_list_widget'    => array( 'class' => 'EO_Event_List_Widget', 'title' => array( 'title' ), 'limit' => array( 'numberposts' ), 'cat' => array( 'event-category' ), 'once' => array( 'group_events_by' ), 'once_when' => 'series' ),
+			'eo_calendar_widget'      => array( 'class' => 'EO_Calendar_Widget', 'title' => array( 'title' ), 'cat' => array( 'event-category' ) ),
+			'eo_events_agenda_widget' => array( 'class' => 'EO_Events_Agenda_Widget', 'title' => array( 'title' ) ),
+		),
+		'mycalendar'     => array(
+			'my_calendar_upcoming_widget' => array( 'class' => 'My_Calendar_Upcoming_Widget', 'title' => array( 'my_calendar_upcoming_title' ), 'limit' => array( 'my_calendar_upcoming_after' ), 'cat' => array( 'my_calendar_upcoming_category' ), 'once' => array( 'my_calendar_upcoming_show_recurring' ), 'once_when' => 'no' ),
+			'my_calendar_today_widget'    => array( 'class' => 'My_Calendar_Today_Widget', 'title' => array( 'my_calendar_today_title' ), 'cat' => array( 'my_calendar_today_category' ), 'days' => 1 ),
+			'my_calendar_mini_widget'     => array( 'class' => 'My_Calendar_Mini_Widget', 'title' => array( 'my_calendar_mini_title' ), 'cat' => array( 'my_calendar_mini_category' ) ),
+		),
+		'eventprime'     => array(
+			'eventm_calendar' => array( 'class' => 'eventm_calendar', 'title' => array( 'title' ) ),
+		),
+		'sugarcalendar'  => array(
+			'sc_event_list_widget' => array( 'class' => 'sc_events_list_widget', 'title' => array( 'title' ), 'limit' => array( 'number' ), 'cat' => array( 'category' ) ),
+			'sc_calendar_widget'   => array( 'class' => 'sc_events_widget', 'title' => array( 'title' ), 'cat' => array( 'category' ) ),
+		),
+		'wpem'           => array(
+			'widget_upcoming_events' => array( 'class' => 'WP_Event_Manager_Widget_Upcoming_Events', 'title' => array( 'title' ), 'limit' => array( 'number' ) ),
+			'widget_recent_events'   => array( 'class' => 'WP_Event_Manager_Widget_Recent_Events', 'title' => array( 'title' ), 'limit' => array( 'number' ) ),
+			'widget_featured_events' => array( 'class' => 'WP_Event_Manager_Widget_Featured_Events', 'title' => array( 'title' ), 'limit' => array( 'number' ) ),
+		),
+		'ai1ec'          => array(
+			'ai1ec_agenda_widget' => array( 'class' => 'Ai1ec_View_Admin_Widget', 'title' => array( 'title' ), 'limit' => array( 'events_per_page' ), 'cat' => array( 'event_cat_ids' ) ),
+		),
+		'mec'            => array(
+			'mec_mec_widget' => array( 'class' => 'MEC_MEC_widget', 'title' => array( 'title' ), 'mec' => array( 'calendar_id' ) ),
+		),
+	);
+
+	/** Source key => plugin name for the widgets' admin label. */
+	const NAMES = array(
+		'tec'            => 'The Events Calendar',
+		'eventon'        => 'EventON',
+		'em'             => 'Events Manager',
+		'eventorganiser' => 'Event Organiser',
+		'mycalendar'     => 'My Calendar',
+		'eventprime'     => 'EventPrime',
+		'sugarcalendar'  => 'Sugar Calendar',
+		'wpem'           => 'WP Event Manager',
+		'ai1ec'          => 'All-in-One Event Calendar',
+		'mec'            => 'Modern Events Calendar',
+	);
+
 	/** Each source's own category taxonomy (term IDs in its shortcodes are looked up there). */
 	const CAT_TAX = array(
 		'tec'            => 'tribe_events_cat',
@@ -49,6 +116,40 @@ final class Compat {
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ), 99 ); // after every plugin registered its own
 		add_filter( 'render_block', array( __CLASS__, 'eventon_block' ), 10, 2 );
+		add_action( 'widgets_init', array( __CLASS__, 'widgets' ), 99 ); // core registers the factory's widgets at 100
+		add_filter( 'widget_types_to_hide_from_legacy_widget_block', array( __CLASS__, 'hide_widgets' ) );
+	}
+
+	/** The old plugin's saved sidebar widgets keep their place, title and count and show Beacon's upcoming events. */
+	public static function widgets(): void {
+		global $wp_widget_factory;
+		if ( ! $wp_widget_factory instanceof \WP_Widget_Factory ) {
+			return; }
+		$taken = array();
+		foreach ( $wp_widget_factory->widgets as $w ) {
+			$taken[ $w->id_base ] = true; }
+		$on = self::sources();
+		foreach ( self::WIDGETS as $source => $list ) {
+			if ( ! in_array( $source, $on, true ) ) {
+				continue; }
+			require_once __DIR__ . '/class-compat-widget.php';
+			foreach ( $list as $id_base => $map ) {
+				if ( isset( $taken[ $id_base ] ) || isset( $wp_widget_factory->widgets[ $map['class'] ] ) ) {
+					continue; } // the old plugin (or anything else) has it
+				$wp_widget_factory->widgets[ $map['class'] ] = new Compat_Widget( $id_base, $source, self::NAMES[ $source ], $map );
+				$taken[ $id_base ] = true;
+			}
+		}
+	}
+
+	/** Keep the stand-ins out of the widget inserter: they exist for saved widgets, not new ones. */
+	public static function hide_widgets( $ids ) {
+		global $wp_widget_factory;
+		foreach ( (array) ( $wp_widget_factory->widgets ?? array() ) as $w ) {
+			if ( $w instanceof Compat_Widget ) {
+				$ids[] = $w->id_base; }
+		}
+		return $ids;
 	}
 
 	/** Sources Beacon holds imported events from. Worked out once, then kept; Import::finish() resets it. */

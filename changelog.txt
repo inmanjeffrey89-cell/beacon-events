@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.35.0 =
+* After a move, the old calendar plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar, MEC, EventPrime) keep their place and saved title and show your upcoming events, instead of vanishing from the sidebar. The saved number of events and category carry over. Only for plugins you imported from, and never while that plugin is active.
+
 = 0.34.0 =
 * Lists can show each event once: turn on "Each event once" in the Events block (or Elementor widget), or add once="1" to the shortcode, and a repeating event shows only its next date, so a weekly class or a daily special doesn't fill a "Coming up" box. A cancelled next date is skipped for the one after it.
 * After a move, EventON lists set to "hide multiple occurrences", My Calendar's show_recurring="no" and Event Organiser's group_events_by="series" keep that behaviour.
