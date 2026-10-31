@@ -120,6 +120,16 @@ final class Compat {
 		add_filter( 'widget_types_to_hide_from_legacy_widget_block', array( __CLASS__, 'hide_widgets' ) );
 	}
 
+	/**
+	 * Elementor can keep a page's rendered widgets for a day. After an import, drop that copy so its pages are drawn again
+	 * with Beacon's stand-ins (what Elementor's "Clear Files & Data" does; Elementor already does it when a plugin is
+	 * switched off).
+	 */
+	public static function clear_page_caches(): void {
+		if ( class_exists( '\Elementor\Plugin' ) && isset( \Elementor\Plugin::$instance->files_manager ) && method_exists( \Elementor\Plugin::$instance->files_manager, 'clear_cache' ) ) {
+			\Elementor\Plugin::$instance->files_manager->clear_cache(); }
+	}
+
 	/** The old plugin's saved sidebar widgets keep their place, title and count and show Beacon's upcoming events. */
 	public static function widgets(): void {
 		global $wp_widget_factory;

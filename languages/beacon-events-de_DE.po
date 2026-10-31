@@ -611,114 +611,114 @@ msgstr "%d Veranstaltungen hatten keine verwendbare Zeitzone; sie haben die Zeit
 msgid "Unknown import source."
 msgstr "Unbekannte Import-Quelle."
 
-#: includes/class-import.php:466
+#: includes/class-import.php:468
 msgid "Combined into a repeating event earlier, left as it is."
 msgstr "Wurde schon zu einer wiederkehrenden Veranstaltung zusammengefasst, bleibt unverändert."
 
-#: includes/class-import.php:493
-#: includes/class-import.php:614
+#: includes/class-import.php:495
+#: includes/class-import.php:616
 msgid "Events you combined into repeating events were left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, blieben unverändert."
 
-#: includes/class-import.php:493
-#: includes/class-import.php:746
+#: includes/class-import.php:495
+#: includes/class-import.php:748
 msgid "Events you combined into repeating events would be left as they are."
 msgstr "Veranstaltungen, die du zu wiederkehrenden zusammengefasst hast, würden unverändert bleiben."
 
-#: includes/class-import.php:517
+#: includes/class-import.php:519
 msgid "would create"
 msgstr "würde anlegen"
 
-#: includes/class-import.php:517
+#: includes/class-import.php:519
 msgid "created"
 msgstr "angelegt"
 
-#: includes/class-import.php:518
+#: includes/class-import.php:520
 msgid "would update"
 msgstr "würde aktualisieren"
 
-#: includes/class-import.php:518
+#: includes/class-import.php:520
 msgid "updated"
 msgstr "aktualisiert"
 
-#: includes/class-import.php:519
+#: includes/class-import.php:521
 msgid "would skip"
 msgstr "würde überspringen"
 
-#: includes/class-import.php:519
+#: includes/class-import.php:521
 msgid "skipped"
 msgstr "übersprungen"
 
-#: includes/class-import.php:520
+#: includes/class-import.php:522
 msgid "error"
 msgstr "Fehler"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Result"
 msgstr "Ergebnis"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Source"
 msgstr "Quelle"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Source ID"
 msgstr "Quell-ID"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Title"
 msgstr "Titel"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Beacon event ID"
 msgstr "Beacon-Veranstaltungs-ID"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Start"
 msgstr "Beginn"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "End"
 msgstr "Ende"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Repeats (RRULE)"
 msgstr "Wiederholung (RRULE)"
 
-#: includes/class-import.php:522
+#: includes/class-import.php:524
 msgid "Notes"
 msgstr "Hinweise"
 
-#: includes/class-import.php:532
+#: includes/class-import.php:534
 msgid "The report lists the first %d events only."
 msgstr "Der Bericht enthält nur die ersten %d Veranstaltungen."
 
-#: includes/class-import.php:548
+#: includes/class-import.php:550
 msgid "There is no import report yet. Run an import or a dry run first."
 msgstr "Es gibt noch keinen Import-Bericht. Starte zuerst einen Import oder einen Probelauf."
 
-#: includes/class-import.php:829
+#: includes/class-import.php:831
 msgid "cost and similar"
 msgstr "Preis und Ähnliches"
 
-#: includes/class-import.php:844
+#: includes/class-import.php:846
 msgid "Tickets"
 msgstr "Tickets"
 
-#: includes/class-import.php:848
+#: includes/class-import.php:850
 msgid "Register"
 msgstr "Anmelden"
 
-#: includes/class-import.php:954
+#: includes/class-import.php:956
 msgid "recurrence rule could not be read; imported as a single event."
 msgstr "Wiederholungsregel konnte nicht gelesen werden; als Einzeltermin importiert."
 
-#: includes/class-import.php:975
+#: includes/class-import.php:977
 #: includes/import/class-source-sc.php:210
 msgid "recurrence rule was simplified (%s not supported); check its dates."
 msgstr "Wiederholungsregel wurde vereinfacht (%s wird nicht unterstützt); prüfe die Termine."
 
-#: includes/class-import.php:1091
+#: includes/class-import.php:1093
 msgid "Image %1$s could not be fetched: %2$s"
 msgstr "Bild %1$s konnte nicht geladen werden: %2$s"
 
@@ -1402,6 +1402,14 @@ msgstr "Zu Google Kalender hinzufügen"
 #: includes/class-views.php:1159
 msgid "Subscribe to these events (.ics)"
 msgstr "Diese Veranstaltungen abonnieren (.ics)"
+
+#: includes/elementor-compat-widgets.php:57
+msgid "Events view (old The Events Calendar widget)"
+msgstr "Veranstaltungsansicht (altes Widget von The Events Calendar)"
+
+#: includes/elementor-compat-widgets.php:76
+msgid "Events list (old The Events Calendar widget)"
+msgstr "Veranstaltungsliste (altes Widget von The Events Calendar)"
 
 #: includes/elementor-widget.php:34
 #: assets/editor.js:10

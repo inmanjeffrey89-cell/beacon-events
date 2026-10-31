@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.35.0
+Stable tag: 0.36.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -153,7 +153,7 @@ https://www.youtube.com/watch?v=_4tAJjVqA-Y
 Or try the whole move in your browser on a throwaway site, with nothing to install: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/inmanjeffrey89-cell/beacon-events/main/blueprints/tec-move.json
 
 = My pages still have the old plugin's shortcodes and widgets. Do they keep working? =
-Yes. After an import, the calendar and list shortcodes your pages used with the old plugin show Beacon Events instead of printing as text once that plugin is switched off: [tribe_events], [tribe_events_list], [tribe_mini_calendar] and [tribe_this_week] (Events Calendar Pro), [add_eventon] and [add_eventon_list] (EventON, also inside its block), [events_list] and [events_calendar] (Events Manager), [eo_events] and [eo_fullcalendar] (Event Organiser), [my_calendar], [my_calendar_upcoming] and [my_calendar_today] (My Calendar), [em_events] (EventPrime), Sugar Calendar's, Eventin's and WP Event Manager's calendar and list shortcodes, ThimPress's [wp_event_list_event], [ai1ec] and [MEC id=""]. The old month, week, day or list view is kept, and so are the category, venue, organizer and number of events when the shortcode named them. The old plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar and MEC widgets) keep their place and title too and show your upcoming events as a short list, instead of disappearing. While the old plugin is still active, its own shortcodes and widgets win. You can swap them for the Events block whenever it suits you.
+Yes. After an import, the calendar and list shortcodes your pages used with the old plugin show Beacon Events instead of printing as text once that plugin is switched off: [tribe_events], [tribe_events_list], [tribe_mini_calendar] and [tribe_this_week] (Events Calendar Pro), [add_eventon] and [add_eventon_list] (EventON, also inside its block), [events_list] and [events_calendar] (Events Manager), [eo_events] and [eo_fullcalendar] (Event Organiser), [my_calendar], [my_calendar_upcoming] and [my_calendar_today] (My Calendar), [em_events] (EventPrime), Sugar Calendar's, Eventin's and WP Event Manager's calendar and list shortcodes, ThimPress's [wp_event_list_event], [ai1ec] and [MEC id=""]. The old month, week, day or list view is kept, and so are the category, venue, organizer and number of events when the shortcode named them. The old plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar and MEC widgets) keep their place and title too and show your upcoming events as a short list, instead of disappearing, and The Events Calendar's Elementor widgets (Events View and Events List) show Beacon's calendar and list. While the old plugin is still active, its own shortcodes and widgets win. You can swap them for the Events block whenever it suits you.
 
 = Can I see what an import will do before it runs? =
 Yes. Every source under Events → Import / Export has a "Dry run first" button (and `wp beacon import <source> --dry-run` on the command line). It goes through all the events exactly as the import would and reports how many would be created, how many updated, which would be skipped and why, which repeating rules would be simplified, and how many venues, organizers and categories would be added, without writing anything. Running the real import afterwards does exactly that, and running it again later updates instead of duplicating. Both the dry run and the import can be downloaded as a CSV with one row per event: created, updated or skipped and why, its new event ID, dates and repeat rule, which is handy for checking a large move event by event (`--report=file.csv` on the command line).
@@ -241,6 +241,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.36.0 =
+* After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
+
 = 0.35.0 =
 * After a move, the old calendar plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar, MEC, EventPrime) keep their place and saved title and show your upcoming events, instead of vanishing from the sidebar. The saved number of events and category carry over. Only for plugins you imported from, and never while that plugin is active.
 
@@ -262,8 +265,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.29.5 =
 * After an import that worked, the results screen has one line asking for a short review on wordpress.org. Nothing is shown anywhere else, and nothing after a dry run or an import with errors.
-
-= 0.29.4 =
-* Fix: events moved from EventON could get a "Tickets & info" button that just opened the same event again. EventON's "Open Event Page" setting saves the event's own address as its link. The importer now leaves out any link that points back at the event and uses EventON's "Learn More" link when there is one. Events imported before this update are cleaned up once, by themselves.
 
 Older versions: see changelog.txt in the plugin folder.

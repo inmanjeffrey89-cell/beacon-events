@@ -416,7 +416,9 @@ final class Import {
 			self::untrack_file( $state['file'] );
 			$state['file'] = ''; }
 		if ( empty( $state['dry'] ) && ( (int) $state['created'] + (int) $state['updated'] ) > 0 ) {
-			delete_option( Compat::OPT ); } // the old plugin's shortcodes start rendering Beacon views
+			delete_option( Compat::OPT ); // the old plugin's shortcodes start rendering Beacon views
+			Compat::clear_page_caches();
+		}
 		$log = get_option( self::OPT_LOG, array() );
 		array_unshift( $log, $state );
 		update_option( self::OPT_LOG, array_slice( is_array( $log ) ? $log : array(), 0, 5 ), false );

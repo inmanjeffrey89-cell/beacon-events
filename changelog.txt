@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.36.0 =
+* After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
+
 = 0.35.0 =
 * After a move, the old calendar plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar, MEC, EventPrime) keep their place and saved title and show your upcoming events, instead of vanishing from the sidebar. The saved number of events and category carry over. Only for plugins you imported from, and never while that plugin is active.
 
