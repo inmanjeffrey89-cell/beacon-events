@@ -123,6 +123,7 @@ final class Compat {
 				$view  = in_array( $tag, array( 'add_eventon', 'add_ajde_evcal' ), true ) ? 'month' : 'list';
 				$limit = (int) $get( 'event_count', 'show_limit' );
 				$cat   = self::join( self::cats( $source, $get( 'event_type' ) ), self::cats( $source, $get( 'event_type_2' ), 'event_type_2' ) );
+				$extra['once'] = 'yes' === strtolower( $get( 'hide_mult_occur' ) ) ? '1' : ''; // EventON's "hide multiple occurrences"
 				$m     = (int) $get( 'number_of_months' );
 				if ( 'list' === $view && $m > 0 ) {
 					$extra['days'] = min( 31 * $m, 3660 ); }
@@ -137,6 +138,7 @@ final class Compat {
 				if ( 'eo_events' === $tag ) {
 					$extra['layout'] = 'compact';
 					$limit           = (int) $get( 'numberposts', 'posts_per_page' );
+					$extra['once']   = 'series' === strtolower( $get( 'group_events_by' ) ) ? '1' : '';
 				} else {
 					$v    = strtolower( $get( 'defaultview' ) );
 					$view = str_contains( $v, 'day' ) ? 'day' : ( str_contains( $v, 'week' ) && ! str_starts_with( $v, 'list' ) ? 'week' : ( str_starts_with( $v, 'list' ) ? 'list' : 'month' ) );
@@ -154,6 +156,7 @@ final class Compat {
 					$extra['layout'] = 'compact';
 					$after           = $get( 'after' );
 					$limit           = 'days' !== strtolower( $get( 'type' ) ) && ctype_digit( $after ) ? (int) $after : 0;
+					$extra['once']   = 'no' === strtolower( $get( 'show_recurring' ) ) ? '1' : '';
 				}
 				$cat = self::mc_cats( $get( 'category' ) );
 				break;

@@ -1,5 +1,9 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.34.0 =
+* Lists can show each event once: turn on "Each event once" in the Events block (or Elementor widget), or add once="1" to the shortcode, and a repeating event shows only its next date, so a weekly class or a daily special doesn't fill a "Coming up" box. A cancelled next date is skipped for the one after it.
+* After a move, EventON lists set to "hide multiple occurrences", My Calendar's show_recurring="no" and Event Organiser's group_events_by="series" keep that behaviour.
+
 = 0.33.0 =
 * After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
 

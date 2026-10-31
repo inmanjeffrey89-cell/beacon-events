@@ -236,6 +236,10 @@ final class Views {
 				'type'    => 'boolean',
 				'default' => false,
 			),
+			'once'      => array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
 			'printLink' => array(
 				'type'    => 'boolean',
 				'default' => true,
@@ -285,6 +289,7 @@ final class Views {
 					'scope'     => '',
 					'layout'    => '',
 					'filters'   => '',
+					'once'      => '',
 					'month'     => '',
 					'day'       => '',
 					'week'      => '',
@@ -445,14 +450,28 @@ final class Views {
 	 * Occurrences in [ $from, $to ) that pass the view's category / venue / organizer / search filters, at most $want.
 	 * Filtering happens in PHP, so on a busy calendar a filtered view keeps reading further pages until it has enough.
 	 */
-	private static function fetch( string $from, string $to, int $want, array $a ): array {
+	private static function fetch( string $from, string $to, int $want, array $a, bool $once = false ): array {
 		$want = max( 1, $want );
 		$page = max( 100, $want * 3 );
 		$off  = 0;
 		$out  = array();
+		$seen = array();
 		do { // each page twice the last: a rare category on a busy calendar costs a handful of queries, not hundreds
 			$chunk = Events::upcoming( $from, $to, $page, array(), $off );
-			$out   = array_merge( $out, self::filter_all( $chunk, $a ) );
+			$keep  = self::filter_all( $chunk, $a );
+			if ( $once ) { // each event once, on its next date that still happens: a weekly class doesn't fill the list
+				$keep = array_filter(
+					$keep,
+					function ( $r ) use ( &$seen ) {
+						$id = (int) $r['event_id'];
+						if ( isset( $seen[ $id ] ) || ( $r['status'] ?? '' ) === 'cancelled' ) {
+							return false; }
+						$seen[ $id ] = true;
+						return true;
+					}
+				);
+			}
+			$out = array_merge( $out, array_values( $keep ) );
 			$off  += $page;
 			$page *= 2;
 		} while ( count( $out ) < $want && count( $chunk ) === $page / 2 && $off < 50000 );
@@ -701,7 +720,7 @@ final class Views {
 	/** Upcoming list, grouped by day — or, with layout="compact", one line per event (sidebars, footers). */
 	public static function list( array $a ): string {
 		$now  = new \DateTimeImmutable( 'today', self::tz() );
-		$rows = self::fetch( self::utc( $now ), self::utc( $now->modify( '+' . max( 1, (int) $a['days'] ) . ' days' ) ), (int) $a['limit'], $a );
+		$rows = self::fetch( self::utc( $now ), self::utc( $now->modify( '+' . max( 1, (int) $a['days'] ) . ' days' ) ), (int) $a['limit'], $a, filter_var( $a['once'] ?? false, FILTER_VALIDATE_BOOLEAN ) );
 		if ( ! $rows ) {
 			return '<div class="beacon-list beacon-empty">' . esc_html__( 'No upcoming events.', 'beacon-events' ) . '</div>'; }
 		if ( ( $a['layout'] ?? '' ) === 'compact' ) {

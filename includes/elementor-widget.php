@@ -49,6 +49,16 @@ class Elementor_Widget extends \Elementor\Widget_Base {
 			)
 		);
 		$this->add_control(
+			'once',
+			array(
+				'label'       => __( 'Each event once', 'beacon-events' ),
+				'description' => __( 'A repeating event shows only its next date, so a weekly class doesn\'t fill the list.', 'beacon-events' ),
+				'type'        => \Elementor\Controls_Manager::SWITCHER,
+				'default'     => '',
+				'condition'   => array( 'view' => 'list' ),
+			)
+		);
+		$this->add_control(
 			'days',
 			array(
 				'label'     => __( 'Days ahead', 'beacon-events' ),
@@ -108,6 +118,7 @@ class Elementor_Widget extends \Elementor\Widget_Base {
 				'venue'     => (string) ( $s['venue'] ?? '' ),
 				'organizer' => (string) ( $s['organizer'] ?? '' ),
 				'filters'   => ( $s['filters'] ?? '' ) === 'yes',
+				'once'      => ( $s['once'] ?? '' ) === 'yes',
 			)
 		);
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Views::render() escapes everything it prints

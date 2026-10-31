@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.33.0
+Stable tag: 0.34.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,7 @@ One database table, `{prefix}beacon_occurrences`, holding the expanded dates of 
 `[beacon_events view="month"]`
 `[beacon_events view="list" filters="1"]` — adds the category / venue / search bar and a list / week / month switch.
 `[beacon_events layout="compact" limit="5"]` — one line per event, for sidebars.
+`once="1"` — in a list, a repeating event shows only its next date (a weekly class doesn't fill a "Coming up" box).
 `[beacon_events view="week"]` — this week as a timetable, with previous/next links. It starts on the day set in Settings → General ("Week Starts On").
 `[beacon_events view="day"]` — today, with previous/next links.
 `venue="slug"` and `organizer="slug"` work like `category`.
@@ -240,6 +241,10 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.34.0 =
+* Lists can show each event once: turn on "Each event once" in the Events block (or Elementor widget), or add once="1" to the shortcode, and a repeating event shows only its next date, so a weekly class or a daily special doesn't fill a "Coming up" box. A cancelled next date is skipped for the one after it.
+* After a move, EventON lists set to "hide multiple occurrences", My Calendar's show_recurring="no" and Event Organiser's group_events_by="series" keep that behaviour.
+
 = 0.33.0 =
 * After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
 
@@ -260,8 +265,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.29.3 =
 * Fix: event pages could all show "Page not found" when the link rules WordPress keeps had been saved without Beacon's (reported after a move from EventON). Beacon now notices on the next visit to an event, venue or calendar page and puts its links back, at most once an hour. Before, the only fix was Settings → Permalinks → Save Changes.
-
-= 0.29.2 =
-* Beacon Events Pro can now also be bought once, with no renewal: $149 for one site or $299 for up to five. The Pro page lists it next to the monthly and yearly prices.
 
 Older versions: see changelog.txt in the plugin folder.
