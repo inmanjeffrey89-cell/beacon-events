@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.33.0 =
+* After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
+
 = 0.32.0 =
 * New: import from My Calendar. It reads My Calendar's own tables: events, all-day events, locations with their addresses, categories with their colours, descriptions, featured images and the ticket or event link (as the "Tickets & info" button). Repeating events stay repeating, checked against every date My Calendar stored, and a deleted date stays deleted. Once My Calendar is deactivated, its old event, location and category pages and its ?mc_id= links redirect to the new ones.
 

@@ -3,7 +3,7 @@
  * Plugin Name:       Beacon Events – Events Calendar with Recurring Events & Google Calendar Sync
  * Plugin URI:        https://wordpress.org/plugins/beacon-events/
  * Description:       A light, honest events calendar. Recurring events, ICS and Google Calendar import that stays in sync, and calendar views that look like your site — all free. Uninstalls clean.
- * Version:           0.32.0
+ * Version:           0.33.0
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Beacon Events
@@ -14,7 +14,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-define( 'BEACON_VERSION', '0.32.0' );
+define( 'BEACON_VERSION', '0.33.0' );
 define( 'BEACON_FILE', __FILE__ );
 define( 'BEACON_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BEACON_URL', plugin_dir_url( __FILE__ ) );
@@ -46,6 +46,7 @@ require_once BEACON_DIR . 'includes/import/class-source-mc.php';
 require_once BEACON_DIR . 'includes/import/class-source-csv.php';
 require_once BEACON_DIR . 'includes/class-import.php';
 require_once BEACON_DIR . 'includes/class-combine.php';
+require_once BEACON_DIR . 'includes/class-compat.php';
 require_once BEACON_DIR . 'includes/class-elementor.php';
 require_once BEACON_DIR . 'includes/class-pro.php';
 require_once BEACON_DIR . 'includes/class-onboarding.php';
@@ -88,6 +89,7 @@ add_action(
 		Beacon\Ics::init();
 		Beacon\Import::init();
 		Beacon\Combine::init();
+		Beacon\Compat::init();
 		Beacon\Elementor::init();
 		// everywhere, not only wp-admin: the block editor saves over REST. A sample the user edits becomes theirs.
 		add_action( 'save_post_' . Beacon\Events::CPT, array( 'Beacon\Onboarding', 'claim_edited_sample' ), 20, 3 );

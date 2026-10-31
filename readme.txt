@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.32.0
+Stable tag: 0.33.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -151,6 +151,9 @@ https://www.youtube.com/watch?v=_4tAJjVqA-Y
 
 Or try the whole move in your browser on a throwaway site, with nothing to install: a small site on The Events Calendar, switched off, with Beacon Events ready to import it. https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/inmanjeffrey89-cell/beacon-events/main/blueprints/tec-move.json
 
+= My pages still have the old plugin's shortcodes. Do they keep working? =
+Yes. After an import, the calendar and list shortcodes your pages used with the old plugin show Beacon Events instead of printing as text once that plugin is switched off: [tribe_events], [tribe_events_list], [tribe_mini_calendar] and [tribe_this_week] (Events Calendar Pro), [add_eventon] and [add_eventon_list] (EventON, also inside its block), [events_list] and [events_calendar] (Events Manager), [eo_events] and [eo_fullcalendar] (Event Organiser), [my_calendar], [my_calendar_upcoming] and [my_calendar_today] (My Calendar), [em_events] (EventPrime), Sugar Calendar's, Eventin's and WP Event Manager's calendar and list shortcodes, ThimPress's [wp_event_list_event], [ai1ec] and [MEC id=""]. The old month, week, day or list view is kept, and so are the category, venue, organizer and number of events when the shortcode named them. While the old plugin is still active, its own shortcode wins. You can swap them for the Events block whenever it suits you.
+
 = Can I see what an import will do before it runs? =
 Yes. Every source under Events → Import / Export has a "Dry run first" button (and `wp beacon import <source> --dry-run` on the command line). It goes through all the events exactly as the import would and reports how many would be created, how many updated, which would be skipped and why, which repeating rules would be simplified, and how many venues, organizers and categories would be added, without writing anything. Running the real import afterwards does exactly that, and running it again later updates instead of duplicating. Both the dry run and the import can be downloaded as a CSV with one row per event: created, updated or skipped and why, its new event ID, dates and repeat rule, which is handy for checking a large move event by event (`--report=file.csv` on the command line).
 
@@ -237,6 +240,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.33.0 =
+* After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
+
 = 0.32.0 =
 * New: import from My Calendar. It reads My Calendar's own tables: events, all-day events, locations with their addresses, categories with their colours, descriptions, featured images and the ticket or event link (as the "Tickets & info" button). Repeating events stay repeating, checked against every date My Calendar stored, and a deleted date stays deleted. Once My Calendar is deactivated, its old event, location and category pages and its ?mc_id= links redirect to the new ones.
 
@@ -257,8 +263,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.29.2 =
 * Beacon Events Pro can now also be bought once, with no renewal: $149 for one site or $299 for up to five. The Pro page lists it next to the monthly and yearly prices.
-
-= 0.29.1 =
-* Moving from Events Calendar Pro: its series pages (/series/weekly-yoga/) now redirect to the event that series became after the import, instead of showing "Page not found". A series link the import doesn't know goes to your calendar page.
 
 Older versions: see changelog.txt in the plugin folder.
