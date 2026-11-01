@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.37.0 =
+* Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
+
 = 0.36.0 =
 * After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
 

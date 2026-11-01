@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** One row per occurrence so "what's on this week" is a cheap indexed query, not RRULE math at request time. */
 final class Schema {
-	const VERSION = '3'; // 3 = 0.29.4's clean-up of imported links that point back at the event itself
+	const VERSION = '4'; // 3 = 0.29.4's clean-up of imported links back to the event itself; 4 = 0.37.0's Rank Math sitemap refresh
 	public static function table(): string {
 		global $wpdb;
 		return $wpdb->prefix . 'beacon_occurrences'; }
@@ -29,6 +29,8 @@ final class Schema {
 			update_option( 'beacon_flush_rewrites', '1' );
 			if ( false !== $was && (int) $was < 3 ) {
 				Import::drop_self_links(); }
+			if ( false !== $was && (int) $was < 4 ) {
+				add_action( 'init', array( 'Beacon\Seo', 'refresh_sitemaps' ), 99 ); }
 		}
 	}
 

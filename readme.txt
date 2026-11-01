@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.36.0
+Stable tag: 0.37.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -222,6 +222,10 @@ Tickets and RSVPs with card payments, attendee export, and priority support. You
 
 WordPress keeps a saved list of link rules, and sometimes another plugin, a cache or a site move saves it without Beacon's. Since 0.29.3 Beacon rebuilds it by itself the next time someone opens an event. On older versions, or if it keeps happening, go to Settings → Permalinks and click Save Changes (no need to change anything). If event pages still 404 after that, another plugin is using /event/ for its own pages.
 
+= Are my events in my SEO plugin's sitemap? =
+
+WordPress's own sitemap lists them by itself. Rank Math stores an "include in sitemap" switch for each kind of content only when it is first set up, so on a site that got Beacon Events later it left every event out, even though its settings showed the switch as on. Since 0.37.0 Beacon reads that missing switch as on; if you turned it off in Rank Math, it stays off. SEOPress lists only the post types you tick, so tick Events in its XML sitemap settings.
+
 = My theme's event page doesn't show the date, place or booking form =
 
 Some themes and theme builders draw single pages with their own template. Since 0.28.1 Beacon adds its When / Where box (and Pro's booking form) there too. If your template leaves the page content out entirely, put the `[beacon_event_details]` shortcode in it (and `[beacon_rsvp]` for Pro's booking form).
@@ -241,6 +245,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.37.0 =
+* Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
+
 = 0.36.0 =
 * After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
 
@@ -262,8 +269,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.30.0 =
 * New: import from Event Organiser. Events, all-day events, venues with their addresses, categories with their colours, featured images and repeating schedules come over; each repeat rule is checked against every date Event Organiser saved, so skipped dates stay skipped. A schedule that can't be written as a rule comes over on its first date and the report lists the rest. Once Event Organiser is deactivated, its old event, venue and category links redirect to the new ones. From the command line: wp beacon import eventorganiser.
-
-= 0.29.5 =
-* After an import that worked, the results screen has one line asking for a short review on wordpress.org. Nothing is shown anywhere else, and nothing after a dry run or an import with errors.
 
 Older versions: see changelog.txt in the plugin folder.
