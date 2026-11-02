@@ -167,4 +167,43 @@ final class CLI {
 			\WP_CLI::error( sprintf( '%d events could not be imported (see above).', count( $state['errors'] ) ) ); }
 		\WP_CLI::success( $state['dry'] ? 'Dry run finished. Nothing was written; run it without --dry-run to import.' : 'Import finished. Nothing in the other plugin was changed; run it again any time to pick up changes.' );
 	}
+
+	/**
+	 * Undoes an import: deletes the events imported from a source, and the venues, organizers and categories that import
+	 * created once nothing uses them. The source plugin's own data was never changed, so turning it back on brings the
+	 * old calendar back. Events with bookings are always kept; events changed after the import are kept unless asked.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <source>
+	 * : The source the events came from (see `wp beacon sources`).
+	 *
+	 * [--include-changed]
+	 * : Also delete events changed in Beacon after the import.
+	 *
+	 * [--yes]
+	 * : Delete. Without it, only lists what would go.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp beacon undo tec
+	 *     wp beacon undo tec --yes
+	 *
+	 * @param array $args  [ source ].
+	 * @param array $assoc [ include-changed, yes ].
+	 */
+	public function undo( $args, $assoc ) {
+		$key = (string) ( $args[0] ?? '' );
+		if ( ! isset( Import::sources()[ $key ] ) || Import\Source_CSV::KEY === $key ) {
+			\WP_CLI::error( sprintf( 'Unknown source "%s". Run `wp beacon sources` to see the choices.', $key ) ); }
+		$include = ! empty( $assoc['include-changed'] );
+		$plan    = Import_Undo::plan( $key, $include );
+		\WP_CLI::log( sprintf( 'Imported from %s: %d to delete, %d changed after the import (%s), %d with bookings (kept).', Import::sources()[ $key ]::label(), count( $plan['remove'] ), count( $plan['changed'] ), $include ? 'deleted too' : 'kept', count( $plan['booked'] ) ) );
+		if ( empty( $assoc['yes'] ) ) {
+			\WP_CLI::log( 'Nothing deleted. Add --yes to delete.' );
+			return;
+		}
+		$r = Import_Undo::run( $key, $include, 0 );
+		\WP_CLI::success( sprintf( 'Deleted %d events and %d venues, organizers and categories the import had created. Nothing in %s was changed.', $r['events'], $r['terms'], Import::sources()[ $key ]::label() ) );
+	}
 }

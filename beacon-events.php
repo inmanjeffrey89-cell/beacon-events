@@ -3,7 +3,7 @@
  * Plugin Name:       Beacon Events – Events Calendar with Recurring Events & Google Calendar Sync
  * Plugin URI:        https://wordpress.org/plugins/beacon-events/
  * Description:       A light, honest events calendar. Recurring events, ICS and Google Calendar import that stays in sync, and calendar views that look like your site — all free. Uninstalls clean.
- * Version:           0.37.1
+ * Version:           0.38.0
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Beacon Events
@@ -14,7 +14,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-define( 'BEACON_VERSION', '0.37.1' );
+define( 'BEACON_VERSION', '0.38.0' );
 define( 'BEACON_FILE', __FILE__ );
 define( 'BEACON_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BEACON_URL', plugin_dir_url( __FILE__ ) );
@@ -45,6 +45,7 @@ require_once BEACON_DIR . 'includes/import/class-source-ep.php';
 require_once BEACON_DIR . 'includes/import/class-source-mc.php';
 require_once BEACON_DIR . 'includes/import/class-source-csv.php';
 require_once BEACON_DIR . 'includes/class-import.php';
+require_once BEACON_DIR . 'includes/class-import-undo.php';
 require_once BEACON_DIR . 'includes/class-combine.php';
 require_once BEACON_DIR . 'includes/class-compat.php';
 require_once BEACON_DIR . 'includes/class-seo.php';
@@ -91,6 +92,7 @@ add_action(
 		Beacon\Views::init();
 		Beacon\Ics::init();
 		Beacon\Import::init();
+		Beacon\Import_Undo::init();
 		Beacon\Combine::init();
 		Beacon\Compat::init();
 		Beacon\Elementor::init();

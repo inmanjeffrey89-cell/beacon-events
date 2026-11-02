@@ -118,6 +118,21 @@ final class Import {
 		}
 		if ( $error ) {
 			echo '<div class="notice notice-error inline"><p>' . esc_html( $error ) . '</p></div>'; }
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- which undo screen to show; the deleting happens in Import_Undo::handle() behind a nonce
+		$undo = isset( $_GET['undo'] ) ? sanitize_key( wp_unslash( $_GET['undo'] ) ) : '';
+		if ( $undo && isset( self::sources()[ $undo ] ) && Source_CSV::KEY !== $undo ) {
+			$totals = array(
+				'events'  => isset( $_GET['events'] ) ? max( 0, (int) $_GET['events'] ) : 0,
+				'terms'   => isset( $_GET['terms'] ) ? max( 0, (int) $_GET['terms'] ) : 0,
+				'include' => ! empty( $_GET['include'] ),
+			);
+			$step = isset( $_GET['undone'] ) ? 'done' : ( isset( $_GET['undoing'] ) ? 'running' : 'confirm' );
+			Import_Undo::screen( $undo, self::label( $undo ), $step, $totals );
+			if ( 'done' !== $step ) {
+				echo '</div>';
+				return; }
+		}
+		// phpcs:enable
 		$log = get_option( self::OPT_LOG, array() );
 		if ( $done && $log ) {
 			self::report( $log[0] ); }
@@ -160,6 +175,7 @@ final class Import {
 			echo ' ';
 			submit_button( __( 'Dry run first', 'beacon-events' ), 'secondary', 'dry', false, array( 'title' => __( 'Shows what the import would create, update, skip or simplify, without writing anything.', 'beacon-events' ) ) );
 			echo '</p></form>';
+			Import_Undo::link( $key );
 		}
 		Combine::section();
 		// CSV in
@@ -704,6 +720,7 @@ final class Import {
 		$filtered = apply_filters( 'beacon_import_after_event', $state, (int) $id, $n );
 		if ( is_array( $filtered ) ) {
 			$state = $filtered; }
+		update_post_meta( $id, Import_Undo::POST_META, time() ); // later edits = changed after the import (see Import_Undo)
 	}
 
 	/**
@@ -1016,6 +1033,7 @@ final class Import {
 			}
 			$term_id = (int) $r['term_id'];
 			++$state['venues'];
+			update_term_meta( $term_id, Import_Undo::TERM_META, $state['source'] );
 		}
 		$addr = trim( (string) ( $v['address'] ?? '' ) );
 		if ( $addr && ! get_term_meta( $term_id, 'beacon_address', true ) ) {
@@ -1040,6 +1058,7 @@ final class Import {
 			}
 			$term_id = (int) $r['term_id'];
 			++$state['organizers'];
+			update_term_meta( $term_id, Import_Undo::TERM_META, $state['source'] );
 		}
 		if ( ! empty( $o['src_id'] ) ) {
 			update_term_meta( $term_id, '_beacon_' . $state['source'] . '_id', (int) $o['src_id'] ); }
@@ -1070,6 +1089,7 @@ final class Import {
 			}
 			$id = (int) $r['term_id'];
 			++$state['categories'];
+			update_term_meta( $id, Import_Undo::TERM_META, $state['source'] );
 		}
 		$hex = ! empty( $c['color'] ) ? sanitize_hex_color( (string) $c['color'] ) : '';
 		if ( $hex && ! get_term_meta( $id, 'beacon_color', true ) ) {

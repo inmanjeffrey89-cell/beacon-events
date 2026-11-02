@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.38.0 =
+* New: undo an import. Events → Import / Export → "Undo this import" deletes the events imported from that plugin, and the venues, organizers and categories the import created once nothing uses them, so you can turn the old plugin back on and be where you started. Events with bookings are kept, and so are events you changed after the import unless you ask. From the command line: wp beacon undo <source>.
+
 = 0.37.1 =
 * Event pages now describe the venue's address the way Google's event results ask for it: street, city, state or region, postcode and country as separate parts instead of one line of text. Addresses whose form isn't clear stay whole in the street line.
 
