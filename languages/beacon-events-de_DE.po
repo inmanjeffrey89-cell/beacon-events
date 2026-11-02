@@ -21,7 +21,7 @@ msgid "A light, honest events calendar. Recurring events, ICS and Google Calenda
 msgstr "Ein schlanker, ehrlicher Veranstaltungskalender. Wiederkehrende Termine, ICS- und Google-Kalender-Import, der synchron bleibt, und Kalenderansichten im Look deiner Website – alles kostenlos. Lässt sich sauber deinstallieren."
 
 #: beacon-events.php
-#: includes/class-events.php:173
+#: includes/class-events.php:250
 #: includes/class-settings.php:22
 #: includes/elementor-widget.php:14
 msgid "Beacon Events"
@@ -319,7 +319,7 @@ msgid "Events with tickets or RSVPs are left out."
 msgstr "Veranstaltungen mit Tickets oder Anmeldungen werden ausgelassen."
 
 #: includes/class-combine.php:463
-#: includes/class-events.php:169
+#: includes/class-events.php:246
 msgid "Event"
 msgstr "Veranstaltung"
 
@@ -374,8 +374,8 @@ msgstr "Aus deinem vorherigen Kalender-Plugin übernommen; Beacon Events füllt 
 msgid "This widget came from %s. Beacon Events now shows your upcoming events in it, with its title and number of events. To change it, replace it with the Events block."
 msgstr "Dieses Widget stammt aus %s. Beacon Events zeigt darin jetzt deine kommenden Veranstaltungen, mit seinem Titel und seiner Anzahl. Um es zu ändern, ersetze es durch den Block „Veranstaltungen“."
 
-#: includes/class-events.php:168
-#: includes/class-events.php:173
+#: includes/class-events.php:245
+#: includes/class-events.php:250
 #: includes/class-import.php:161
 #: includes/elementor-widget.php:23
 #: assets/editor.js:5
@@ -383,23 +383,23 @@ msgstr "Dieses Widget stammt aus %s. Beacon Events zeigt darin jetzt deine komme
 msgid "Events"
 msgstr "Veranstaltungen"
 
-#: includes/class-events.php:170
+#: includes/class-events.php:247
 msgid "Add New Event"
 msgstr "Neue Veranstaltung"
 
-#: includes/class-events.php:171
+#: includes/class-events.php:248
 msgid "Edit Event"
 msgstr "Veranstaltung bearbeiten"
 
-#: includes/class-events.php:191
+#: includes/class-events.php:268
 msgid "Event Categories"
 msgstr "Veranstaltungskategorien"
 
-#: includes/class-events.php:201
+#: includes/class-events.php:278
 msgid "Venues"
 msgstr "Orte"
 
-#: includes/class-events.php:211
+#: includes/class-events.php:288
 #: includes/class-import.php:163
 msgid "Organizers"
 msgstr "Veranstalter"

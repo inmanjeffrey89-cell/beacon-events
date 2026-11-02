@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.2
+Stable tag: 0.38.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -161,6 +161,9 @@ Yes. Every source under Events → Import / Export has a "Dry run first" button 
 = Can I keep my old calendar plugin running while I try Beacon Events? =
 Yes. The Events Calendar, Events Manager, Modern Events Calendar, EventON, WP Event Manager, EventPrime, Sugar Calendar, WP Events Manager, All-in-One Event Calendar and Event Organiser use addresses that overlap with Beacon's (/event/, /events/, /venue/ or /organizer/). While one of them is active, Beacon's pages sit under /beacon-event/ and /beacon-events/, so your visitors keep seeing the old plugin's pages while you look at the imported events. When you deactivate the old plugin, Beacon moves to /event/ and /events/ by itself, and links to the /beacon-… addresses are redirected. Before 0.38.1, Beacon took those addresses as soon as it was activated, so some of the other plugin's pages showed "Page not found" or Beacon's calendar instead.
 
+= My site already has a page called Events. Does Beacon take it over? =
+No. Since 0.38.3 a published page at /events/ keeps that address, so you can put the calendar block on it and that is what visitors see. Beacon's own list of all events then lives at /beacon-events/. The same goes for a theme or plugin that already uses /event/, /venue/ or /organizer/ for its own content: those addresses stay theirs, Beacon uses /beacon-event/ and so on, and old links to Beacon's events that the other one doesn't know are redirected. When the page or the other post type goes away, Beacon moves back by itself.
+
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs are always kept, and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
@@ -251,6 +254,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.3 =
+* Fix: a site's own page called "Events" was hidden behind Beacon's list of events at /events/, so a calendar block put on that page never showed. The page keeps /events/ now and Beacon's list moves to /beacon-events/. Likewise a theme or plugin that already uses /event/, /venue/, /organizer/ or /event-category/ keeps those addresses and Beacon uses /beacon-… ones; links to Beacon's events at the old address are redirected. Checked in the admin and when pages change, never on the front end.
+
 = 0.38.2 =
 * While another events plugin is still active, Beacon's admin menu is called "Beacon Events", so it can't be mixed up with the other plugin's "Events" menu. It goes back to "Events" when the other plugin is switched off.
 
@@ -271,8 +277,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.35.0 =
 * After a move, the old calendar plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar, MEC, EventPrime) keep their place and saved title and show your upcoming events, instead of vanishing from the sidebar. The saved number of events and category carry over. Only for plugins you imported from, and never while that plugin is active.
-
-= 0.34.0 =
-* Lists can show each event once: turn on "Each event once" in the Events block (or Elementor widget), or add once="1" to the shortcode, and a repeating event shows only its next date, so a weekly class or a daily special doesn't fill a "Coming up" box. A cancelled next date is skipped for the one after it.
-* After a move, EventON lists set to "hide multiple occurrences", My Calendar's show_recurring="no" and Event Organiser's group_events_by="series" keep that behaviour.
 Older versions: see changelog.txt in the plugin folder.

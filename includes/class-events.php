@@ -24,6 +24,10 @@ final class Events {
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
 	const HEAL    = 'beacon_rules_heal';            // transient: Beacon rebuilt lost rewrite rules recently, wait
 	const BASES   = 'beacon_url_bases';             // the address bases the saved rewrite rules were built with
+	const TAKEN   = 'beacon_url_taken';             // { sig, keys }: DEFAULT_BASES keys something else answers (see check_taken)
+
+	/** @var bool The stored check is missing or was made with other plugins or another theme active. */
+	private static $recheck = false;
 	const DEFAULT_BASES = array(
 		'event'     => 'event',
 		'events'    => 'events',
@@ -34,6 +38,11 @@ final class Events {
 
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ) );
+		add_action( 'admin_init', array( __CLASS__, 'check_taken' ) );
+		add_action( 'save_post_page', array( __CLASS__, 'check_taken' ), 20 );
+		add_action( 'deleted_post', fn( $id, $post = null ) => $post && 'page' === $post->post_type && self::check_taken(), 10, 2 );
+		// plugins or theme changed since the last check: look again once everything has registered (any request)
+		add_action( 'init', fn() => self::$recheck && self::check_taken(), 9999 );
 		add_filter( 'do_parse_request', array( __CLASS__, 'heal_rules' ), 1 );
 		add_action( 'save_post_' . self::CPT, array( __CLASS__, 'on_save' ), 20, 2 );
 		// The block editor saves meta over REST AFTER save_post fires; rebuild occurrences once the meta is actually written.
@@ -154,9 +163,77 @@ final class Events {
 		$sharing = self::sharing_plugin();
 		$bases   = self::DEFAULT_BASES;
 		if ( '' !== $sharing ) {
-			$bases = array_map( fn( $b ) => 'beacon-' . $b, $bases ); }
+			$bases = array_map( fn( $b ) => 'beacon-' . $b, $bases );
+		} else {
+			$t = get_option( self::TAKEN );
+			if ( ! is_array( $t ) || ( $t['sig'] ?? '' ) !== self::site_sig() ) {
+				self::$recheck = true;
+				$t             = array();
+			}
+			foreach ( (array) ( $t['keys'] ?? array() ) as $k ) {
+				if ( isset( $bases[ $k ] ) ) {
+					$bases[ $k ] = 'beacon-' . $bases[ $k ]; }
+			}
+		}
 		$bases = (array) apply_filters( 'beacon_url_bases', $bases, $sharing );
 		return array_map( 'sanitize_title', array_merge( self::DEFAULT_BASES, $bases ) );
+	}
+
+	/**
+	 * Which of Beacon's addresses something else on the site already answers: a theme's or plugin's post type at
+	 * /event/<name>/ or with its archive at /events/, a taxonomy or post type at /venue/, /organizer/ or
+	 * /event-category/, or a published page at /events/ (a site's own "Events" page, often the one the calendar block
+	 * goes on). Those addresses stay theirs and Beacon uses "beacon-…" for them (see bases()). Runs in the admin and
+	 * when pages are saved or deleted, never on the front end; a change rebuilds the rewrite rules on the next request.
+	 */
+	public static function check_taken(): void {
+		if ( ! did_action( 'init' ) ) {
+			return; }
+		$d     = self::DEFAULT_BASES;
+		$taken = array();
+		foreach ( get_post_types( array(), 'objects' ) as $pt ) {
+			if ( self::CPT === $pt->name || empty( $pt->rewrite ) || ! $pt->publicly_queryable ) {
+				continue; }
+			$slug = trim( (string) ( $pt->rewrite['slug'] ?? $pt->name ), '/' );
+			$arch = is_string( $pt->has_archive ) ? trim( $pt->has_archive, '/' ) : ( true === $pt->has_archive ? $slug : '' );
+			foreach ( array( 'event', 'venue', 'organizer', 'category' ) as $k ) {
+				if ( $d[ $k ] === $slug ) {
+					$taken[] = $k; }
+			}
+			if ( '' !== $arch && $d['events'] === $arch ) {
+				$taken[] = 'events'; }
+		}
+		foreach ( get_taxonomies( array(), 'objects' ) as $tax ) {
+			if ( in_array( $tax->name, array( 'beacon_category', 'beacon_venue', 'beacon_organizer' ), true ) || empty( $tax->rewrite ) ) {
+				continue; }
+			$slug = trim( (string) ( $tax->rewrite['slug'] ?? '' ), '/' );
+			foreach ( array( 'category', 'venue', 'organizer', 'event' ) as $k ) {
+				if ( $d[ $k ] === $slug ) {
+					$taken[] = $k; }
+			}
+		}
+		$page = get_page_by_path( $d['events'] );
+		if ( $page && 'publish' === $page->post_status ) {
+			$taken[] = 'events'; }
+		$taken = array_values( array_unique( $taken ) );
+		sort( $taken );
+		$now           = array(
+			'sig'  => self::site_sig(),
+			'keys' => $taken,
+		);
+		self::$recheck = false;
+		if ( get_option( self::TAKEN ) !== $now ) {
+			update_option( self::TAKEN, $now ); // the bases follow on the next request, and register() rebuilds the rules then
+		}
+	}
+
+	/** Active plugins and theme: what decides which post types, taxonomies and archives exist. */
+	private static function site_sig(): string {
+		$plugins = (array) get_option( 'active_plugins', array() );
+		if ( is_multisite() ) {
+			$plugins = array_merge( $plugins, array_keys( (array) get_site_option( 'active_sitewide_plugins', array() ) ) ); }
+		sort( $plugins );
+		return md5( implode( ',', $plugins ) . '|' . get_stylesheet() );
 	}
 
 	public static function register(): void {

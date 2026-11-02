@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.38.3 =
+* Fix: a site's own page called "Events" was hidden behind Beacon's list of events at /events/, so a calendar block put on that page never showed. The page keeps /events/ now and Beacon's list moves to /beacon-events/. Likewise a theme or plugin that already uses /event/, /venue/, /organizer/ or /event-category/ keeps those addresses and Beacon uses /beacon-… ones; links to Beacon's events at the old address are redirected. Checked in the admin and when pages change, never on the front end.
+
 = 0.38.2 =
 * While another events plugin is still active, Beacon's admin menu is called "Beacon Events", so it can't be mixed up with the other plugin's "Events" menu. It goes back to "Events" when the other plugin is switched off.
 

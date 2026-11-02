@@ -1155,10 +1155,33 @@ final class Import {
 		// Links handed out while another events plugin still held /event/ and /events/ (Beacon was at /beacon-event/…):
 		// once Beacon has its own addresses back, send them there, query string and all.
 		$bases = Events::bases();
-		if ( preg_match( '#^beacon-(event|events|event-category|venue|organizer)(/.*)?$#', $path, $m ) && Events::DEFAULT_BASES === $bases ) {
+		$keys  = array_flip( Events::DEFAULT_BASES ); // 'event-category' => 'category', …
+		if ( preg_match( '#^beacon-(event-category|events|event|venue|organizer)(/.*)?$#', $path, $m ) && $bases[ $keys[ $m[1] ] ] === $m[1] ) {
 			$to = add_query_arg( urlencode_deep( wp_unslash( $_GET ) ), home_url( user_trailingslashit( $m[1] . ( $m[2] ?? '' ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- carried over as is
 			wp_safe_redirect( $to, 301 );
 			exit;
+		}
+		// The reverse: something else took /event/ (or /venue/ …) after links to Beacon's pages were handed out there.
+		// Its own pages still answer; an address it doesn't know (a 404) goes to the Beacon page with that name, if any.
+		if ( is_404() && preg_match( '#^(event|event-category|venue|organizer)/([^/]+)/?$#', $path, $m ) && $bases[ $keys[ $m[1] ] ] !== $m[1] ) {
+			$slug = sanitize_title( $m[2] );
+			if ( 'event' === $m[1] ) {
+				$p  = get_page_by_path( $slug, OBJECT, Events::CPT );
+				$to = $p && 'publish' === $p->post_status ? (string) get_permalink( $p ) : '';
+			} else {
+				$tax  = array(
+					'event-category' => 'beacon_category',
+					'venue'          => 'beacon_venue',
+					'organizer'      => 'beacon_organizer',
+				)[ $m[1] ];
+				$term = get_term_by( 'slug', $slug, $tax );
+				$link = $term ? get_term_link( $term ) : '';
+				$to   = is_string( $link ) ? $link : '';
+			}
+			if ( $to ) {
+				wp_safe_redirect( $to, 301 );
+				exit;
+			}
 		}
 		// Not only on a 404: Events Manager leaves placeholder pages named "events" / "locations" behind, which make
 		// WordPress answer these URLs with something other than a 404. A redirect happens only when the target exists.
