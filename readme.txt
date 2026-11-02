@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.3
+Stable tag: 0.38.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,6 +164,9 @@ Yes. The Events Calendar, Events Manager, Modern Events Calendar, EventON, WP Ev
 = My site already has a page called Events. Does Beacon take it over? =
 No. Since 0.38.3 a published page at /events/ keeps that address, so you can put the calendar block on it and that is what visitors see. Beacon's own list of all events then lives at /beacon-events/. The same goes for a theme or plugin that already uses /event/, /venue/ or /organizer/ for its own content: those addresses stay theirs, Beacon uses /beacon-event/ and so on, and old links to Beacon's events that the other one doesn't know are redirected. When the page or the other post type goes away, Beacon moves back by itself.
 
+= People subscribed to my old calendar feed. Do they keep getting updates? =
+Yes, for The Events Calendar. After the move, its "Subscribe to calendar" address (the one Google Calendar, Apple Calendar and Outlook were given), an "Export .ics" link on any of its calendar views, its category feeds and an event's own ?ical=1 link all answer with Beacon's feed for the same events, so subscribed calendars keep updating. This starts once The Events Calendar is deactivated; while it is active, its own feed still answers.
+
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs are always kept, and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
@@ -254,6 +257,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.4 =
+* After a move from The Events Calendar, calendars subscribed to its feed keep updating: its "Subscribe" address (/?post_type=tribe_events&ical=1), ?ical=1 and ?outlook-ical=1 on its calendar views, its category feeds and an event's ?ical=1 link now answer with Beacon's feed for the same events, category or event. Only once The Events Calendar is deactivated.
+
 = 0.38.3 =
 * Fix: a site's own page called "Events" was hidden behind Beacon's list of events at /events/, so a calendar block put on that page never showed. The page keeps /events/ now and Beacon's list moves to /beacon-events/. Likewise a theme or plugin that already uses /event/, /venue/, /organizer/ or /event-category/ keeps those addresses and Beacon uses /beacon-… ones; links to Beacon's events at the old address are redirected. Checked in the admin and when pages change, never on the front end.
 
@@ -274,7 +280,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.36.0 =
 * After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
-
-= 0.35.0 =
-* After a move, the old calendar plugin's sidebar widgets (The Events Calendar's Events List and mini calendar, EventON, Events Manager, Event Organiser, My Calendar, Sugar Calendar, WP Event Manager, All-in-One Event Calendar, MEC, EventPrime) keep their place and saved title and show your upcoming events, instead of vanishing from the sidebar. The saved number of events and category carry over. Only for plugins you imported from, and never while that plugin is active.
 Older versions: see changelog.txt in the plugin folder.

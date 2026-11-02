@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.38.4 =
+* After a move from The Events Calendar, calendars subscribed to its feed keep updating: its "Subscribe" address (/?post_type=tribe_events&ical=1), ?ical=1 and ?outlook-ical=1 on its calendar views, its category feeds and an event's ?ical=1 link now answer with Beacon's feed for the same events, category or event. Only once The Events Calendar is deactivated.
+
 = 0.38.3 =
 * Fix: a site's own page called "Events" was hidden behind Beacon's list of events at /events/, so a calendar block put on that page never showed. The page keeps /events/ now and Beacon's list moves to /beacon-events/. Likewise a theme or plugin that already uses /event/, /venue/, /organizer/ or /event-category/ keeps those addresses and Beacon uses /beacon-… ones; links to Beacon's events at the old address are redirected. Checked in the admin and when pages change, never on the front end.
 

@@ -25,6 +25,58 @@ final class Ics {
 		);
 		// Before redirect_canonical (priority 10): a ?beacon_category=slug feed URL must not be bounced to the pretty term URL.
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_export' ), 1 );
+		add_action( 'template_redirect', array( __CLASS__, 'old_feeds' ), 0 );
+	}
+
+	/**
+	 * The Events Calendar's feed addresses keep working after a move: calendars subscribed to
+	 * /?post_type=tribe_events&ical=1&eventDisplay=list (its "Subscribe" links, with tribe_events_cat for a category),
+	 * any view with ?ical=1 or ?outlook-ical=1, or an event page with ?ical=1 would otherwise get a web page back and
+	 * quietly stop updating. Served straight away (status 200), only once TEC is gone and events were imported from it.
+	 */
+	public static function old_feeds(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public, read-only export
+		if ( ( ! isset( $_GET['ical'] ) && ! isset( $_GET['outlook-ical'] ) ) || isset( $_GET['beacon_ical'] ) || class_exists( 'Tribe__Events__Main' ) || ! in_array( Import\Source_TEC::KEY, Compat::sources(), true ) ) {
+			return; }
+		$which = 'all';
+		$cat   = isset( $_GET['tribe_events_cat'] ) ? sanitize_title( wp_unslash( $_GET['tribe_events_cat'] ) ) : '';
+		// phpcs:enable
+		$path = trim( (string) wp_parse_url( (string) ( $_SERVER['REQUEST_URI'] ?? '' ), PHP_URL_PATH ), '/' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- path only, matched against fixed patterns
+		$home = trim( (string) wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
+		if ( '' !== $home && 0 === strpos( $path . '/', $home . '/' ) ) {
+			$path = trim( (string) substr( $path, strlen( $home ) ), '/' ); }
+		if ( is_singular( Events::CPT ) ) {
+			$which = (string) get_queried_object_id();
+		} elseif ( preg_match( '#^series/([^/]+)#', $path, $m ) && ( $series = (array) get_option( Import::OPT_SERIES, array() ) ) && isset( $series[ $m[1] ] ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+			$which = (string) (int) $series[ $m[1] ];
+		} elseif ( '' === $cat && preg_match( '#^events/category/(?:[^/]+/)*([^/]+?)(?:/(?:list|month|day|week|photo|map|summary))?/?$#', $path, $m ) ) {
+			$cat = sanitize_title( $m[1] );
+		}
+		if ( '' !== $cat ) {
+			// the category imported under that TEC slug first, then a Beacon category with the same slug
+			$found = get_terms(
+				array(
+					'taxonomy'   => 'beacon_category',
+					'hide_empty' => false,
+					'number'     => 1,
+					'orderby'    => 'count', // an emptied leftover from an earlier import never wins
+					'order'      => 'DESC',
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one lookup, only for an old feed address
+					'meta_query' => array(
+						array(
+							'key'   => '_beacon_tec_slug',
+							'value' => $cat,
+						),
+					),
+				)
+			);
+			$term  = is_array( $found ) && $found ? $found[0] : get_term_by( 'slug', $cat, 'beacon_category' );
+			if ( $term ) {
+				$_GET['beacon_category'] = $term->slug; }
+		}
+		$_GET['beacon_ical'] = $which;
+		status_header( 200 ); // WordPress has already called this a 404 when the old view's address no longer exists
+		self::maybe_export();
 	}
 
 	/* ---------------- parsing ---------------- */
