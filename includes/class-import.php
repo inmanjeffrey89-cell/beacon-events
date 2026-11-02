@@ -136,6 +136,18 @@ final class Import {
 		$log = get_option( self::OPT_LOG, array() );
 		if ( $done && $log ) {
 			self::report( $log[0] ); }
+		$sharing = Events::sharing_plugin();
+		if ( '' !== $sharing ) {
+			$archive = (string) get_post_type_archive_link( Events::CPT );
+			echo '<div class="notice notice-info inline" style="margin:0 0 1em;max-width:60em"><p>' . esc_html(
+				sprintf(
+					/* translators: 1: the other events plugin, e.g. "The Events Calendar", 2: Beacon's events address while it is active */
+					__( 'While %1$s is active, Beacon\'s events are at %2$s and each event under /beacon-event/, so your visitors keep seeing %1$s\'s own pages while you check the imported ones. When you deactivate %1$s, Beacon moves to /events/ and /event/ by itself, and the old links are redirected.', 'beacon-events' ),
+					$sharing,
+					$archive
+				)
+			) . '</p></div>';
+		}
 		$intro = esc_html__( 'Nothing in the other plugin is changed or deleted. Events, venues, organizers, categories, featured images, timezones and recurring rules are copied over; anything imported earlier is updated, not duplicated. Both plugins can stay active while you check the result.', 'beacon-events' );
 		foreach ( self::sources() as $key => $cls ) {
 			if ( $key === Source_CSV::KEY ) {
@@ -1140,6 +1152,14 @@ final class Import {
 		if ( $home !== '' && strpos( $path . '/', $home . '/' ) === 0 ) {
 			$path = trim( (string) substr( $path, strlen( $home ) ), '/' ); }
 		$to = '';
+		// Links handed out while another events plugin still held /event/ and /events/ (Beacon was at /beacon-event/…):
+		// once Beacon has its own addresses back, send them there, query string and all.
+		$bases = Events::bases();
+		if ( preg_match( '#^beacon-(event|events|event-category|venue|organizer)(/.*)?$#', $path, $m ) && Events::DEFAULT_BASES === $bases ) {
+			$to = add_query_arg( urlencode_deep( wp_unslash( $_GET ) ), home_url( user_trailingslashit( $m[1] . ( $m[2] ?? '' ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- carried over as is
+			wp_safe_redirect( $to, 301 );
+			exit;
+		}
 		// Not only on a 404: Events Manager leaves placeholder pages named "events" / "locations" behind, which make
 		// WordPress answer these URLs with something other than a 404. A redirect happens only when the target exists.
 		if ( preg_match( '#^events/categor(?:y|ies)/([^/]+)#', $path, $m ) && ! class_exists( 'Tribe__Events__Main' ) && ! class_exists( 'EM_Event' ) && ! defined( 'EVENT_ORGANISER_VER' ) ) {

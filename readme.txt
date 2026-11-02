@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.0
+Stable tag: 0.38.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,9 @@ Yes. After an import, the calendar and list shortcodes your pages used with the 
 = Can I see what an import will do before it runs? =
 Yes. Every source under Events → Import / Export has a "Dry run first" button (and `wp beacon import <source> --dry-run` on the command line). It goes through all the events exactly as the import would and reports how many would be created, how many updated, which would be skipped and why, which repeating rules would be simplified, and how many venues, organizers and categories would be added, without writing anything. Running the real import afterwards does exactly that, and running it again later updates instead of duplicating. Both the dry run and the import can be downloaded as a CSV with one row per event: created, updated or skipped and why, its new event ID, dates and repeat rule, which is handy for checking a large move event by event (`--report=file.csv` on the command line).
 
+= Can I keep my old calendar plugin running while I try Beacon Events? =
+Yes. The Events Calendar, Events Manager, Modern Events Calendar, EventON, WP Event Manager, EventPrime, Sugar Calendar, WP Events Manager, All-in-One Event Calendar and Event Organiser use addresses that overlap with Beacon's (/event/, /events/, /venue/ or /organizer/). While one of them is active, Beacon's pages sit under /beacon-event/ and /beacon-events/, so your visitors keep seeing the old plugin's pages while you look at the imported events. When you deactivate the old plugin, Beacon moves to /event/ and /events/ by itself, and links to the /beacon-… addresses are redirected. Before 0.38.1, Beacon took those addresses as soon as it was activated, so some of the other plugin's pages showed "Page not found" or Beacon's calendar instead.
+
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs are always kept, and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
@@ -248,6 +251,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.1 =
+* Fix: activating Beacon Events on a site that still runs The Events Calendar (or another events plugin that uses /event/ and /events/) made that plugin's event pages show "Page not found". While such a plugin is active, Beacon's pages now sit under /beacon-event/ and /beacon-events/, so visitors keep seeing the old plugin's pages while you check the import; when you deactivate it, Beacon moves to /event/ and /events/ by itself and the /beacon-… links are redirected. Also: Events → Import / Export says where the imported events are while both plugins run.
+
 = 0.38.0 =
 * New: undo an import. Events → Import / Export → "Undo this import" deletes the events imported from that plugin, and the venues, organizers and categories the import created once nothing uses them, so you can turn the old plugin back on and be where you started. Events with bookings are kept, and so are events you changed after the import unless you ask. From the command line: wp beacon undo <source>.
 
@@ -269,7 +275,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.33.0 =
 * After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
-
-= 0.32.0 =
-* New: import from My Calendar. It reads My Calendar's own tables: events, all-day events, locations with their addresses, categories with their colours, descriptions, featured images and the ticket or event link (as the "Tickets & info" button). Repeating events stay repeating, checked against every date My Calendar stored, and a deleted date stays deleted. Once My Calendar is deactivated, its old event, location and category pages and its ?mc_id= links redirect to the new ones.
 Older versions: see changelog.txt in the plugin folder.

@@ -23,6 +23,14 @@ final class Events {
 	const HORIZON = '_beacon_horizon';              // last date a series was materialised to (Y-m-d)
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
 	const HEAL    = 'beacon_rules_heal';            // transient: Beacon rebuilt lost rewrite rules recently, wait
+	const BASES   = 'beacon_url_bases';             // the address bases the saved rewrite rules were built with
+	const DEFAULT_BASES = array(
+		'event'     => 'event',
+		'events'    => 'events',
+		'category'  => 'event-category',
+		'venue'     => 'venue',
+		'organizer' => 'organizer',
+	);
 
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ) );
@@ -111,7 +119,48 @@ final class Events {
 		return true;
 	}
 
+	/**
+	 * The active events plugin that answers the same addresses as Beacon (/event/, /events/, /venue/, /organizer/,
+	 * /event-category/), or '' when there is none. Its name is shown on the Import / Export screen.
+	 */
+	public static function sharing_plugin(): string {
+		$plugins = array(
+			'The Events Calendar'           => class_exists( 'Tribe__Events__Main' ),
+			'Events Manager'                => defined( 'EM_VERSION' ) || class_exists( 'EM_Event' ),
+			'Modern Events Calendar'        => class_exists( 'MEC' ),
+			'EventON'                       => class_exists( 'EventON' ),
+			'WP Event Manager'              => class_exists( 'WP_Event_Manager' ),
+			'EventPrime'                    => defined( 'EVENTPRIME_VERSION' ),
+			'Sugar Calendar'                => function_exists( 'sugar_calendar' ),
+			'WP Events Manager (ThimPress)' => defined( 'WPEMS_MAIN_FILE' ),
+			'All-in-One Event Calendar'     => defined( 'AI1EC_POST_TYPE' ),
+			'Event Organiser'               => defined( 'EVENT_ORGANISER_VER' ),
+		);
+		foreach ( $plugins as $name => $active ) {
+			if ( $active ) {
+				return $name; }
+		}
+		return '';
+	}
+
+	/**
+	 * Address bases for events, the archive and the three taxonomies. While another events plugin that uses the same
+	 * addresses is still active, Beacon's pages sit under "beacon-…" (/beacon-event/<slug>/, /beacon-events/), so that
+	 * plugin's own pages keep answering its links while you look at the imported events. Once it is switched off,
+	 * Beacon moves to /event/ and /events/ by itself and the "beacon-…" links redirect there.
+	 * Filter `beacon_url_bases` ( array $bases, string $sharing_plugin ) to choose your own.
+	 */
+	public static function bases(): array {
+		$sharing = self::sharing_plugin();
+		$bases   = self::DEFAULT_BASES;
+		if ( '' !== $sharing ) {
+			$bases = array_map( fn( $b ) => 'beacon-' . $b, $bases ); }
+		$bases = (array) apply_filters( 'beacon_url_bases', $bases, $sharing );
+		return array_map( 'sanitize_title', array_merge( self::DEFAULT_BASES, $bases ) );
+	}
+
 	public static function register(): void {
+		$bases = self::bases();
 		register_post_type(
 			self::CPT,
 			array(
@@ -123,9 +172,9 @@ final class Events {
 					'menu_name'     => __( 'Events', 'beacon-events' ),
 				),
 				'public'        => true,
-				'has_archive'   => 'events',
+				'has_archive'   => $bases['events'],
 				'rewrite'       => array(
-					'slug'       => 'event',
+					'slug'       => $bases['event'],
 					'with_front' => false,
 				),
 				'menu_icon'     => 'dashicons-calendar-alt',
@@ -141,7 +190,7 @@ final class Events {
 				'label'        => __( 'Event Categories', 'beacon-events' ),
 				'hierarchical' => true,
 				'show_in_rest' => true,
-				'rewrite'      => array( 'slug' => 'event-category' ),
+				'rewrite'      => array( 'slug' => $bases['category'] ),
 			)
 		);
 		register_taxonomy(
@@ -151,7 +200,7 @@ final class Events {
 				'label'        => __( 'Venues', 'beacon-events' ),
 				'hierarchical' => false,
 				'show_in_rest' => true,
-				'rewrite'      => array( 'slug' => 'venue' ),
+				'rewrite'      => array( 'slug' => $bases['venue'] ),
 			)
 		);
 		register_taxonomy(
@@ -161,9 +210,15 @@ final class Events {
 				'label'        => __( 'Organizers', 'beacon-events' ),
 				'hierarchical' => false,
 				'show_in_rest' => true,
-				'rewrite'      => array( 'slug' => 'organizer' ),
+				'rewrite'      => array( 'slug' => $bases['organizer'] ),
 			)
 		);
+		// The bases changed (another events plugin was switched on or off): rebuild the rules at init 99, once.
+		$key = implode( '|', $bases );
+		if ( get_option( self::BASES ) !== $key ) {
+			update_option( self::BASES, $key );
+			update_option( 'beacon_flush_rewrites', '1' );
+		}
 		register_term_meta(
 			'beacon_venue',
 			'beacon_address',

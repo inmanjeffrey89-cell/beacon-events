@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.38.1 =
+* Fix: activating Beacon Events on a site that still runs The Events Calendar (or another events plugin that uses /event/ and /events/) made that plugin's event pages show "Page not found". While such a plugin is active, Beacon's pages now sit under /beacon-event/ and /beacon-events/, so visitors keep seeing the old plugin's pages while you check the import; when you deactivate it, Beacon moves to /event/ and /events/ by itself and the /beacon-… links are redirected. Also: Events → Import / Export says where the imported events are while both plugins run.
+
 = 0.38.0 =
 * New: undo an import. Events → Import / Export → "Undo this import" deletes the events imported from that plugin, and the venues, organizers and categories the import created once nothing uses them, so you can turn the old plugin back on and be where you started. Events with bookings are kept, and so are events you changed after the import unless you ask. From the command line: wp beacon undo <source>.
 
