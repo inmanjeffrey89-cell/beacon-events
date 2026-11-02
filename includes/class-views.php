@@ -1208,7 +1208,7 @@ final class Views {
 				array(
 					'@type'   => 'Place',
 					'name'    => self::plain( $venue->name ),
-					'address' => self::plain( (string) get_term_meta( $venue->term_id, 'beacon_address', true ) ),
+					'address' => self::postal_address( self::plain( (string) get_term_meta( $venue->term_id, 'beacon_address', true ) ) ),
 				)
 			); }
 		$items = array();
@@ -1251,5 +1251,60 @@ final class Views {
 		if ( ! $items ) {
 			return; }
 		echo '<script type="application/ld+json">' . wp_json_encode( count( $items ) === 1 ? $items[0] : $items, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput -- JSON built from escaped scalars by wp_json_encode
+	}
+
+	const US_STATES = 'AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA PR RI SC SD TN TX UT VT VA WA WV WI WY';
+
+	/**
+	 * A venue's one-line address as a schema.org PostalAddress (Google's Event docs type location.address as PostalAddress).
+	 * Parts are split out only when the form is clear: "…, City, ST 12345[, Country]" (a US state code; country US unless
+	 * written), or "…, 12345 City[, Country]" (a European postcode). Anything else goes whole into streetAddress.
+	 *
+	 * @param string $text Plain-text address.
+	 * @return array|null PostalAddress, or null when there is no address.
+	 */
+	public static function postal_address( string $text ): ?array {
+		$parts = array_values( array_filter( array_map( 'trim', preg_split( '/\s*(?:,|\R)\s*/u', $text ) ), 'strlen' ) );
+		if ( ! $parts ) {
+			return null; }
+		$addr = array( '@type' => 'PostalAddress' );
+		$n       = count( $parts );
+		$states  = explode( ' ', self::US_STATES );
+		$country = '';
+		if ( $n >= 3 && ! preg_match( '/\d/', $parts[ $n - 1 ] ) && ! in_array( $parts[ $n - 1 ], $states, true ) ) {
+			$country = $parts[ $n - 1 ]; // a trailing part with no digits, kept only if a postcode or state comes right before it
+		}
+		$tail = $country ? $n - 2 : $n - 1;
+		if ( $tail >= 1 && preg_match( '/^([A-Z]{2})(?:\s+(\d{5}(?:-\d{4})?))?$/', $parts[ $tail ], $m ) && in_array( $m[1], $states, true ) ) {
+			$addr += array_filter(
+				array(
+					'streetAddress'   => implode( ', ', array_slice( $parts, 0, $tail - 1 ) ),
+					'addressLocality' => $parts[ $tail - 1 ],
+					'addressRegion'   => $m[1],
+					'postalCode'      => $m[2] ?? '',
+					'addressCountry'  => $country ?: 'US',
+				),
+				'strlen'
+			);
+			return $addr;
+		}
+		// "Hauptstraße 5, 32816 Schlangen". Not "Suite 3, 10500 Main Street" or "Building B, 12345 Research Blvd": the
+		// street before it must hold a number and the town must not read as a street.
+		$street_word = '/\b(?:street|st|road|rd|avenue|ave|boulevard|blvd|drive|dr|lane|ln|way|court|ct|place|pl|highway|hwy|parkway|pkwy|circle|terrace|trail)\b\.?$/i';
+		if ( $tail >= 1 && preg_match( '/^(\d{4,5})\s+(\p{L}[\p{L}\p{M} .\'-]*)$/u', $parts[ $tail ], $m )
+			&& preg_match( '/\d/', implode( ' ', array_slice( $parts, 0, $tail ) ) ) && ! preg_match( $street_word, $m[2] ) ) {
+			$addr += array_filter(
+				array(
+					'streetAddress'   => implode( ', ', array_slice( $parts, 0, $tail ) ),
+					'addressLocality' => $m[2],
+					'postalCode'      => $m[1],
+					'addressCountry'  => $country,
+				),
+				'strlen'
+			);
+			return $addr;
+		}
+		$addr['streetAddress'] = implode( ', ', $parts );
+		return $addr;
 	}
 }

@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.37.0
+Stable tag: 0.37.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,6 +245,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.37.1 =
+* Event pages now describe the venue's address the way Google's event results ask for it: street, city, state or region, postcode and country as separate parts instead of one line of text. Addresses whose form isn't clear stay whole in the street line.
+
 = 0.37.0 =
 * Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
 
@@ -266,8 +269,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.31.0 =
 * New: import from EventPrime. Events, all-day events, venues with their addresses, event types as categories with their colours, organizers, featured images and the outside booking link (as the "Tickets & info" button) come over. A repeating event becomes one repeating event when a rule gives its dates; a date EventPrime left out becomes a skipped date. Lists of hand-picked dates come over as one event per date, for Combine. Once EventPrime is deactivated, its old ?event= / ?venue= links and SEO addresses redirect to the new ones. Bookings and tickets are not imported.
-
-= 0.30.0 =
-* New: import from Event Organiser. Events, all-day events, venues with their addresses, categories with their colours, featured images and repeating schedules come over; each repeat rule is checked against every date Event Organiser saved, so skipped dates stay skipped. A schedule that can't be written as a rule comes over on its first date and the report lists the rest. Once Event Organiser is deactivated, its old event, venue and category links redirect to the new ones. From the command line: wp beacon import eventorganiser.
-
 Older versions: see changelog.txt in the plugin folder.

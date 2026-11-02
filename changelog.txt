@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.37.1 =
+* Event pages now describe the venue's address the way Google's event results ask for it: street, city, state or region, postcode and country as separate parts instead of one line of text. Addresses whose form isn't clear stay whole in the street line.
+
 = 0.37.0 =
 * Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
 
