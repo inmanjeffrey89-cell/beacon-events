@@ -169,7 +169,8 @@ final class Events {
 					'singular_name' => __( 'Event', 'beacon-events' ),
 					'add_new_item'  => __( 'Add New Event', 'beacon-events' ),
 					'edit_item'     => __( 'Edit Event', 'beacon-events' ),
-					'menu_name'     => __( 'Events', 'beacon-events' ),
+					// two "Events" menus side by side while the other plugin is still on: say which one is ours
+					'menu_name'     => '' !== self::sharing_plugin() ? __( 'Beacon Events', 'beacon-events' ) : __( 'Events', 'beacon-events' ),
 				),
 				'public'        => true,
 				'has_archive'   => $bases['events'],

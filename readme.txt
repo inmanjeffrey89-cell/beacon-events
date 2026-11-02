@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.1
+Stable tag: 0.38.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.2 =
+* While another events plugin is still active, Beacon's admin menu is called "Beacon Events", so it can't be mixed up with the other plugin's "Events" menu. It goes back to "Events" when the other plugin is switched off.
+
 = 0.38.1 =
 * Fix: activating Beacon Events on a site that still runs The Events Calendar (or another events plugin that uses /event/ and /events/) made that plugin's event pages show "Page not found". While such a plugin is active, Beacon's pages now sit under /beacon-event/ and /beacon-events/, so visitors keep seeing the old plugin's pages while you check the import; when you deactivate it, Beacon moves to /event/ and /events/ by itself and the /beacon-… links are redirected. Also: Events → Import / Export says where the imported events are while both plugins run.
 
@@ -272,7 +275,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 = 0.34.0 =
 * Lists can show each event once: turn on "Each event once" in the Events block (or Elementor widget), or add once="1" to the shortcode, and a repeating event shows only its next date, so a weekly class or a daily special doesn't fill a "Coming up" box. A cancelled next date is skipped for the one after it.
 * After a move, EventON lists set to "hide multiple occurrences", My Calendar's show_recurring="no" and Event Organiser's group_events_by="series" keep that behaviour.
-
-= 0.33.0 =
-* After a move, the old plugin's calendar and list shortcodes on your pages (The Events Calendar Pro, EventON, Events Manager, Event Organiser, My Calendar, EventPrime, Sugar Calendar, Eventin, WP Event Manager, WP Events Manager, All-in-One Event Calendar, Modern Events Calendar) show Beacon's calendar or list instead of raw text, keeping their view, category, venue and number of events. Only for plugins you imported from, and never while that plugin is still active.
 Older versions: see changelog.txt in the plugin folder.

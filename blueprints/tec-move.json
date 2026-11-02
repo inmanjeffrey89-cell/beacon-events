@@ -2,7 +2,7 @@
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"meta": {
 		"title": "Move off The Events Calendar with Beacon Events",
-		"description": "A small site on The Events Calendar (venues, an organizer, categories, a weekly class entered as copies), switched off, with Beacon Events ready to import it.",
+		"description": "A small site on The Events Calendar (venues, an organizer, categories, a weekly class entered as copies) with Beacon Events installed next to it: import, look at the events at /beacon-events/ while visitors still see TEC's calendar, then switch TEC off.",
 		"author": "inmanjeffrey89-cell"
 	},
 	"landingPage": "/wp-admin/edit.php?post_type=beacon_event&page=beacon-import",
@@ -42,7 +42,7 @@
 		},
 		{
 			"step": "runPHP",
-			"code": "<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; deactivate_plugins( 'the-events-calendar/the-events-calendar.php' );"
+			"code": "<?php require_once '/wordpress/wp-load.php'; tribe_update_option( 'tec_onboarding_wizard_visited_guided_setup', true ); delete_transient( '_tribe_events_activation_redirect' );"
 		},
 		{
 			"step": "installPlugin",
