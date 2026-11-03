@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.7
+Stable tag: 0.39.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -167,6 +167,9 @@ No. Since 0.38.3 a published page at /events/ keeps that address, so you can put
 = People subscribed to my old calendar feed. Do they keep getting updates? =
 Yes, for The Events Calendar. After the move, its "Subscribe to calendar" address (the one Google Calendar, Apple Calendar and Outlook were given), an "Export .ics" link on any of its calendar views, its category feeds and an event's own ?ical=1 link all answer with Beacon's feed for the same events, so subscribed calendars keep updating. This starts once The Events Calendar is deactivated; while it is active, its own feed still answers.
 
+= Does each date of a repeating event have its own page? =
+Yes, since 0.39.0. Every date has its own address, /event/<name>/<date>/, that shows that date (marked if it was moved or cancelled) with a link to all dates, opens the booking form on that date when Beacon Events Pro takes bookings, and is its own page for search engines: its canonical address is itself, also with Yoast, Rank Math, All in One SEO or SEOPress, and its event data describes just that date. Google's event results ask for a unique page for each event. The event's main page lists the next dates, the calendar views link each repeating event to the date you clicked, and The Events Calendar Pro's old per-date addresses now open the matching date.
+
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs are always kept, and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
@@ -257,6 +260,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.39.0 =
+* New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
+
 = 0.38.7 =
 * Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
 
@@ -277,7 +283,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.38.1 =
 * Fix: activating Beacon Events on a site that still runs The Events Calendar (or another events plugin that uses /event/ and /events/) made that plugin's event pages show "Page not found". While such a plugin is active, Beacon's pages now sit under /beacon-event/ and /beacon-events/, so visitors keep seeing the old plugin's pages while you check the import; when you deactivate it, Beacon moves to /event/ and /events/ by itself and the /beacon-… links are redirected. Also: Events → Import / Export says where the imported events are while both plugins run.
-
-= 0.38.0 =
-* New: undo an import. Events → Import / Export → "Undo this import" deletes the events imported from that plugin, and the venues, organizers and categories the import created once nothing uses them, so you can turn the old plugin back on and be where you started. Events with bookings are kept, and so are events you changed after the import unless you ask. From the command line: wp beacon undo <source>.
 Older versions: see changelog.txt in the plugin folder.

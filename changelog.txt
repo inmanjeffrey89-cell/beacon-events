@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.39.0 =
+* New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
+
 = 0.38.7 =
 * Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
 

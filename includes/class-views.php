@@ -17,6 +17,9 @@ final class Views {
 		add_action( 'init', array( __CLASS__, 'register_templates' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_filter( 'the_content', array( __CLASS__, 'single_details' ) );
+		add_filter( 'document_title_parts', array( __CLASS__, 'date_page_title' ) );
+		foreach ( array( 'get_canonical_url', 'wpseo_canonical', 'rank_math/frontend/canonical', 'aioseo_canonical_url', 'seopress_titles_canonical' ) as $hook ) {
+			add_filter( $hook, array( __CLASS__, 'date_page_canonical' ), 20 ); }
 		add_filter( 'the_excerpt', array( __CLASS__, 'archive_details' ) );
 		add_filter( 'oceanwp_excerpt', array( __CLASS__, 'archive_details' ) ); // OceanWP builds its archive excerpts without the_excerpt
 		add_filter( 'render_block_core/post-date', array( __CLASS__, 'archive_date_block' ), 10, 3 );
@@ -729,7 +732,7 @@ final class Views {
 			foreach ( $rows as $r ) {
 				$id   = (int) $r['event_id'];
 				$s    = self::local( $r['start_utc'], $id );
-				$out .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-date">' . esc_html( wp_date( 'D, M j', $s->getTimestamp(), $s->getTimezone() ) ) . '</span> <span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( get_permalink( $id ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . '</span></li>';
+				$out .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-date">' . esc_html( wp_date( 'D, M j', $s->getTimestamp(), $s->getTimezone() ) ) . '</span> <span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . '</span></li>';
 			}
 			return $out . '</ul>';
 		}
@@ -747,7 +750,7 @@ final class Views {
 				$out  .= '<section class="beacon-day"><h3 class="beacon-day-heading">' . esc_html( wp_date( 'l, F j', $s->getTimestamp(), $s->getTimezone() ) ) . '</h3><ul class="beacon-day-events">'; }
 			$id    = (int) $r['event_id'];
 			$venue = self::venue( $id );
-			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( get_permalink( $id ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span></li>';
+			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span></li>';
 		}
 		return $out . '</ul></section></div>';
 	}
@@ -802,7 +805,7 @@ final class Views {
 		foreach ( $rows as $r ) {
 			$id    = (int) $r['event_id'];
 			$venue = self::venue( $id );
-			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( get_permalink( $id ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
+			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
 		}
 		return $out . '</ul></div>';
 	}
@@ -849,7 +852,7 @@ final class Views {
 				$id    = (int) $r['event_id'];
 				$venue = self::venue( $id );
 				$time  = (int) $r['all_day'] ? esc_html__( 'All day', 'beacon-events' ) : self::when_start( $r ); // the full range is on the event page
-				$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . $time . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( get_permalink( $id ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
+				$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . $time . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
 			}
 			$out .= '</ul></section>';
 		}
@@ -910,7 +913,7 @@ final class Views {
 					$time  = (int) $r['all_day'] ? '' : '<span class="beacon-cell-time">' . self::when_start( $r ) . '</span>';
 					$title = '<span class="beacon-cell-title">' . self::title( $r ) . '</span>';
 					// on paper the time leads, inline, so a wrapped title uses the cell's full width
-					$out .= '<a class="beacon-cell-event' . self::row_class( $r ) . '"' . self::color_attr( (int) $r['event_id'] ) . ' href="' . esc_url( get_permalink( (int) $r['event_id'] ) ) . '">' . ( empty( $a['printing'] ) ? $title . $time : ( $time ? $time . ' ' : '' ) . $title ) . self::badge( $r ) . '</a>'; }
+					$out .= '<a class="beacon-cell-event' . self::row_class( $r ) . '"' . self::color_attr( (int) $r['event_id'] ) . ' href="' . esc_url( Events::date_url( (int) $r['event_id'], (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . ( empty( $a['printing'] ) ? $title . $time : ( $time ? $time . ' ' : '' ) . $title ) . self::badge( $r ) . '</a>'; }
 				$out .= '</td>';
 				$d    = $d->modify( '+1 day' );
 			}
@@ -1066,6 +1069,31 @@ final class Views {
 		return self::details_block( $id );
 	}
 
+	/** The date shown on this page when it is that event's own date page (/event/<name>/<date>/), else null. */
+	private static function date_page_for( int $id ): ?array {
+		return (int) get_queried_object_id() === $id ? Events::requested_date() : null;
+	}
+
+	/** A date page's title says which date it is ("Gentle Yoga – November 10, 2026"). */
+	public static function date_page_title( array $parts ): array {
+		$on = Events::requested_date();
+		if ( $on && isset( $parts['title'] ) ) {
+			$id = (int) get_queried_object_id();
+			try {
+				$tz = new \DateTimeZone( Events::get( $id )['tz'] );
+			} catch ( \Exception $x ) {
+				$tz = self::tz(); }
+			$parts['title'] .= ' – ' . wp_date( get_option( 'date_format' ), ( new \DateTimeImmutable( $on['start'], $tz ) )->getTimestamp(), $tz );
+		}
+		return $parts;
+	}
+
+	/** A date page is its own page for search engines (canonical to itself), with or without an SEO plugin. */
+	public static function date_page_canonical( $url ) {
+		$on = Events::requested_date();
+		return $on ? Events::date_url( (int) get_queried_object_id(), $on['orig'] ) : $url;
+	}
+
 	/** The When / Repeats / Where block, or '' if the event has no start. */
 	public static function details_block( int $id ): string {
 		$e = Events::get( $id );
@@ -1084,17 +1112,27 @@ final class Views {
 				$otz = new \DateTimeZone( $e['tz'] );
 			} catch ( \Exception $x ) {
 				$otz = new \DateTimeZone( 'UTC' ); }
-			foreach ( Events::occurrences_for_edit( $id, 20 ) as $o ) {
-				if ( $o['status'] !== 'cancelled' ) {
+			$on = self::date_page_for( $id );
+			foreach ( $on ? array( $on ) : Events::occurrences_for_edit( $id, 20 ) as $o ) {
+				if ( $on || $o['status'] !== 'cancelled' ) {
 					$s  = ( new \DateTimeImmutable( $o['start'], $otz ) )->setTimezone( $tz );
 					$en = $en ? ( new \DateTimeImmutable( $o['end'], $otz ) )->setTimezone( $tz ) : null;
 					break; }
 			}
 		}
 		$when = $e['all_day'] ? wp_date( get_option( 'date_format' ), $s->getTimestamp(), $tz ) . ( $en && $en->format( 'Y-m-d' ) !== $s->format( 'Y-m-d' ) ? ' – ' . wp_date( get_option( 'date_format' ), $en->getTimestamp(), $tz ) : '' ) : wp_date( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), $s->getTimestamp(), $tz ) . ( $en ? ' – ' . wp_date( $en->format( 'Y-m-d' ) === $s->format( 'Y-m-d' ) ? get_option( 'time_format' ) : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), $en->getTimestamp(), $tz ) : '' ) . self::zone_label( $s );
-		$rows = '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'When', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( $when ) . '</span></div>';
+		$on    = $e['rrule'] ? self::date_page_for( $id ) : null;
+		$badge = '';
+		if ( $on && 'cancelled' === $on['status'] ) {
+			$badge = ' <span class="beacon-badge beacon-badge-cancelled">' . esc_html__( 'Cancelled', 'beacon-events' ) . '</span>';
+		} elseif ( $on && 'moved' === $on['status'] ) {
+			/* translators: %s: the date this one was moved from */
+			$badge = ' <span class="beacon-badge beacon-badge-moved">' . esc_html( sprintf( __( 'Moved from %s', 'beacon-events' ), wp_date( get_option( 'date_format' ), ( new \DateTimeImmutable( $on['orig'], $tz ) )->getTimestamp(), $tz ) ) ) . '</span>';
+		}
+		$rows = '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'When', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( $when ) . $badge . '</span></div>';
 		if ( $e['rrule'] ) {
-			$rows .= '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'Repeats', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( Recurrence::describe( $e['rrule'] ) ) . '</span></div>'; }
+			$all  = $on ? ' <a class="beacon-all-dates" href="' . esc_url( (string) get_permalink( $id ) ) . '">' . esc_html__( 'All dates', 'beacon-events' ) . '</a>' : '';
+			$rows .= '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'Repeats', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( Recurrence::describe( $e['rrule'] ) ) . $all . '</span></div>'; }
 		$changes = $e['rrule'] ? self::changes_line( $id ) : '';
 		if ( $changes ) {
 			$rows .= '<div class="beacon-detail beacon-changes"><span class="beacon-detail-label">' . esc_html__( 'Changes', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . $changes . '</span></div>'; }
@@ -1109,12 +1147,24 @@ final class Views {
 				if ( $o['status'] === 'cancelled' ) {
 					continue; }
 				$url     = Events::link_for( $id, $o['orig'] );
-				$items[] = '<li><span class="beacon-date">' . esc_html( $o['label'] ) . '</span>' . ( $url ? ' <a class="beacon-row-link" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( self::link_label( $e ) ) . '</a>' : '' ) . '</li>';
+				$items[] = '<li><a class="beacon-date" href="' . esc_url( Events::date_url( $id, $o['orig'] ) ) . '">' . esc_html( $o['label'] ) . '</a>' . ( $url ? ' <a class="beacon-row-link" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( self::link_label( $e ) ) . '</a>' : '' ) . '</li>';
 			}
 			if ( $items ) {
 				$rows .= '<div class="beacon-detail beacon-dates" id="beacon-dates"><span class="beacon-detail-label">' . esc_html__( 'Dates', 'beacon-events' ) . '</span> <ul class="beacon-detail-value">' . implode( '', $items ) . '</ul></div>'; }
-		} elseif ( $e['link'] ) {
-			$rows .= '<div class="beacon-detail beacon-link-row"><a class="beacon-link wp-element-button" href="' . esc_url( $e['link'] ) . '" target="_blank" rel="noopener">' . esc_html( self::link_label( $e ) ) . '</a></div>'; }
+		} else {
+			if ( $e['link'] ) {
+				$rows .= '<div class="beacon-detail beacon-link-row"><a class="beacon-link wp-element-button" href="' . esc_url( $e['link'] ) . '" target="_blank" rel="noopener">' . esc_html( self::link_label( $e ) ) . '</a></div>'; }
+			if ( $e['rrule'] && ! $on ) {
+				// the next dates, each a link to its own page (one page per date for search engines, and the booking form there)
+				$items = array();
+				foreach ( Events::occurrences_for_edit( $id, 8 ) as $o ) {
+					if ( 'cancelled' !== $o['status'] ) {
+						$items[] = '<li><a class="beacon-date" href="' . esc_url( Events::date_url( $id, $o['orig'] ) ) . '">' . esc_html( $o['label'] ) . '</a></li>'; }
+				}
+				if ( count( $items ) > 1 ) {
+					$rows .= '<div class="beacon-detail beacon-dates" id="beacon-dates"><span class="beacon-detail-label">' . esc_html__( 'Next dates', 'beacon-events' ) . '</span> <ul class="beacon-detail-value">' . implode( '', $items ) . '</ul></div>'; }
+			}
+		}
 		$rows .= '<div class="beacon-detail beacon-add"><a class="beacon-ical" href="' . esc_url( add_query_arg( array( 'beacon_ical' => $id ), home_url( '/' ) ) ) . '">' . esc_html__( 'Add to calendar (.ics)', 'beacon-events' ) . '</a> <a class="beacon-google" href="' . esc_url( self::google_url( $id ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Add to Google Calendar', 'beacon-events' ) . '</a></div>';
 		wp_enqueue_style( 'beacon-events' );
 		return '<div class="beacon-single">' . $rows . '</div>';
@@ -1176,7 +1226,8 @@ final class Views {
 			$tz = new \DateTimeZone( $e['tz'] );
 		} catch ( \Exception $x ) {
 			$tz = self::tz(); }
-		$occ = Events::occurrences_for_edit( $id, 10 );
+		$on  = Events::requested_date();
+		$occ = $on ? array( $on ) : Events::occurrences_for_edit( $id, 10 );
 		if ( ! $occ ) {   // nothing upcoming: describe the (past or unpublished) base date once
 			$occ = array(
 				array(
@@ -1224,13 +1275,13 @@ final class Views {
 				'@context'            => 'https://schema.org',
 				'@type'               => 'Event',
 				// stable per date: the date the rule gave (a moved date keeps its id), on the event's own permalink
-				'@id'                 => get_permalink( $id ) . '#' . ( $o['orig'] ?? substr( (string) $o['start'], 0, 10 ) ),
+				'@id'                 => $e['rrule'] ? Events::date_url( $id, (string) $o['orig'] ) : get_permalink( $id ) . '#' . ( $o['orig'] ?? substr( (string) $o['start'], 0, 10 ) ),
 				'name'                => self::plain( get_the_title( $id ) ),
 				'startDate'           => $e['all_day'] ? $s->format( 'Y-m-d' ) : $s->format( 'c' ),
 				'endDate'             => $e['all_day'] ? $f->format( 'Y-m-d' ) : $f->format( 'c' ),
 				'eventStatus'         => $o['status'] === 'cancelled' ? 'https://schema.org/EventCancelled' : ( $o['status'] === 'moved' ? 'https://schema.org/EventRescheduled' : 'https://schema.org/EventScheduled' ),
 				'eventAttendanceMode' => $mode,
-				'url'                 => get_permalink( $id ),
+				'url'                 => $e['rrule'] ? Events::date_url( $id, (string) $o['orig'] ) : get_permalink( $id ), // each date's own page (Google: a unique URL per event)
 				'description'         => $desc,
 				'image'               => $image ?: null,
 				'location'            => count( $places ) === 1 ? $places[0] : ( $places ?: null ),
@@ -1249,7 +1300,7 @@ final class Views {
 				$price         = $pro ? \BeaconPro\Rsvp::parse_price( $raw ) : (float) str_replace( ',', '.', $raw );
 				$item['offers'] = array(
 					'@type'         => 'Offer',
-					'url'           => get_permalink( $id ),
+					'url'           => $e['rrule'] ? Events::date_url( $id, (string) $o['orig'] ) : get_permalink( $id ),
 					'price'         => number_format( $price, 2, '.', '' ),
 					'priceCurrency' => strtoupper( $pro ? \BeaconPro\Rsvp::currency() : (string) get_option( 'beacon_pro_currency', 'usd' ) ),
 					'availability'  => 'https://schema.org/InStock',

@@ -24,6 +24,7 @@ final class Events {
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
 	const HEAL    = 'beacon_rules_heal';            // transient: Beacon rebuilt lost rewrite rules recently, wait
 	const BASES   = 'beacon_url_bases';             // the address bases the saved rewrite rules were built with
+	const DATE_VAR = 'beacon_date';                 // /event/<name>/<Y-m-d>/: one date of a repeating event (its own page)
 	const TAKEN   = 'beacon_url_taken';             // { sig, keys }: DEFAULT_BASES keys something else answers (see check_taken)
 
 	/** @var bool The stored check is missing or was made with other plugins or another theme active. */
@@ -38,6 +39,10 @@ final class Events {
 
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ) );
+		add_filter( 'query_vars', fn( $v ) => array_merge( (array) $v, array( self::DATE_VAR ) ) );
+		add_action( 'template_redirect', array( __CLASS__, 'date_page_redirect' ), 8 );
+		// WordPress would otherwise send /event/<name>/<date>/ back to the event's own address
+		add_filter( 'redirect_canonical', fn( $to ) => ( is_singular( self::CPT ) && '' !== (string) get_query_var( self::DATE_VAR ) ) ? false : $to );
 		add_action( 'admin_init', array( __CLASS__, 'check_taken' ) );
 		add_action( 'save_post_page', array( __CLASS__, 'check_taken' ), 20 );
 		add_action( 'deleted_post', fn( $id, $post = null ) => $post && 'page' === $post->post_type && self::check_taken(), 10, 2 );
@@ -291,6 +296,8 @@ final class Events {
 				'rewrite'      => array( 'slug' => $bases['organizer'] ),
 			)
 		);
+		// One date of a repeating event on its own page, ahead of the post type's attachment rules for /event/<name>/<x>/.
+		add_rewrite_rule( '^' . preg_quote( $bases['event'], '#' ) . '/([^/]+)/(\d{4}-\d{2}-\d{2})/?$', 'index.php?' . self::CPT . '=$matches[1]&' . self::DATE_VAR . '=$matches[2]', 'top' );
 		// The bases changed (another events plugin was switched on or off): rebuild the rules at init 99, once.
 		$key = implode( '|', $bases );
 		if ( get_option( self::BASES ) !== $key ) {
@@ -524,6 +531,68 @@ final class Events {
 			);
 		}
 		return $out;
+	}
+
+	/**
+	 * The address of one date of a repeating event: /event/<name>/<Y-m-d>/ (?beacon_date=<Y-m-d> with plain permalinks),
+	 * keyed by the date the rule gave so a moved date keeps its address. Google's event results want each date that sells
+	 * its own tickets on a page of its own. A one-off event, or an unknown date, gets the event's permalink.
+	 */
+	public static function date_url( int $id, string $ymd ): string {
+		$link = (string) get_permalink( $id );
+		if ( '' === $link || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $ymd ) || '' === (string) get_post_meta( $id, self::META['rrule'], true ) ) {
+			return $link; }
+		global $wp_rewrite;
+		return $wp_rewrite instanceof \WP_Rewrite && $wp_rewrite->using_permalinks() && false === strpos( $link, '?' )
+			? trailingslashit( $link ) . $ymd . '/'
+			: add_query_arg( self::DATE_VAR, $ymd, $link );
+	}
+
+	/** @var array|false|null The date shown on this request's date page (false: none). */
+	private static $requested = null;
+
+	/**
+	 * On a date's own page: that date of the event, as [ orig, start, end (event-local Y-m-d H:i), status, start_utc,
+	 * end_utc ]. Null on every other page, and for a date the series doesn't have.
+	 */
+	public static function requested_date(): ?array {
+		if ( null !== self::$requested ) {
+			return self::$requested ?: null; }
+		self::$requested = false;
+		$ymd             = (string) get_query_var( self::DATE_VAR );
+		if ( ! is_singular( self::CPT ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $ymd ) ) {
+			return null; }
+		$id = (int) get_queried_object_id();
+		if ( '' === (string) get_post_meta( $id, self::META['rrule'], true ) ) {
+			return null; }
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- own occurrence table, one indexed row
+		$r = $wpdb->get_row( $wpdb->prepare( 'SELECT orig_ymd, start_utc, end_utc, status FROM %i WHERE event_id = %d AND orig_ymd = %s LIMIT 1', Schema::table(), $id, $ymd ), ARRAY_A );
+		if ( ! $r ) {
+			return null; }
+		$e = self::get( $id );
+		try {
+			$tz = new \DateTimeZone( $e['tz'] );
+		} catch ( \Exception $x ) {
+			$tz = new \DateTimeZone( 'UTC' ); }
+		$utc             = new \DateTimeZone( 'UTC' );
+		self::$requested = array(
+			'orig'      => $r['orig_ymd'],
+			'start'     => ( new \DateTimeImmutable( $r['start_utc'], $utc ) )->setTimezone( $tz )->format( 'Y-m-d H:i' ),
+			'end'       => ( new \DateTimeImmutable( $r['end_utc'], $utc ) )->setTimezone( $tz )->format( 'Y-m-d H:i' ),
+			'status'    => $r['status'],
+			'start_utc' => $r['start_utc'],
+			'end_utc'   => $r['end_utc'],
+		);
+		return self::$requested;
+	}
+
+	/** A date page for a date the series doesn't have (an old link, a typo): the event's own page. */
+	public static function date_page_redirect(): void {
+		if ( is_singular( self::CPT ) && '' !== (string) get_query_var( self::DATE_VAR ) && ! self::requested_date() ) {
+			wp_safe_redirect( (string) get_permalink( get_queried_object_id() ), 301 );
+			exit;
+		}
 	}
 
 	/**
