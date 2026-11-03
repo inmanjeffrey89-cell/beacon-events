@@ -18,6 +18,7 @@ final class Views {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_filter( 'the_content', array( __CLASS__, 'single_details' ) );
 		add_filter( 'the_excerpt', array( __CLASS__, 'archive_details' ) );
+		add_filter( 'oceanwp_excerpt', array( __CLASS__, 'archive_details' ) ); // OceanWP builds its archive excerpts without the_excerpt
 		add_filter( 'render_block_core/post-date', array( __CLASS__, 'archive_date_block' ), 10, 3 );
 		add_action( 'pre_get_posts', array( __CLASS__, 'archive_query' ) );
 		add_filter( 'get_the_date', array( __CLASS__, 'event_date' ), 10, 3 );

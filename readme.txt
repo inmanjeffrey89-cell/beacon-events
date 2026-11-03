@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.5
+Stable tag: 0.38.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,6 +257,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.6 =
+* More themes checked (Kadence, GeneratePress, OceanWP): on OceanWP, event lists and venue pages now show each event's time, place and repeat line (it builds its excerpts its own way); on GeneratePress, a calendar set to Wide width no longer runs past a phone screen.
+
 = 0.38.5 =
 * Looks right on more themes, checked on Astra, Hello Elementor, Twenty Twenty-One and Twenty Twenty-Five: the filter bar's menus and search box no longer stretch to full width on themes that size every form field that way; in lists, an event without a category colour lines up with the coloured ones; and a calendar set to Wide width no longer runs past a phone screen on themes that draw Wide width with fixed negative margins (Hello Elementor), which had pushed the week view's day names off the left edge.
 
@@ -277,7 +280,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.37.1 =
 * Event pages now describe the venue's address the way Google's event results ask for it: street, city, state or region, postcode and country as separate parts instead of one line of text. Addresses whose form isn't clear stay whole in the street line.
-
-= 0.37.0 =
-* Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
 Older versions: see changelog.txt in the plugin folder.

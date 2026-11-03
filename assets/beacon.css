@@ -28,5 +28,6 @@
 @media (max-width:782px){.beacon-week-grid{grid-template-columns:1fr;gap:.4em}.beacon-week-empty{display:none}}
 @container (max-width:720px){.beacon-week-grid{grid-template-columns:1fr;gap:0}.beacon-week-day{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:.75em;padding:.5em 0}.beacon-week-heading{margin:0}.beacon-week-date{display:block}.beacon-week-empty{display:none}.beacon-week-day .beacon-event{display:flex;flex-wrap:wrap;gap:0 .6em;padding:.15em 0 .3em}.beacon-week-day .beacon-time{display:inline;min-width:5.5em}.beacon-week-day .beacon-venue{display:inline}.beacon-week-day .beacon-venue::before{content:"· "}.beacon-week-day .beacon-body{flex-basis:7em}}
 @container (max-width:420px){.beacon-week-day{grid-template-columns:4.2em minmax(0,1fr);gap:.5em}.beacon-week-day .beacon-time{min-width:4.8em}}
-/* Classic themes that draw "Wide width" with fixed negative margins (Hello Elementor: -80px) push it past a phone screen */
-@media (max-width:960px){.wp-block-beacon-events.alignwide{margin-left:0;margin-right:0}}
+/* Classic themes that draw "Wide width" with fixed negative margins (Hello Elementor: -80px) or an extra width
+   (GeneratePress: calc(100% + 60px)) push it past a phone screen */
+@media (max-width:960px){.wp-block-beacon-events.alignwide{margin-left:0;margin-right:0;width:auto;max-width:100%}}

@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.38.6 =
+* More themes checked (Kadence, GeneratePress, OceanWP): on OceanWP, event lists and venue pages now show each event's time, place and repeat line (it builds its excerpts its own way); on GeneratePress, a calendar set to Wide width no longer runs past a phone screen.
+
 = 0.38.5 =
 * Looks right on more themes, checked on Astra, Hello Elementor, Twenty Twenty-One and Twenty Twenty-Five: the filter bar's menus and search box no longer stretch to full width on themes that size every form field that way; in lists, an event without a category colour lines up with the coloured ones; and a calendar set to Wide width no longer runs past a phone screen on themes that draw Wide width with fixed negative margins (Hello Elementor), which had pushed the week view's day names off the left edge.
 
