@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.6
+Stable tag: 0.38.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,6 +257,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.7 =
+* Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
+
 = 0.38.6 =
 * More themes checked (Kadence, GeneratePress, OceanWP): on OceanWP, event lists and venue pages now show each event's time, place and repeat line (it builds its excerpts its own way); on GeneratePress, a calendar set to Wide width no longer runs past a phone screen.
 
@@ -277,7 +280,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.38.0 =
 * New: undo an import. Events → Import / Export → "Undo this import" deletes the events imported from that plugin, and the venues, organizers and categories the import created once nothing uses them, so you can turn the old plugin back on and be where you started. Events with bookings are kept, and so are events you changed after the import unless you ask. From the command line: wp beacon undo <source>.
-
-= 0.37.1 =
-* Event pages now describe the venue's address the way Google's event results ask for it: street, city, state or region, postcode and country as separate parts instead of one line of text. Addresses whose form isn't clear stay whole in the street line.
 Older versions: see changelog.txt in the plugin folder.

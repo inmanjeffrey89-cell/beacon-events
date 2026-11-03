@@ -1205,13 +1205,17 @@ final class Views {
 				)
 			); }
 		if ( $venue ) {
+			$vlink    = get_term_link( $venue );
 			$places[] = array_filter(
 				array(
 					'@type'   => 'Place',
+					'@id'     => is_string( $vlink ) ? $vlink . '#place' : null, // the venue's own page: one entity across all its events
 					'name'    => self::plain( $venue->name ),
+					'url'     => is_string( $vlink ) ? $vlink : null,
 					'address' => self::postal_address( self::plain( (string) get_term_meta( $venue->term_id, 'beacon_address', true ) ) ),
 				)
 			); }
+		$olink  = $org ? get_term_link( $org ) : '';
 		$items = array();
 		foreach ( $occ as $o ) {
 			$s    = new \DateTimeImmutable( $o['start'], $tz );
@@ -1219,6 +1223,8 @@ final class Views {
 			$item = array(
 				'@context'            => 'https://schema.org',
 				'@type'               => 'Event',
+				// stable per date: the date the rule gave (a moved date keeps its id), on the event's own permalink
+				'@id'                 => get_permalink( $id ) . '#' . ( $o['orig'] ?? substr( (string) $o['start'], 0, 10 ) ),
 				'name'                => self::plain( get_the_title( $id ) ),
 				'startDate'           => $e['all_day'] ? $s->format( 'Y-m-d' ) : $s->format( 'c' ),
 				'endDate'             => $e['all_day'] ? $f->format( 'Y-m-d' ) : $f->format( 'c' ),
@@ -1228,9 +1234,13 @@ final class Views {
 				'description'         => $desc,
 				'image'               => $image ?: null,
 				'location'            => count( $places ) === 1 ? $places[0] : ( $places ?: null ),
-				'organizer'           => $org ? array(
-					'@type' => 'Organization',
-					'name'  => self::plain( $org->name ),
+				'organizer'           => $org ? array_filter(
+					array(
+						'@type' => 'Organization',
+						'@id'   => is_string( $olink ) ? $olink . '#organizer' : null,
+						'name'  => self::plain( $org->name ),
+						'url'   => is_string( $olink ) ? $olink : null,
+					)
 				) : null,
 			);
 			if ( defined( 'BEACON_PRO_VERSION' ) && get_post_meta( $id, '_beacon_rsvp', true ) === '1' ) {
