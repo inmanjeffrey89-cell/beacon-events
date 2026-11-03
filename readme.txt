@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.38.4
+Stable tag: 0.38.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,6 +257,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.38.5 =
+* Looks right on more themes, checked on Astra, Hello Elementor, Twenty Twenty-One and Twenty Twenty-Five: the filter bar's menus and search box no longer stretch to full width on themes that size every form field that way; in lists, an event without a category colour lines up with the coloured ones; and a calendar set to Wide width no longer runs past a phone screen on themes that draw Wide width with fixed negative margins (Hello Elementor), which had pushed the week view's day names off the left edge.
+
 = 0.38.4 =
 * After a move from The Events Calendar, calendars subscribed to its feed keep updating: its "Subscribe" address (/?post_type=tribe_events&ical=1), ?ical=1 and ?outlook-ical=1 on its calendar views, its category feeds and an event's ?ical=1 link now answer with Beacon's feed for the same events, category or event. Only once The Events Calendar is deactivated.
 
@@ -277,7 +280,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.37.0 =
 * Rank Math: your events are now in its XML sitemap. Rank Math only saves its "include in sitemap" switch for the post types that exist when it is set up, so on sites that installed Beacon Events afterwards it left every event out while its settings screen showed them included. A switch you turned off in Rank Math stays off. Rank Math's cached sitemaps are refreshed once with this update.
-
-= 0.36.0 =
-* After a move from The Events Calendar, its Elementor widgets on your pages (Events View and Events List) show Beacon's calendar and upcoming list instead of an empty space, keeping the saved view, title and number of events. A real import also clears Elementor's cached page output so the pages are drawn again.
 Older versions: see changelog.txt in the plugin folder.
