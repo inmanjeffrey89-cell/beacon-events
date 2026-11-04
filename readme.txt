@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.39.0
+Stable tag: 0.40.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,7 @@ One database table, `{prefix}beacon_occurrences`, holding the expanded dates of 
 `[beacon_events view="day"]` — today, with previous/next links.
 `venue="slug"` and `organizer="slug"` work like `category`.
 `print="no"` — hides the "Print this month" link under a month view.
+`show_venue="no"` — leaves the venue name off each row in a list, week or day view (the block has the same switch: "Show venue").
 
 = Block =
 
@@ -260,6 +261,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.40.0 =
+* New: a "Show venue" switch in the Events block's settings (list, week and day views) and show_venue="no" for the [beacon_events] shortcode. Turn it off when all your events happen in one place, so each row isn't followed by your own name.
+
 = 0.39.0 =
 * New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
 
@@ -281,6 +285,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 = 0.38.2 =
 * While another events plugin is still active, Beacon's admin menu is called "Beacon Events", so it can't be mixed up with the other plugin's "Events" menu. It goes back to "Events" when the other plugin is switched off.
 
-= 0.38.1 =
-* Fix: activating Beacon Events on a site that still runs The Events Calendar (or another events plugin that uses /event/ and /events/) made that plugin's event pages show "Page not found". While such a plugin is active, Beacon's pages now sit under /beacon-event/ and /beacon-events/, so visitors keep seeing the old plugin's pages while you check the import; when you deactivate it, Beacon moves to /event/ and /events/ by itself and the /beacon-… links are redirected. Also: Events → Import / Export says where the imported events are while both plugins run.
 Older versions: see changelog.txt in the plugin folder.

@@ -248,6 +248,10 @@ final class Views {
 				'type'    => 'boolean',
 				'default' => true,
 			),
+			'showVenue' => array(
+				'type'    => 'boolean',
+				'default' => true,
+			),
 		);
 		wp_register_script( 'beacon-events-editor', BEACON_URL . 'assets/editor.js', array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-server-side-render', 'wp-i18n' ), BEACON_VERSION, true );
 		wp_set_script_translations( 'beacon-events-editor', 'beacon-events', BEACON_DIR . 'languages' );
@@ -298,6 +302,7 @@ final class Views {
 					'day'       => '',
 					'week'      => '',
 					'print'     => '',
+					'show_venue' => '',
 				),
 				$atts,
 				'beacon_events'
@@ -723,6 +728,7 @@ final class Views {
 
 	/** Upcoming list, grouped by day — or, with layout="compact", one line per event (sidebars, footers). */
 	public static function list( array $a ): string {
+		$show_venue = self::venue_on( $a );
 		$now  = new \DateTimeImmutable( 'today', self::tz() );
 		$rows = self::fetch( self::utc( $now ), self::utc( $now->modify( '+' . max( 1, (int) $a['days'] ) . ' days' ) ), (int) $a['limit'], $a, filter_var( $a['once'] ?? false, FILTER_VALIDATE_BOOLEAN ) );
 		if ( ! $rows ) {
@@ -749,7 +755,7 @@ final class Views {
 				} $day = $d;
 				$out  .= '<section class="beacon-day"><h3 class="beacon-day-heading">' . esc_html( wp_date( 'l, F j', $s->getTimestamp(), $s->getTimezone() ) ) . '</h3><ul class="beacon-day-events">'; }
 			$id    = (int) $r['event_id'];
-			$venue = self::venue( $id );
+			$venue = $show_venue ? self::venue( $id ) : '';
 			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span></li>';
 		}
 		return $out . '</ul></section></div>';
@@ -790,6 +796,7 @@ final class Views {
 
 	/** One day. ?beacon_day=YYYY-MM-DD navigates; reached from a month grid's day numbers or view="day". */
 	public static function day( array $a ): string {
+		$show_venue = self::venue_on( $a );
 		$req   = (string) ( $a['day'] ?? '' );
 		$start = self::valid_date( $req ) ? new \DateTimeImmutable( $req, self::tz() ) : new \DateTimeImmutable( 'today', self::tz() );
 		$start = $start->setTime( 0, 0 );
@@ -804,7 +811,7 @@ final class Views {
 		$out .= '<ul class="beacon-day-events">';
 		foreach ( $rows as $r ) {
 			$id    = (int) $r['event_id'];
-			$venue = self::venue( $id );
+			$venue = $show_venue ? self::venue( $id ) : '';
 			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
 		}
 		return $out . '</ul></div>';
@@ -815,6 +822,7 @@ final class Views {
 	 * all-day ones first. ?beacon_week=YYYY-MM-DD (any day of that week) navigates; no JS required.
 	 */
 	public static function week( array $a ): string {
+		$show_venue = self::venue_on( $a );
 		$req       = (string) ( $a['week'] ?? '' );
 		$day       = self::valid_date( $req ) ? new \DateTimeImmutable( $req, self::tz() ) : new \DateTimeImmutable( 'today', self::tz() );
 		$day       = $day->setTime( 0, 0 );
@@ -850,7 +858,7 @@ final class Views {
 			$out .= '<ul class="beacon-day-events">';
 			foreach ( $list as $r ) {
 				$id    = (int) $r['event_id'];
-				$venue = self::venue( $id );
+				$venue = $show_venue ? self::venue( $id ) : '';
 				$time  = (int) $r['all_day'] ? esc_html__( 'All day', 'beacon-events' ) : self::when_start( $r ); // the full range is on the event page
 				$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . $time . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
 			}
@@ -872,6 +880,16 @@ final class Views {
 	private static function month_rows( array $a, \DateTimeImmutable $first ): array {
 		$next = $first->modify( '+1 month' );
 		return self::in_days( self::fetch( self::utc( $first->modify( '-1 day' ) ), self::utc( $next->modify( '+1 day' ) ), 5000, $a ), $first->format( 'Y-m-d' ), $next->format( 'Y-m-d' ) );
+	}
+
+	/**
+	 * Whether list, week and day rows name the venue: block toggle "Show venue", shortcode show_venue="no", filter
+	 * beacon_show_venue. A site whose events all happen in one place doesn't need its own name on every row.
+	 */
+	private static function venue_on( array $a ): bool {
+		$on = ! ( array_key_exists( 'showVenue', $a ) && ! $a['showVenue'] )
+			&& ! in_array( strtolower( (string) ( $a['show_venue'] ?? '' ) ), array( 'no', '0', 'false', 'off' ), true );
+		return (bool) apply_filters( 'beacon_show_venue', $on, $a );
 	}
 
 	/** Whether a month view shows its "Print this month" link: block toggle, shortcode print="no", filter beacon_print_link. */
