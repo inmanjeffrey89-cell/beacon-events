@@ -1,0 +1,58 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Move off EventON with Beacon Events",
+		"description": "A small taproom site on EventON Lite (weekly trivia and live music, a first-Saturday run club, a release party, a market, a page with EventON's list shortcode) with Beacon Events installed next to it: import, look at the events at /beacon-events/ while visitors still see EventON, then switch EventON off.",
+		"author": "inmanjeffrey89-cell"
+	},
+	"landingPage": "/wp-admin/edit.php?post_type=beacon_event&page=beacon-import",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"permalink_structure": "/%postname%/",
+				"blogname": "Lakeside Taproom (moving off EventON)"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "eventon-lite"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\n// Seeds a small EventON Lite site for the \"try the move off EventON\" Playground (blueprints/eventon-move.json).\n// Runs after EventON Lite is activated. Stored the way EventON Lite keeps events (tests/eventon-seed.php, checked against\n// 2.5.9 and a real site): ajde_events posts, \"virtual\" unix times (the wall clock as if it were UTC) in evcal_srow /\n// evcal_erow, the repeat settings plus every date in repeat_intervals, location / organizer / event type terms, location\n// details in the evo_tax_meta option. Dates are relative to today so they are always upcoming.\nrequire_once '/wordpress/wp-load.php';\nupdate_option( 'timezone_string', 'America/Chicago' );\n$tz  = new DateTimeZone( 'America/Chicago' );\n$v   = fn( string $ymd_hm ) => strtotime( $ymd_hm . ' UTC' );\n$loc = wp_insert_term( 'Lakeside Taproom', 'event_location' );\n$org = wp_insert_term( 'Lakeside Events Team', 'event_organizer' );\n$typ = array();\nforeach ( array( 'Weekly', 'Music', 'Special' ) as $t ) {\n\t$r          = wp_insert_term( $t, 'event_type' );\n\t$typ[ $t ] = is_wp_error( $r ) ? 0 : (int) $r['term_id'];\n}\nupdate_option( 'evo_tax_meta', array( 'event_location' => array( (int) $loc['term_id'] => array( 'location_address' => '7701 Lake Ave, Dallas, TX 75209', 'location_lat' => '32.84', 'location_lon' => '-96.80' ) ) ) );\n$ev = function ( string $title, array $meta, string $type, string $content = '' ) use ( $loc, $org, $typ ) {\n\t$id = wp_insert_post( array( 'post_type' => 'ajde_events', 'post_status' => 'publish', 'post_title' => $title, 'post_content' => $content ?: 'Join us for ' . $title . '.' ) );\n\tforeach ( $meta as $k => $val ) {\n\t\tupdate_post_meta( $id, $k, $val ); }\n\twp_set_object_terms( $id, array( (int) $loc['term_id'] ), 'event_location' );\n\twp_set_object_terms( $id, array( (int) $org['term_id'] ), 'event_organizer' );\n\twp_set_object_terms( $id, array( $typ[ $type ] ), 'event_type' );\n\tupdate_post_meta( $id, '_evo_tz', 'America/Chicago' );\n\treturn $id;\n};\n// every date of a repeat, as EventON saves them: [[start, end], \u2026] in its virtual time\n$dates = function ( string $first, string $step, int $n, string $h1, string $h2 ) use ( $v, $tz ) {\n\t$d   = new DateTimeImmutable( $first, $tz );\n\t$out = array();\n\tfor ( $i = 0; $i < $n; $i++ ) {\n\t\t$day   = $d->modify( \"+$i $step\" )->format( 'Y-m-d' );\n\t\t$out[] = array( $v( \"$day $h1\" ), $v( \"$day $h2\" ) );\n\t}\n\treturn $out;\n};\n$first_of = function ( string $dow, int $months_ahead ) use ( $tz ) {\n\treturn ( new DateTimeImmutable( \"first $dow of +$months_ahead month\", $tz ) )->format( 'Y-m-d' );\n};\n$tue    = ( new DateTimeImmutable( 'next tuesday', $tz ) )->format( 'Y-m-d' );\n$fri    = ( new DateTimeImmutable( 'next friday', $tz ) )->format( 'Y-m-d' );\n$trivia = $dates( $tue, 'week', 6, '19:00', '21:00' );\n$music  = $dates( $fri, 'week', 6, '20:00', '22:30' );\n$ev( 'Tuesday Trivia', array( 'evcal_srow' => $trivia[0][0], 'evcal_erow' => $trivia[0][1], 'evcal_repeat' => 'yes', 'evcal_rep_freq' => 'weekly', 'evcal_rep_gap' => 1, 'evp_repeat_rb_wk' => 'sing', 'evcal_rep_num' => 6, 'repeat_intervals' => $trivia, 'evcal_event_color' => '2d7ff9' ), 'Weekly' );\n$ev( 'Live Music Fridays', array( 'evcal_srow' => $music[0][0], 'evcal_erow' => $music[0][1], 'evcal_repeat' => 'yes', 'evcal_rep_freq' => 'weekly', 'evcal_rep_gap' => 1, 'evp_repeat_rb_wk' => 'sing', 'evcal_rep_num' => 6, 'repeat_intervals' => $music, 'evcal_event_color' => 'e0457b' ), 'Music' );\n$runs = array();\nfor ( $m = 0; $m < 3; $m++ ) {\n\t$d      = $first_of( 'saturday', $m + ( $first_of( 'saturday', 0 ) < gmdate( 'Y-m-d' ) ? 1 : 0 ) );\n\t$runs[] = array( $v( \"$d 09:00\" ), $v( \"$d 10:30\" ) );\n}\n$ev( 'First Saturday Run Club', array( 'evcal_srow' => $runs[0][0], 'evcal_erow' => $runs[0][1], 'evcal_repeat' => 'yes', 'evcal_rep_freq' => 'monthly', 'evcal_rep_gap' => 1, 'evp_repeat_rb' => 'dow', 'evo_rep_WK' => array( '6' ), 'evo_repeat_wom' => array( '1' ), 'repeat_intervals' => $runs ), 'Weekly' );\n$rel = ( new DateTimeImmutable( '+10 days', $tz ) )->format( 'Y-m-d' );\n$ev( 'Winter Stout Release', array( 'evcal_srow' => $v( \"$rel 16:00\" ), 'evcal_erow' => $v( \"$rel 22:00\" ), 'evcal_subtitle' => 'Tapping at 4', 'evcal_exlink' => 'https://example.com/stout' ), 'Special' );\n$mk = ( new DateTimeImmutable( '+17 days', $tz ) )->format( 'Y-m-d' );\n$ev( 'Holiday Makers Market', array( 'evcal_srow' => $v( \"$mk 00:00\" ), 'evcal_erow' => $v( \"$mk 23:59\" ), 'evcal_allday' => 'yes' ), 'Special' );\n// the page visitors use today: EventON's shortcodes, which Beacon renders once EventON is switched off\nwp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'What\\'s On', 'post_name' => 'whats-on', 'post_content' => \"<!-- wp:shortcode -->[add_eventon_list number_of_months=\\\"2\\\"]<!-- /wp:shortcode -->\" ) );\necho \"seeded EventON\\n\";\n"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "beacon-events"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; flush_rewrite_rules();"
+		}
+	]
+}
