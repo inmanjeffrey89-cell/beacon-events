@@ -252,6 +252,10 @@ final class Views {
 				'type'    => 'boolean',
 				'default' => true,
 			),
+			'showImages' => array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
 		);
 		wp_register_script( 'beacon-events-editor', BEACON_URL . 'assets/editor.js', array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-server-side-render', 'wp-i18n' ), BEACON_VERSION, true );
 		wp_set_script_translations( 'beacon-events-editor', 'beacon-events', BEACON_DIR . 'languages' );
@@ -303,6 +307,7 @@ final class Views {
 					'week'      => '',
 					'print'     => '',
 					'show_venue' => '',
+					'images'     => '',
 				),
 				$atts,
 				'beacon_events'
@@ -833,6 +838,9 @@ final class Views {
 		$by        = array();
 		foreach ( $rows as $r ) {
 			$by[ self::local( $r['start_utc'], (int) $r['event_id'] )->format( 'Y-m-d' ) ][] = $r; }
+		$images = self::images_on( $a );
+		if ( $images ) {
+			self::prime_thumbs( $rows ); }
 		$last  = $end->modify( '-1 day' );
 		$title = $start->format( 'Y' ) === $last->format( 'Y' )
 			? wp_date( 'M j', $start->getTimestamp() ) . ' – ' . wp_date( 'M j, Y', $last->getTimestamp() )
@@ -860,7 +868,10 @@ final class Views {
 				$id    = (int) $r['event_id'];
 				$venue = $show_venue ? self::venue( $id ) : '';
 				$time  = (int) $r['all_day'] ? esc_html__( 'All day', 'beacon-events' ) : self::when_start( $r ); // the full range is on the event page
-				$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . $time . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
+				$url   = esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) );
+				$img   = $images ? self::thumb( $id ) : '';
+				// the picture links to the event too, but out of the tab order: the title right below is the same link
+				$out  .= '<li class="beacon-event' . self::row_class( $r ) . ( $img ? ' beacon-has-thumb' : '' ) . '"' . self::color_attr( $id ) . '>' . ( $img ? '<a class="beacon-thumb-link" href="' . $url . '" tabindex="-1" aria-hidden="true">' . $img . '</a>' : '' ) . '<span class="beacon-time">' . $time . '</span> <span class="beacon-body"><a class="beacon-title" href="' . $url . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . '</span></li>';
 			}
 			$out .= '</ul></section>';
 		}
@@ -892,6 +903,42 @@ final class Views {
 		return (bool) apply_filters( 'beacon_show_venue', $on, $a );
 	}
 
+	/**
+	 * Whether week and month views show each event's featured image: block toggle "Show images", shortcode images="yes",
+	 * filter beacon_show_images. Off by default: a calendar full of photos loads slower, so a site turns it on.
+	 */
+	private static function images_on( array $a ): bool {
+		$on = ! empty( $a['showImages'] ) || in_array( strtolower( (string) ( $a['images'] ?? '' ) ), array( 'yes', '1', 'true', 'on' ), true );
+		return (bool) apply_filters( 'beacon_show_images', $on && empty( $a['printing'] ), $a );
+	}
+
+	/** Loads the rows' featured images in two queries instead of two per event. */
+	private static function prime_thumbs( array $rows ): void {
+		$ids = array_values( array_unique( array_map( fn( $r ) => (int) $r['event_id'], $rows ) ) );
+		if ( ! $ids ) {
+			return; }
+		update_meta_cache( 'post', $ids );
+		$tids = array_filter( array_map( fn( $id ) => (int) get_post_thumbnail_id( $id ), $ids ) );
+		if ( $tids ) {
+			_prime_post_caches( array_values( array_unique( $tids ) ), false, true ); }
+	}
+
+	/** An event's featured image for a calendar cell, or ''. alt="": the title is right beside it, a screen reader needn't hear it twice. */
+	private static function thumb( int $id ): string {
+		$tid = (int) get_post_thumbnail_id( $id );
+		return $tid ? wp_get_attachment_image(
+			$tid,
+			'medium',
+			false,
+			array(
+				'class'    => 'beacon-thumb',
+				'alt'      => '',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+			)
+		) : '';
+	}
+
 	/** Whether a month view shows its "Print this month" link: block toggle, shortcode print="no", filter beacon_print_link. */
 	private static function print_link_on( array $a ): bool {
 		$on = ! ( array_key_exists( 'printLink', $a ) && ! $a['printLink'] )
@@ -908,6 +955,9 @@ final class Views {
 		$by    = array();
 		foreach ( $rows as $r ) {
 			$by[ self::local( $r['start_utc'], (int) $r['event_id'] )->format( 'Y-m-d' ) ][] = $r; }
+		$images = self::images_on( $a );
+		if ( $images ) {
+			self::prime_thumbs( $rows ); }
 		$start_dow  = (int) get_option( 'start_of_week', 0 );
 		$grid_start = $first->modify( '-' . ( ( (int) $first->format( 'w' ) - $start_dow + 7 ) % 7 ) . ' days' );
 		$nav        = fn( $d ) => esc_url( add_query_arg( 'beacon_month', $d->format( 'Y-m' ) ) );
@@ -930,8 +980,9 @@ final class Views {
 				foreach ( $by[ $ymd ] ?? array() as $r ) {
 					$time  = (int) $r['all_day'] ? '' : '<span class="beacon-cell-time">' . self::when_start( $r ) . '</span>';
 					$title = '<span class="beacon-cell-title">' . self::title( $r ) . '</span>';
+					$img   = $images ? self::thumb( (int) $r['event_id'] ) : '';
 					// on paper the time leads, inline, so a wrapped title uses the cell's full width
-					$out .= '<a class="beacon-cell-event' . self::row_class( $r ) . '"' . self::color_attr( (int) $r['event_id'] ) . ' href="' . esc_url( Events::date_url( (int) $r['event_id'], (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . ( empty( $a['printing'] ) ? $title . $time : ( $time ? $time . ' ' : '' ) . $title ) . self::badge( $r ) . '</a>'; }
+					$out .= '<a class="beacon-cell-event' . self::row_class( $r ) . ( $img ? ' beacon-has-thumb' : '' ) . '"' . self::color_attr( (int) $r['event_id'] ) . ' href="' . esc_url( Events::date_url( (int) $r['event_id'], (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . $img . ( empty( $a['printing'] ) ? $title . $time : ( $time ? $time . ' ' : '' ) . $title ) . self::badge( $r ) . '</a>'; }
 				$out .= '</td>';
 				$d    = $d->modify( '+1 day' );
 			}

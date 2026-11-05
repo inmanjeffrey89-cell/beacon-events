@@ -31,3 +31,7 @@
 /* Classic themes that draw "Wide width" with fixed negative margins (Hello Elementor: -80px) or an extra width
    (GeneratePress: calc(100% + 60px)) push it past a phone screen */
 @media (max-width:960px){.wp-block-beacon-events.alignwide{margin-left:0;margin-right:0;width:auto;max-width:100%}}
+.beacon-thumb{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:3px}.beacon-week-day .beacon-thumb-link{display:block;margin:0 0 .3em}.beacon-cell-event .beacon-thumb{margin:0 0 .2em}
+@container (max-width:720px){.beacon-week-day .beacon-thumb-link{flex-basis:100%;margin-bottom:.15em}.beacon-week-day .beacon-thumb{max-width:8em}}
+@media (max-width:640px){.beacon-cell-event .beacon-thumb{display:none}}
+@media print{.beacon-thumb{display:none}}

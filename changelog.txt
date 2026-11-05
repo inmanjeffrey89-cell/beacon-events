@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.41.0 =
+* New: a "Show images" switch in the Events block's settings for the week and month views, and images="yes" for the [beacon_events] shortcode. Each event with a featured image shows it above its title, loaded only as it scrolls into view. Off by default, so calendars that are already set up stay as light as they are; the printed month never shows them.
+
 = 0.40.0 =
 * New: a "Show venue" switch in the Events block's settings (list, week and day views) and show_venue="no" for the [beacon_events] shortcode. Turn it off when all your events happen in one place, so each row isn't followed by your own name.
 
