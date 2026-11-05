@@ -35,3 +35,4 @@
 @container (max-width:720px){.beacon-week-day .beacon-thumb-link{flex-basis:100%;margin-bottom:.15em}.beacon-week-day .beacon-thumb{max-width:8em}}
 @media (max-width:640px){.beacon-cell-event .beacon-thumb{display:none}}
 @media print{.beacon-thumb{display:none}}
+.beacon-loading{opacity:.55;transition:opacity .15s}.beacon-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.42.0 =
+* The week, month and day views now page in place: the previous / next arrows, "This week", "Back to month" and a month's day numbers load the new dates without reloading the whole page, so the page stays where you scrolled to. The address still changes (links can be shared, Back and Forward work), keyboard focus stays on the arrow, and without JavaScript the arrows work as plain links like before. Turn it off with the beacon_inline_nav filter.
+
 = 0.41.0 =
 * New: a "Show images" switch in the Events block's settings for the week and month views, and images="yes" for the [beacon_events] shortcode. Each event with a featured image shows it above its title, loaded only as it scrolls into view. Off by default, so calendars that are already set up stay as light as they are; the printed month never shows them.
 

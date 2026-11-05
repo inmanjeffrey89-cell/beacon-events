@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.41.0
+Stable tag: 0.42.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -262,6 +262,9 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.42.0 =
+* The week, month and day views now page in place: the previous / next arrows, "This week", "Back to month" and a month's day numbers load the new dates without reloading the whole page, so the page stays where you scrolled to. The address still changes (links can be shared, Back and Forward work), keyboard focus stays on the arrow, and without JavaScript the arrows work as plain links like before. Turn it off with the beacon_inline_nav filter.
+
 = 0.41.0 =
 * New: a "Show images" switch in the Events block's settings for the week and month views, and images="yes" for the [beacon_events] shortcode. Each event with a featured image shows it above its title, loaded only as it scrolls into view. Off by default, so calendars that are already set up stay as light as they are; the printed month never shows them.
 
@@ -282,8 +285,5 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 
 = 0.38.4 =
 * After a move from The Events Calendar, calendars subscribed to its feed keep updating: its "Subscribe" address (/?post_type=tribe_events&ical=1), ?ical=1 and ?outlook-ical=1 on its calendar views, its category feeds and an event's ?ical=1 link now answer with Beacon's feed for the same events, category or event. Only once The Events Calendar is deactivated.
-
-= 0.38.3 =
-* Fix: a site's own page called "Events" was hidden behind Beacon's list of events at /events/, so a calendar block put on that page never showed. The page keeps /events/ now and Beacon's list moves to /beacon-events/. Likewise a theme or plugin that already uses /event/, /venue/, /organizer/ or /event-category/ keeps those addresses and Beacon uses /beacon-… ones; links to Beacon's events at the old address are redirected. Checked in the admin and when pages change, never on the front end.
 
 Older versions: see changelog.txt in the plugin folder.

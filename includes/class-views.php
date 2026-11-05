@@ -199,6 +199,13 @@ final class Views {
 
 	public static function register_assets(): void {
 		wp_register_style( 'beacon-events', BEACON_URL . 'assets/beacon.css', array(), BEACON_VERSION );   // enqueued only when a view renders
+		wp_register_script( 'beacon-events-nav', BEACON_URL . 'assets/nav.js', array(), BEACON_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+	}
+
+	/** Week / month / day paging without a full page reload (assets/nav.js; plain links still work without it). Filter beacon_inline_nav to false to turn it off. */
+	private static function inline_nav( array $a ): void {
+		if ( empty( $a['printing'] ) && apply_filters( 'beacon_inline_nav', true, $a ) ) {
+			wp_enqueue_script( 'beacon-events-nav' ); }
 	}
 
 	public static function register_blocks(): void {
@@ -801,6 +808,7 @@ final class Views {
 
 	/** One day. ?beacon_day=YYYY-MM-DD navigates; reached from a month grid's day numbers or view="day". */
 	public static function day( array $a ): string {
+		self::inline_nav( $a );
 		$show_venue = self::venue_on( $a );
 		$req   = (string) ( $a['day'] ?? '' );
 		$start = self::valid_date( $req ) ? new \DateTimeImmutable( $req, self::tz() ) : new \DateTimeImmutable( 'today', self::tz() );
@@ -827,6 +835,7 @@ final class Views {
 	 * all-day ones first. ?beacon_week=YYYY-MM-DD (any day of that week) navigates; no JS required.
 	 */
 	public static function week( array $a ): string {
+		self::inline_nav( $a );
 		$show_venue = self::venue_on( $a );
 		$req       = (string) ( $a['week'] ?? '' );
 		$day       = self::valid_date( $req ) ? new \DateTimeImmutable( $req, self::tz() ) : new \DateTimeImmutable( 'today', self::tz() );
@@ -948,6 +957,7 @@ final class Views {
 
 	/** Month grid. ?beacon_month=YYYY-MM navigates; no JS required. */
 	public static function month( array $a ): string {
+		self::inline_nav( $a );
 		$first = self::month_first( $a );
 		$next  = $first->modify( '+1 month' );
 		$prev  = $first->modify( '-1 month' );
