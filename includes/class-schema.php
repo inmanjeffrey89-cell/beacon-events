@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** One row per occurrence so "what's on this week" is a cheap indexed query, not RRULE math at request time. */
 final class Schema {
-	const VERSION = '5'; // 3 = 0.29.4's clean-up of imported links back to the event itself; 4 = 0.37.0's Rank Math sitemap refresh; 5 = 0.39.0's date pages (a new rewrite rule; every upgrade already flushes)
+	const VERSION = '6'; // 3 = 0.29.4's clean-up of imported links back to the event itself; 4 = 0.37.0's Rank Math sitemap refresh; 5 = 0.39.0's date pages (a new rewrite rule; every upgrade already flushes); 6 = 0.43.0's Event organizer role (install() adds it)
 	public static function table(): string {
 		global $wpdb;
 		return $wpdb->prefix . 'beacon_occurrences'; }
@@ -53,6 +53,7 @@ final class Schema {
 			KEY start_utc (start_utc)
 		) $c;"
 		);
+		Roles::add_role();
 		update_option( 'beacon_schema_version', self::VERSION );
 	}
 }

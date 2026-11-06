@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.42.0
+Stable tag: 0.43.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,10 @@ Some themes and theme builders draw single pages with their own template. Since 
 
 German is included (since 0.28.0) and loads by itself on a German site. Every other language can be added at translate.wordpress.org/projects/wp-plugins/beacon-events/, and a finished translation arrives as a normal update.
 
+= Can club leaders or volunteers add events without being able to write blog posts? =
+
+Yes. Give them the "Event organizer" role (Users → Edit user → Role). They can add, publish and edit their own events, pick categories, add a venue and upload images, but they can't write posts or pages or change anyone else's events, and they land on their events list when they log in. Other roles keep what they have with posts: Authors publish their own events, Contributors submit theirs for review, Editors edit everyone's. With a role editor plugin you can fine-tune it, for example take "publish_beacon_events" away so their events wait for review.
+
 == Screenshots ==
 
 1. The month view, inheriting the theme.
@@ -262,6 +266,10 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.43.0 =
+* New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
+* Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
+
 = 0.42.0 =
 * The week, month and day views now page in place: the previous / next arrows, "This week", "Back to month" and a month's day numbers load the new dates without reloading the whole page, so the page stays where you scrolled to. The address still changes (links can be shared, Back and Forward work), keyboard focus stays on the arrow, and without JavaScript the arrows work as plain links like before. Turn it off with the beacon_inline_nav filter.
 
@@ -283,7 +291,4 @@ German is included (since 0.28.0) and loads by itself on a German site. Every ot
 = 0.38.5 =
 * Looks right on more themes, checked on Astra, Hello Elementor, Twenty Twenty-One and Twenty Twenty-Five: the filter bar's menus and search box no longer stretch to full width on themes that size every form field that way; in lists, an event without a category colour lines up with the coloured ones; and a calendar set to Wide width no longer runs past a phone screen on themes that draw Wide width with fixed negative margins (Hello Elementor), which had pushed the week view's day names off the left edge.
 
-= 0.38.4 =
-* After a move from The Events Calendar, calendars subscribed to its feed keep updating: its "Subscribe" address (/?post_type=tribe_events&ical=1), ?ical=1 and ?outlook-ical=1 on its calendar views, its category feeds and an event's ?ical=1 link now answer with Beacon's feed for the same events, category or event. Only once The Events Calendar is deactivated.
-
-Older versions: see changelog.txt in the plugin folder.
+Older versions: see changelog.txt.

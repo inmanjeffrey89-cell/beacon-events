@@ -392,15 +392,15 @@ msgstr "Neue Veranstaltung"
 msgid "Edit Event"
 msgstr "Veranstaltung bearbeiten"
 
-#: includes/class-events.php:273
+#: includes/class-events.php:276
 msgid "Event Categories"
 msgstr "Veranstaltungskategorien"
 
-#: includes/class-events.php:283
+#: includes/class-events.php:287
 msgid "Venues"
 msgstr "Orte"
 
-#: includes/class-events.php:293
+#: includes/class-events.php:298
 #: includes/class-import.php:163
 msgid "Organizers"
 msgstr "Veranstalter"
@@ -1161,6 +1161,11 @@ msgstr "fünften"
 msgctxt "the last Monday of the month"
 msgid "last"
 msgstr "letzten"
+
+#: includes/class-roles.php:77
+msgctxt "user role"
+msgid "Event organizer"
+msgstr "Veranstalter"
 
 #: includes/class-settings.php:12
 msgid "Beacon Settings"

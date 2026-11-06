@@ -260,6 +260,9 @@ final class Events {
 					'slug'       => $bases['event'],
 					'with_front' => false,
 				),
+				// edit_beacon_events …: every role keeps what it has with posts (Roles::fill), and the Event organizer role can manage events only
+				'capability_type' => array( 'beacon_event', 'beacon_events' ),
+				'map_meta_cap'    => true,
 				'menu_icon'     => 'dashicons-calendar-alt',
 				'menu_position' => 20,
 				'show_in_rest'  => true,
@@ -271,6 +274,7 @@ final class Events {
 			self::CPT,
 			array(
 				'label'        => __( 'Event Categories', 'beacon-events' ),
+				'capabilities' => array( 'assign_terms' => 'edit_beacon_events' ),
 				'hierarchical' => true,
 				'show_in_rest' => true,
 				'rewrite'      => array( 'slug' => $bases['category'] ),
@@ -281,6 +285,7 @@ final class Events {
 			self::CPT,
 			array(
 				'label'        => __( 'Venues', 'beacon-events' ),
+				'capabilities' => array( 'assign_terms' => 'edit_beacon_events' ),
 				'hierarchical' => false,
 				'show_in_rest' => true,
 				'rewrite'      => array( 'slug' => $bases['venue'] ),
@@ -291,6 +296,7 @@ final class Events {
 			self::CPT,
 			array(
 				'label'        => __( 'Organizers', 'beacon-events' ),
+				'capabilities' => array( 'assign_terms' => 'edit_beacon_events' ),
 				'hierarchical' => false,
 				'show_in_rest' => true,
 				'rewrite'      => array( 'slug' => $bases['organizer'] ),
@@ -341,7 +347,7 @@ final class Events {
 					'single'            => true,
 					'type'              => 'string',
 					'sanitize_callback' => $sanitize[ $name ] ?? 'sanitize_text_field',
-					'auth_callback'     => fn() => current_user_can( 'edit_posts' ),
+					'auth_callback'     => fn( $allowed, $key, $post_id ) => current_user_can( 'edit_post', (int) $post_id ),
 				)
 			);
 		}

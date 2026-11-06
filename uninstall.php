@@ -47,6 +47,21 @@ function beacon_events_uninstall_site(): bool {
 	// Importer progress is kept per user as beacon_import_<user id> transients.
 	$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_beacon_import_' ) . '%', $wpdb->esc_like( '_transient_timeout_beacon_import_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	delete_transient( 'beacon_rules_heal' );
+	// The Event organizer role: its people keep an account (as Subscribers) and only lose the event rights.
+	if ( get_role( 'beacon_event_organizer' ) ) {
+		foreach ( get_users(
+			array(
+				'role'   => 'beacon_event_organizer',
+				'fields' => 'ID',
+			)
+		) as $beacon_user_id ) {
+			$beacon_user = new WP_User( (int) $beacon_user_id );
+			$beacon_user->remove_role( 'beacon_event_organizer' );
+			if ( ! $beacon_user->roles ) {
+				$beacon_user->add_role( 'subscriber' ); }
+		}
+		remove_role( 'beacon_event_organizer' );
+	}
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}beacon_occurrences" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	return true;
 }

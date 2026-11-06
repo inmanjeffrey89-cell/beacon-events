@@ -1,5 +1,9 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.43.0 =
+* New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
+* Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
+
 = 0.42.0 =
 * The week, month and day views now page in place: the previous / next arrows, "This week", "Back to month" and a month's day numbers load the new dates without reloading the whole page, so the page stays where you scrolled to. The address still changes (links can be shared, Back and Forward work), keyboard focus stays on the arrow, and without JavaScript the arrows work as plain links like before. Turn it off with the beacon_inline_nav filter.
 
