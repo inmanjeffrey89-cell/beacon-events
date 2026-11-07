@@ -2,8 +2,8 @@
 /**
  * Undo an import: removes the events an import from another plugin created, and the venues, organizers and categories
  * it created that are left empty. The other plugin's own data was never changed by the import, so turning that plugin
- * back on brings the old calendar back as it was. Events that have bookings are kept; events changed in Beacon after
- * the import are kept unless asked.
+ * back on brings the old calendar back as it was. Events with bookings made in Beacon are kept (bookings that came over
+ * with the import are deleted with their event); events changed in Beacon after the import are kept unless asked.
  */
 namespace Beacon;
 
@@ -26,16 +26,55 @@ final class Import_Undo {
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = '_beacon_import' WHERE p.post_type = %s AND m.meta_value = %s ORDER BY p.ID", Events::CPT, $key ) ) );
 	}
 
-	/** Event IDs with at least one booking or RSVP in Beacon Events Pro's table (empty when Pro was never installed). */
-	private static function booked_ids(): array {
+	/**
+	 * Beacon Events Pro's bookings table: [table, has the `source` column]. '' when Pro was never installed. Rows Pro's
+	 * importer brought over from the old plugin carry a `source` ("tec-rsvp:12" …); bookings made in Beacon have none.
+	 */
+	private static function attendees(): array {
 		global $wpdb;
 		$table = $wpdb->prefix . 'beacon_attendees';
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Pro's own table, read once per undo
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Pro's own table, probed once per undo step
 		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ) !== $table ) {
+			return array( '', false ); }
+		$source = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'source' ) );
+		// phpcs:enable
+		return array( $table, $source );
+	}
+
+	/**
+	 * Event IDs with at least one booking or RSVP made in Beacon (empty when Pro was never installed). Bookings that
+	 * only came over with the import don't count: they are still in the old plugin and go with their event.
+	 */
+	private static function booked_ids(): array {
+		global $wpdb;
+		list( $table, $source ) = self::attendees();
+		if ( '' === $table ) {
 			return array(); }
-		$ids = $wpdb->get_col( $wpdb->prepare( 'SELECT DISTINCT event_id FROM %i', $table ) );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Pro's own table, read once per undo
+		if ( $source ) {
+			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT event_id FROM %i WHERE source = ''", $table ) );
+		} else {
+			$ids = $wpdb->get_col( $wpdb->prepare( 'SELECT DISTINCT event_id FROM %i', $table ) );
+		}
 		// phpcs:enable
 		return array_map( 'intval', $ids );
+	}
+
+	/** How many imported bookings and RSVPs belong to these events (they are deleted with them). */
+	private static function imported_bookings( array $ids ): int {
+		global $wpdb;
+		list( $table, $source ) = self::attendees();
+		if ( '' === $table || ! $source || ! $ids ) {
+			return 0; }
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Pro's own table, read once for the confirm screen
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT event_id, COUNT(*) AS n FROM %i WHERE source <> '' GROUP BY event_id", $table ) );
+		$want = array_flip( array_map( 'intval', $ids ) );
+		$n    = 0;
+		foreach ( $rows as $r ) {
+			if ( isset( $want[ (int) $r->event_id ] ) ) {
+				$n += (int) $r->n; }
+		}
+		return $n;
 	}
 
 	/** Changed in Beacon after the import last wrote it (only known for events imported with 0.38.0 or later). */
@@ -85,14 +124,22 @@ final class Import_Undo {
 	 * @return array{events:int,terms:int,left:int}
 	 */
 	public static function run( string $key, bool $include_changed, int $seconds = self::BUDGET ): array {
-		$ids   = self::plan( $key, $include_changed )['remove'];
-		$start = microtime( true );
-		$done  = 0;
+		global $wpdb;
+		$ids                    = self::plan( $key, $include_changed )['remove'];
+		list( $table, $source ) = self::attendees();
+		$start                  = microtime( true );
+		$done                   = 0;
 		foreach ( $ids as $id ) {
 			if ( $seconds && microtime( true ) - $start > $seconds ) {
 				break; }
 			if ( wp_delete_post( $id, true ) ) {
-				++$done; }
+				++$done;
+				if ( $source ) {
+					// Pro removes an event's bookings when it is deleted; with Pro switched off, the imported ones are removed here
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Pro's own table
+					$wpdb->query( $wpdb->prepare( "DELETE FROM %i WHERE event_id = %d AND source <> ''", $table, $id ) );
+				}
+			}
 		}
 		$left  = count( $ids ) - $done;
 		$terms = 0;
@@ -274,12 +321,24 @@ final class Import_Undo {
 				)
 			) . '</label></p>';
 		}
+		$imported = self::imported_bookings( $plan['remove'] );
+		if ( $imported ) {
+			echo '<p>' . esc_html(
+				sprintf(
+					/* translators: 1: number of bookings, 2: plugin name */
+					_n( 'The %1$d booking or RSVP that came over with these events is deleted with them. It is still in %2$s.', 'The %1$d bookings and RSVPs that came over with these events are deleted with them. They are still in %2$s.', $imported, 'beacon-events' ),
+					$imported,
+					$label
+				)
+			) . '</p>';
+		}
 		if ( $plan['booked'] ) {
+			$kept = count( $plan['booked'] );
 			echo '<p>' . esc_html(
 				sprintf(
 					/* translators: 1: number of events, 2: their titles */
-					_n( '%1$d event has bookings or RSVPs, so it stays: %2$s.', '%1$d events have bookings or RSVPs, so they stay: %2$s.', count( $plan['booked'] ), 'beacon-events' ),
-					count( $plan['booked'] ),
+					_n( '%1$d event has bookings or RSVPs made in Beacon, so it stays: %2$s.', '%1$d events have bookings or RSVPs made in Beacon, so they stay: %2$s.', $kept, 'beacon-events' ),
+					$kept,
 					self::titles( $plan['booked'] )
 				)
 			) . '</p>';

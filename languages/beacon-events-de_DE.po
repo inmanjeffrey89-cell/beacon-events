@@ -417,64 +417,70 @@ msgstr "(ohne Titel)"
 msgid "Join online:"
 msgstr "Online teilnehmen:"
 
-#: includes/class-import-undo.php:196
+#: includes/class-import-undo.php:240
 msgid "Undo this import (%d event)…"
 msgid_plural "Undo this import (%d events)…"
 msgstr[0] "Diesen Import rückgängig machen (%d Termin) …"
 msgstr[1] "Diesen Import rückgängig machen (%d Termine) …"
 
-#: includes/class-import-undo.php:228
+#: includes/class-import-undo.php:272
 msgid "Removed %1$d imported event and %2$d venues, organizers and categories the import had created. Nothing in %3$s was changed: turn it back on and your old calendar is there as it was."
 msgid_plural "Removed %1$d imported events and %2$d venues, organizers and categories the import had created. Nothing in %3$s was changed: turn it back on and your old calendar is there as it was."
 msgstr[0] "%1$d importierter Termin und %2$d Orte, Veranstalter und Kategorien, die der Import angelegt hatte, wurden entfernt. In %3$s wurde nichts verändert: Aktiviere es wieder und dein alter Kalender ist so da, wie er war."
 msgstr[1] "%1$d importierte Termine und %2$d Orte, Veranstalter und Kategorien, die der Import angelegt hatte, wurden entfernt. In %3$s wurde nichts verändert: Aktiviere es wieder und dein alter Kalender ist so da, wie er war."
 
-#: includes/class-import-undo.php:239
+#: includes/class-import-undo.php:283
 msgid "Undoing the import from %s…"
 msgstr "Der Import aus %s wird rückgängig gemacht …"
 
-#: includes/class-import-undo.php:241
+#: includes/class-import-undo.php:285
 msgid "%d event left to remove."
 msgid_plural "%d events left to remove."
 msgstr[0] "Noch %d Termin zu entfernen."
 msgstr[1] "Noch %d Termine zu entfernen."
 
-#: includes/class-import-undo.php:249
+#: includes/class-import-undo.php:293
 #: includes/class-import.php:115
 msgid "Continue"
 msgstr "Weiter"
 
-#: includes/class-import-undo.php:253
+#: includes/class-import-undo.php:297
 msgid "Undo the import from %s"
 msgstr "Import aus %s rückgängig machen"
 
-#: includes/class-import-undo.php:259
+#: includes/class-import-undo.php:303
 msgid "This permanently deletes the %1$d event that was imported from %2$s, and the venues, organizers and categories the import created once nothing uses them. Nothing in %2$s was changed by the import, so turning it back on brings your old calendar back as it was."
 msgid_plural "This permanently deletes the %1$d events that were imported from %2$s, and the venues, organizers and categories the import created once nothing uses them. Nothing in %2$s was changed by the import, so turning it back on brings your old calendar back as it was."
 msgstr[0] "Damit wird der %1$d Termin, der aus %2$s importiert wurde, endgültig gelöscht, dazu die Orte, Veranstalter und Kategorien, die der Import angelegt hat, sobald nichts sie mehr nutzt. Der Import hat in %2$s nichts verändert: Wenn du es wieder aktivierst, ist dein alter Kalender so da, wie er war."
 msgstr[1] "Damit werden die %1$d Termine, die aus %2$s importiert wurden, endgültig gelöscht, dazu die Orte, Veranstalter und Kategorien, die der Import angelegt hat, sobald nichts sie mehr nutzt. Der Import hat in %2$s nichts verändert: Wenn du es wieder aktivierst, ist dein alter Kalender so da, wie er war."
 
-#: includes/class-import-undo.php:271
+#: includes/class-import-undo.php:315
 msgid "Also delete the %1$d event you changed after the import (%2$s). Left unticked, it stays."
 msgid_plural "Also delete the %1$d events you changed after the import (%2$s). Left unticked, they stay."
 msgstr[0] "Auch den %1$d Termin löschen, den du nach dem Import geändert hast (%2$s). Ohne Häkchen bleibt er."
 msgstr[1] "Auch die %1$d Termine löschen, die du nach dem Import geändert hast (%2$s). Ohne Häkchen bleiben sie."
 
-#: includes/class-import-undo.php:281
-msgid "%1$d event has bookings or RSVPs, so it stays: %2$s."
-msgid_plural "%1$d events have bookings or RSVPs, so they stay: %2$s."
-msgstr[0] "%1$d Termin hat Buchungen oder Anmeldungen und bleibt deshalb: %2$s."
-msgstr[1] "%1$d Termine haben Buchungen oder Anmeldungen und bleiben deshalb: %2$s."
+#: includes/class-import-undo.php:326
+msgid "The %1$d booking or RSVP that came over with these events is deleted with them. It is still in %2$s."
+msgid_plural "The %1$d bookings and RSVPs that came over with these events are deleted with them. They are still in %2$s."
+msgstr[0] "Die %1$d Buchung oder Anmeldung, die mit diesen Terminen übernommen wurde, wird mit ihnen gelöscht. In %2$s ist sie noch vorhanden."
+msgstr[1] "Die %1$d Buchungen und Anmeldungen, die mit diesen Terminen übernommen wurden, werden mit ihnen gelöscht. In %2$s sind sie noch vorhanden."
 
-#: includes/class-import-undo.php:288
+#: includes/class-import-undo.php:337
+msgid "%1$d event has bookings or RSVPs made in Beacon, so it stays: %2$s."
+msgid_plural "%1$d events have bookings or RSVPs made in Beacon, so they stay: %2$s."
+msgstr[0] "%1$d Termin hat in Beacon gemachte Buchungen oder Anmeldungen und bleibt deshalb: %2$s."
+msgstr[1] "%1$d Termine haben in Beacon gemachte Buchungen oder Anmeldungen und bleiben deshalb: %2$s."
+
+#: includes/class-import-undo.php:344
 msgid "Delete the imported events"
 msgstr "Importierte Termine löschen"
 
-#: includes/class-import-undo.php:289
+#: includes/class-import-undo.php:345
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/class-import-undo.php:299
+#: includes/class-import-undo.php:355
 #: includes/class-import.php:356
 msgid "Unknown import source."
 msgstr "Unbekannte Import-Quelle."

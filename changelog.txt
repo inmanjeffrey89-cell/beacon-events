@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.43.1 =
+* Undo an import now removes events whose only bookings came over with the import. Moving from The Events Calendar with Event Tickets (or WP Events Manager) and Beacon Events Pro brings the old tickets and attendees across, and until now those copies counted as bookings, so the undo kept every ticketed event. The copies are deleted with their event (they are still in the old plugin); events with bookings made in Beacon are kept as before.
+
 = 0.43.0 =
 * New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
 * Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
@@ -15,9 +18,11 @@ Beacon Events changelog: every version. The readme on wordpress.org shows the la
 
 = 0.39.0 =
 * New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
+* Thanks to PeepSo for pointing out, on Reddit, that Google expects each event date to have its own page.
 
 = 0.38.7 =
 * Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
+* Thanks to PeepSo for flagging, on Reddit, that event schema needs stable identities after a migration.
 
 = 0.38.6 =
 * More themes checked (Kadence, GeneratePress, OceanWP): on OceanWP, event lists and venue pages now show each event's time, place and repeat line (it builds its excerpts its own way); on GeneratePress, a calendar set to Wide width no longer runs past a phone screen.

@@ -171,7 +171,7 @@ final class CLI {
 	/**
 	 * Undoes an import: deletes the events imported from a source, and the venues, organizers and categories that import
 	 * created once nothing uses them. The source plugin's own data was never changed, so turning it back on brings the
-	 * old calendar back. Events with bookings are always kept; events changed after the import are kept unless asked.
+	 * old calendar back. Events with bookings made in Beacon are always kept (imported ones go with their event); events changed after the import are kept unless asked.
 	 *
 	 * ## OPTIONS
 	 *
@@ -198,7 +198,7 @@ final class CLI {
 			\WP_CLI::error( sprintf( 'Unknown source "%s". Run `wp beacon sources` to see the choices.', $key ) ); }
 		$include = ! empty( $assoc['include-changed'] );
 		$plan    = Import_Undo::plan( $key, $include );
-		\WP_CLI::log( sprintf( 'Imported from %s: %d to delete, %d changed after the import (%s), %d with bookings (kept).', Import::sources()[ $key ]::label(), count( $plan['remove'] ), count( $plan['changed'] ), $include ? 'deleted too' : 'kept', count( $plan['booked'] ) ) );
+		\WP_CLI::log( sprintf( 'Imported from %s: %d to delete, %d changed after the import (%s), %d with bookings made in Beacon (kept).', Import::sources()[ $key ]::label(), count( $plan['remove'] ), count( $plan['changed'] ), $include ? 'deleted too' : 'kept', count( $plan['booked'] ) ) );
 		if ( empty( $assoc['yes'] ) ) {
 			\WP_CLI::log( 'Nothing deleted. Add --yes to delete.' );
 			return;

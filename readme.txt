@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.43.0
+Stable tag: 0.43.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,7 +173,7 @@ Yes, for The Events Calendar. After the move, its "Subscribe to calendar" addres
 Yes, since 0.39.0. Every date has its own address, /event/<name>/<date>/, that shows that date (marked if it was moved or cancelled) with a link to all dates, opens the booking form on that date when Beacon Events Pro takes bookings, and is its own page for search engines: its canonical address is itself, also with Yoast, Rank Math, All in One SEO or SEOPress, and its event data describes just that date. Google's event results ask for a unique page for each event. The event's main page lists the next dates, the calendar views link each repeating event to the date you clicked, and The Events Calendar Pro's old per-date addresses now open the matching date.
 
 = Can I undo an import? =
-Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs are always kept, and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
+Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs made in Beacon are always kept (tickets and attendees that came over with the import are deleted with their event; they are still in the old plugin), and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
 = Can I move my events from Sugar Calendar? =
 Yes, from Sugar Calendar Lite or Pro, with it still active or already deactivated. Events → Import / Export copies events with their times and timezones, all-day and multi-day events, locations (the location box becomes a venue, with the address when there is one), calendars (they become categories with their colours), featured images, online events with their Zoom or custom links, and repeats: daily, weekly on one or several days, every other week, monthly by date or by "fourth Tuesday", and yearly, with their end date or count. Repeating events are free in Beacon Events. A joining link Sugar Calendar showed to attendees only is not put on the public page; the import report lists those links so you can decide. Once Sugar Calendar is deactivated, its /events/… and calendar links are redirected to the imported events and categories.
@@ -266,6 +266,9 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.43.1 =
+* Undo an import now removes events whose only bookings came over with the import. Moving from The Events Calendar with Event Tickets (or WP Events Manager) and Beacon Events Pro brings the old tickets and attendees across, and until now those copies counted as bookings, so the undo kept every ticketed event. The copies are deleted with their event (they are still in the old plugin); events with bookings made in Beacon are kept as before.
+
 = 0.43.0 =
 * New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
 * Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
@@ -281,14 +284,13 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.39.0 =
 * New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
+* Thanks to PeepSo for pointing out, on Reddit, that Google expects each event date to have its own page.
 
 = 0.38.7 =
 * Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
+* Thanks to PeepSo for flagging, on Reddit, that event schema needs stable identities after a migration.
 
 = 0.38.6 =
 * More themes checked (Kadence, GeneratePress, OceanWP): on OceanWP, event lists and venue pages now show each event's time, place and repeat line (it builds its excerpts its own way); on GeneratePress, a calendar set to Wide width no longer runs past a phone screen.
-
-= 0.38.5 =
-* Looks right on more themes, checked on Astra, Hello Elementor, Twenty Twenty-One and Twenty Twenty-Five: the filter bar's menus and search box no longer stretch to full width on themes that size every form field that way; in lists, an event without a category colour lines up with the coloured ones; and a calendar set to Wide width no longer runs past a phone screen on themes that draw Wide width with fixed negative margins (Hello Elementor), which had pushed the week view's day names off the left edge.
 
 Older versions: see changelog.txt.
