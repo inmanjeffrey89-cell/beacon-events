@@ -34,5 +34,7 @@
 .beacon-thumb{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:3px}.beacon-week-day .beacon-thumb-link{display:block;margin:0 0 .3em}.beacon-cell-event .beacon-thumb{margin:0 0 .2em}
 @container (max-width:720px){.beacon-week-day .beacon-thumb-link{flex-basis:100%;margin-bottom:.15em}.beacon-week-day .beacon-thumb{max-width:8em}}
 @media (max-width:640px){.beacon-cell-event .beacon-thumb{display:none}}
+.beacon-list .beacon-has-thumb{flex-wrap:nowrap;align-items:flex-start;padding:.5em 0}.beacon-list .beacon-thumb-link{flex:0 0 7em}.beacon-list .beacon-thumb{aspect-ratio:auto;max-height:9em}.beacon-row-main{display:block;flex:1 1 0;min-width:0;overflow-wrap:break-word}.beacon-row-main .beacon-time{display:block;min-width:0;margin-bottom:.15em}
+@media (max-width:480px){.beacon-list .beacon-thumb-link{flex-basis:5em}}
 @media print{.beacon-thumb{display:none}}
 .beacon-loading{opacity:.55;transition:opacity .15s}.beacon-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

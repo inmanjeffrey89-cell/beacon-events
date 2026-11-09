@@ -30,14 +30,14 @@ msgstr "Beacon Events"
 #: includes/class-admin.php:11
 #: includes/class-admin.php:62
 #: includes/class-settings.php:50
-#: includes/class-views.php:1211
+#: includes/class-views.php:1222
 #: assets/editor-panel.js:251
 msgid "When"
 msgstr "Wann"
 
 #: includes/class-admin.php:63
 #: includes/class-admin.php:130
-#: includes/class-views.php:1214
+#: includes/class-views.php:1225
 #: assets/editor-panel.js:260
 msgid "Repeats"
 msgstr "Wiederholung"
@@ -74,7 +74,7 @@ msgstr "Ende"
 #: includes/class-admin.php:128
 #: includes/class-views.php:124
 #: includes/class-views.php:581
-#: includes/class-views.php:879
+#: includes/class-views.php:889
 #: assets/editor-panel.js:253
 msgid "All day"
 msgstr "Ganztägig"
@@ -250,7 +250,7 @@ msgstr "Wie geplant"
 
 #: includes/class-admin.php:205
 #: includes/class-views.php:566
-#: includes/class-views.php:1206
+#: includes/class-views.php:1217
 #: assets/editor-panel.js:180
 msgid "Cancelled"
 msgstr "Abgesagt"
@@ -329,7 +329,7 @@ msgid "Pattern"
 msgstr "Muster"
 
 #: includes/class-combine.php:463
-#: includes/class-views.php:1232
+#: includes/class-views.php:1243
 msgid "Dates"
 msgstr "Termine"
 
@@ -417,70 +417,70 @@ msgstr "(ohne Titel)"
 msgid "Join online:"
 msgstr "Online teilnehmen:"
 
-#: includes/class-import-undo.php:240
+#: includes/class-import-undo.php:243
 msgid "Undo this import (%d event)…"
 msgid_plural "Undo this import (%d events)…"
 msgstr[0] "Diesen Import rückgängig machen (%d Termin) …"
 msgstr[1] "Diesen Import rückgängig machen (%d Termine) …"
 
-#: includes/class-import-undo.php:272
+#: includes/class-import-undo.php:275
 msgid "Removed %1$d imported event and %2$d venues, organizers and categories the import had created. Nothing in %3$s was changed: turn it back on and your old calendar is there as it was."
 msgid_plural "Removed %1$d imported events and %2$d venues, organizers and categories the import had created. Nothing in %3$s was changed: turn it back on and your old calendar is there as it was."
 msgstr[0] "%1$d importierter Termin und %2$d Orte, Veranstalter und Kategorien, die der Import angelegt hatte, wurden entfernt. In %3$s wurde nichts verändert: Aktiviere es wieder und dein alter Kalender ist so da, wie er war."
 msgstr[1] "%1$d importierte Termine und %2$d Orte, Veranstalter und Kategorien, die der Import angelegt hatte, wurden entfernt. In %3$s wurde nichts verändert: Aktiviere es wieder und dein alter Kalender ist so da, wie er war."
 
-#: includes/class-import-undo.php:283
+#: includes/class-import-undo.php:286
 msgid "Undoing the import from %s…"
 msgstr "Der Import aus %s wird rückgängig gemacht …"
 
-#: includes/class-import-undo.php:285
+#: includes/class-import-undo.php:288
 msgid "%d event left to remove."
 msgid_plural "%d events left to remove."
 msgstr[0] "Noch %d Termin zu entfernen."
 msgstr[1] "Noch %d Termine zu entfernen."
 
-#: includes/class-import-undo.php:293
+#: includes/class-import-undo.php:296
 #: includes/class-import.php:115
 msgid "Continue"
 msgstr "Weiter"
 
-#: includes/class-import-undo.php:297
+#: includes/class-import-undo.php:300
 msgid "Undo the import from %s"
 msgstr "Import aus %s rückgängig machen"
 
-#: includes/class-import-undo.php:303
+#: includes/class-import-undo.php:306
 msgid "This permanently deletes the %1$d event that was imported from %2$s, and the venues, organizers and categories the import created once nothing uses them. Nothing in %2$s was changed by the import, so turning it back on brings your old calendar back as it was."
 msgid_plural "This permanently deletes the %1$d events that were imported from %2$s, and the venues, organizers and categories the import created once nothing uses them. Nothing in %2$s was changed by the import, so turning it back on brings your old calendar back as it was."
 msgstr[0] "Damit wird der %1$d Termin, der aus %2$s importiert wurde, endgültig gelöscht, dazu die Orte, Veranstalter und Kategorien, die der Import angelegt hat, sobald nichts sie mehr nutzt. Der Import hat in %2$s nichts verändert: Wenn du es wieder aktivierst, ist dein alter Kalender so da, wie er war."
 msgstr[1] "Damit werden die %1$d Termine, die aus %2$s importiert wurden, endgültig gelöscht, dazu die Orte, Veranstalter und Kategorien, die der Import angelegt hat, sobald nichts sie mehr nutzt. Der Import hat in %2$s nichts verändert: Wenn du es wieder aktivierst, ist dein alter Kalender so da, wie er war."
 
-#: includes/class-import-undo.php:315
+#: includes/class-import-undo.php:318
 msgid "Also delete the %1$d event you changed after the import (%2$s). Left unticked, it stays."
 msgid_plural "Also delete the %1$d events you changed after the import (%2$s). Left unticked, they stay."
 msgstr[0] "Auch den %1$d Termin löschen, den du nach dem Import geändert hast (%2$s). Ohne Häkchen bleibt er."
 msgstr[1] "Auch die %1$d Termine löschen, die du nach dem Import geändert hast (%2$s). Ohne Häkchen bleiben sie."
 
-#: includes/class-import-undo.php:326
+#: includes/class-import-undo.php:329
 msgid "The %1$d booking or RSVP that came over with these events is deleted with them. It is still in %2$s."
 msgid_plural "The %1$d bookings and RSVPs that came over with these events are deleted with them. They are still in %2$s."
 msgstr[0] "Die %1$d Buchung oder Anmeldung, die mit diesen Terminen übernommen wurde, wird mit ihnen gelöscht. In %2$s ist sie noch vorhanden."
 msgstr[1] "Die %1$d Buchungen und Anmeldungen, die mit diesen Terminen übernommen wurden, werden mit ihnen gelöscht. In %2$s sind sie noch vorhanden."
 
-#: includes/class-import-undo.php:337
+#: includes/class-import-undo.php:340
 msgid "%1$d event has bookings or RSVPs made in Beacon, so it stays: %2$s."
 msgid_plural "%1$d events have bookings or RSVPs made in Beacon, so they stay: %2$s."
 msgstr[0] "%1$d Termin hat in Beacon gemachte Buchungen oder Anmeldungen und bleibt deshalb: %2$s."
 msgstr[1] "%1$d Termine haben in Beacon gemachte Buchungen oder Anmeldungen und bleiben deshalb: %2$s."
 
-#: includes/class-import-undo.php:344
+#: includes/class-import-undo.php:347
 msgid "Delete the imported events"
 msgstr "Importierte Termine löschen"
 
-#: includes/class-import-undo.php:345
+#: includes/class-import-undo.php:348
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/class-import-undo.php:355
+#: includes/class-import-undo.php:358
 #: includes/class-import.php:356
 msgid "Unknown import source."
 msgstr "Unbekannte Import-Quelle."
@@ -1376,8 +1376,8 @@ msgid "(the joining link is sent when you sign up)"
 msgstr "(den Link zur Teilnahme bekommst du nach der Anmeldung)"
 
 #: includes/class-views.php:673
-#: includes/class-views.php:1262
-#: includes/class-views.php:1287
+#: includes/class-views.php:1273
+#: includes/class-views.php:1298
 msgid "Map"
 msgstr "Karte"
 
@@ -1393,96 +1393,96 @@ msgstr "%1$s verschoben auf %2$s"
 msgid "No upcoming events."
 msgstr "Keine anstehenden Veranstaltungen."
 
-#: includes/class-views.php:819
+#: includes/class-views.php:829
 msgid "Previous day"
 msgstr "Vorheriger Tag"
 
-#: includes/class-views.php:819
+#: includes/class-views.php:829
 msgid "Next day"
 msgstr "Nächster Tag"
 
-#: includes/class-views.php:821
+#: includes/class-views.php:831
 msgid "← Back to month"
 msgstr "← Zurück zum Monat"
 
-#: includes/class-views.php:823
+#: includes/class-views.php:833
 msgid "No events on this day."
 msgstr "An diesem Tag keine Veranstaltungen."
 
-#: includes/class-views.php:859
+#: includes/class-views.php:869
 msgid "Previous week"
 msgstr "Vorherige Woche"
 
-#: includes/class-views.php:859
+#: includes/class-views.php:869
 msgid "Next week"
 msgstr "Nächste Woche"
 
-#: includes/class-views.php:861
+#: includes/class-views.php:871
 msgid "This week"
 msgstr "Diese Woche"
 
-#: includes/class-views.php:863
+#: includes/class-views.php:873
 msgid "No events this week."
 msgstr "Diese Woche keine Veranstaltungen."
 
-#: includes/class-views.php:872
+#: includes/class-views.php:882
 msgid "No events"
 msgstr "Keine Termine"
 
-#: includes/class-views.php:974
+#: includes/class-views.php:985
 msgid "Previous month"
 msgstr "Vorheriger Monat"
 
-#: includes/class-views.php:974
+#: includes/class-views.php:985
 msgid "Next month"
 msgstr "Nächster Monat"
 
-#: includes/class-views.php:1015
+#: includes/class-views.php:1026
 msgid "Print this month"
 msgstr "Diesen Monat drucken"
 
-#: includes/class-views.php:1061
+#: includes/class-views.php:1072
 msgid "matching \"%s\""
 msgstr "passend zu „%s“"
 
-#: includes/class-views.php:1084
+#: includes/class-views.php:1095
 msgid "Print"
 msgstr "Drucken"
 
-#: includes/class-views.php:1084
+#: includes/class-views.php:1095
 msgid "← Back to the calendar"
 msgstr "← Zurück zum Kalender"
 
-#: includes/class-views.php:1209
+#: includes/class-views.php:1220
 msgid "Moved from %s"
 msgstr "Verschoben vom %s"
 
-#: includes/class-views.php:1213
+#: includes/class-views.php:1224
 msgid "All dates"
 msgstr "Alle Termine"
 
-#: includes/class-views.php:1217
+#: includes/class-views.php:1228
 msgid "Changes"
 msgstr "Änderungen"
 
-#: includes/class-views.php:1220
+#: includes/class-views.php:1231
 msgid "Where"
 msgstr "Wo"
 
-#: includes/class-views.php:1244
+#: includes/class-views.php:1255
 msgid "Next dates"
 msgstr "Nächste Termine"
 
-#: includes/class-views.php:1247
+#: includes/class-views.php:1258
 msgid "Add to calendar (.ics)"
 msgstr "Zum Kalender hinzufügen (.ics)"
 
-#: includes/class-views.php:1247
+#: includes/class-views.php:1258
 msgid "Add to Google Calendar"
 msgstr "Zu Google Kalender hinzufügen"
 
-#: includes/class-views.php:1266
-#: includes/class-views.php:1289
+#: includes/class-views.php:1277
+#: includes/class-views.php:1300
 msgid "Subscribe to these events (.ics)"
 msgstr "Diese Veranstaltungen abonnieren (.ics)"
 

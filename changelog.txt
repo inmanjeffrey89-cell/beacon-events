@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.43.2 =
+* "Show images" now works in the list view too (grouped by day): each event's featured image sits on the left, with its time and title beside it, so a list of shows or classes can carry their posters. Turn it on in the Events block's settings or with images="yes" on the [beacon_events] shortcode. Off by default; the compact list stays text only.
+
 = 0.43.1 =
 * Undo an import now removes events whose only bookings came over with the import. Moving from The Events Calendar with Event Tickets (or WP Events Manager) and Beacon Events Pro brings the old tickets and attendees across, and until now those copies counted as bookings, so the undo kept every ticketed event. The copies are deleted with their event (they are still in the old plugin); events with bookings made in Beacon are kept as before.
 

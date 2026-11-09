@@ -756,7 +756,10 @@ final class Views {
 		}
 		// Group by each event's own date; rows come in UTC order, so sort by that date first (events in other zones).
 		usort( $rows, fn( $x, $y ) => array( self::local( $x['start_utc'], (int) $x['event_id'] )->format( 'Y-m-d' ), $x['start_utc'] ) <=> array( self::local( $y['start_utc'], (int) $y['event_id'] )->format( 'Y-m-d' ), $y['start_utc'] ) );
-		$out = '<div class="beacon-list' . self::clock_class() . '">';
+		$images = self::images_on( $a );
+		if ( $images ) {
+			self::prime_thumbs( $rows ); }
+		$out = '<div class="beacon-list' . self::clock_class() . ( $images ? ' beacon-list-thumbs' : '' ) . '">';
 		$day = '';
 		foreach ( $rows as $r ) {
 			$s = self::local( $r['start_utc'], (int) $r['event_id'] );
@@ -768,7 +771,14 @@ final class Views {
 				$out  .= '<section class="beacon-day"><h3 class="beacon-day-heading">' . esc_html( wp_date( 'l, F j', $s->getTimestamp(), $s->getTimezone() ) ) . '</h3><ul class="beacon-day-events">'; }
 			$id    = (int) $r['event_id'];
 			$venue = $show_venue ? self::venue( $id ) : '';
-			$out  .= '<li class="beacon-event' . self::row_class( $r ) . '"' . self::color_attr( $id ) . '><span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) ) . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span></li>';
+			$url   = esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) );
+			$img   = $images ? self::thumb( $id ) : '';
+			$row   = '<span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . $url . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span>';
+			if ( $img ) {
+				// picture on the left, time and text beside it; the picture links to the event too, out of the tab order
+				$row = '<a class="beacon-thumb-link" href="' . $url . '" tabindex="-1" aria-hidden="true">' . $img . '</a><span class="beacon-row-main">' . $row . '</span>';
+			}
+			$out .= '<li class="beacon-event' . self::row_class( $r ) . ( $img ? ' beacon-has-thumb' : '' ) . '"' . self::color_attr( $id ) . '>' . $row . '</li>';
 		}
 		return $out . '</ul></section></div>';
 	}
@@ -913,8 +923,9 @@ final class Views {
 	}
 
 	/**
-	 * Whether week and month views show each event's featured image: block toggle "Show images", shortcode images="yes",
-	 * filter beacon_show_images. Off by default: a calendar full of photos loads slower, so a site turns it on.
+	 * Whether the week, month and grouped list views show each event's featured image: block toggle "Show images",
+	 * shortcode images="yes", filter beacon_show_images. Off by default: a calendar full of photos loads slower, so a
+	 * site turns it on.
 	 */
 	private static function images_on( array $a ): bool {
 		$on = ! empty( $a['showImages'] ) || in_array( strtolower( (string) ( $a['images'] ?? '' ) ), array( 'yes', '1', 'true', 'on' ), true );
