@@ -456,12 +456,18 @@ final class Ics {
 		$only = 'all' === $which ? null : array_filter( array( (int) $which ) ); // "?beacon_ical=foo" → id 0 → an empty calendar
 		foreach ( Views::TAX_ATTR as $tax => $attr ) {
 			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public, read-only export
-			$slug = isset( $_GET[ 'beacon_' . $attr ] ) ? sanitize_title( wp_unslash( $_GET[ 'beacon_' . $attr ] ) ) : '';
+			$raw = isset( $_GET[ 'beacon_' . $attr ] ) ? sanitize_text_field( wp_unslash( $_GET[ 'beacon_' . $attr ] ) ) : '';
 			// phpcs:enable
-			if ( $slug ) {
-				$term = get_term_by( 'slug', $slug, $tax );
-				$in   = $term ? array_map( 'intval', (array) get_objects_in_term( (int) $term->term_id, $tax ) ) : array();
-				$only = null === $only ? $in : array_values( array_intersect( $only, $in ) );
+			// "a,b" (a calendar limited to two categories): events in any of them; several kinds of limit: events in all
+			$slugs = array_filter( array_map( 'sanitize_title', explode( ',', $raw ) ) );
+			if ( $slugs ) {
+				$in = array();
+				foreach ( $slugs as $slug ) {
+					$term = get_term_by( 'slug', $slug, $tax );
+					if ( $term ) {
+						$in = array_merge( $in, array_map( 'intval', (array) get_objects_in_term( (int) $term->term_id, $tax ) ) ); }
+				}
+				$only = null === $only ? array_values( array_unique( $in ) ) : array_values( array_intersect( $only, $in ) );
 			}
 		}
 		// Up to 5,000 dates (a year of a studio running a dozen classes a day, about 1.5 MB), read in pages that double,

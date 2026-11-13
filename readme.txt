@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.47.0
+Stable tag: 0.48.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 * **Online events.** Flip "Online event", paste the meeting link, and visitors get a Join button; calendar apps get the link too.
 * **Search engines understand your events.** schema.org Event markup on every event page, one entry per upcoming date.
 * **Venues with addresses.** Each venue has a street address, shown on the event with a map link — no API key, no embedded map slowing the page down.
-* **Export.** Every event has "Add to calendar (.ics)", "Add to Google Calendar" and "Add to Outlook" links (Outlook.com, and Outlook for work or school accounts), and your whole calendar has a subscribable feed.
+* **Export.** Every event has "Add to calendar (.ics)", "Add to Google Calendar" and "Add to Outlook" links (Outlook.com, and Outlook for work or school accounts), and your whole calendar has a subscribable feed. Turn on "Subscribe links" on a calendar and visitors can subscribe to its events in Google Calendar, Outlook.com, Microsoft 365 or Apple Calendar in one click; category, venue and organizer pages have the same links.
 * **A free alternative to The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) and All-in-One Event Calendar, and it brings your events over from any of them.** Events → Import / Export copies events, venues, organizers, categories, images, recurring rules and each event's own SEO title and description in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Changed your mind? Undo the import in one click, and turn the old plugin back on. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
 * **Uninstalls clean.** Turn on "delete all data on uninstall" and the plugin removes everything it created — events, venues, categories, settings, its table.
 
@@ -60,6 +60,7 @@ One database table, `{prefix}beacon_occurrences`, holding the expanded dates of 
 `print="no"` — hides the "Print this month" link under a month view.
 `show_venue="no"` — leaves the venue name off each row in a list, week or day view (the block has the same switch: "Show venue").
 `images="yes"` — shows each event's featured image in a week, month or list view (the block's switch: "Show images").
+`subscribe="yes"` — adds "Subscribe: Google Calendar · Outlook.com · Microsoft 365 · Apple Calendar / Outlook app · .ics file" under the calendar, for the events it shows (the block's switch: "Subscribe links").
 
 = Block =
 
@@ -272,6 +273,12 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.48.0 =
+* New "Subscribe links" switch for the Events block (and subscribe="yes" for the shortcode): under the calendar, one line lets visitors subscribe to its events in Google Calendar, Outlook.com, Microsoft 365, Apple Calendar or the Outlook app, or download the .ics file. The feed follows the calendar's own category, venue and organizer limits. Off by default.
+* Category, venue and organizer pages now offer the same subscribe links instead of only the .ics file.
+* Moved from The Events Calendar? Its [tribe_events] calendars showed a "Subscribe to calendar" menu, and after the move they show these links in its place.
+* The calendar feed now takes several categories, venues or organizers (?beacon_category=a,b): events in any of them.
+
 = 0.47.0 =
 * Event pages now have "Add to Outlook.com" and "Add to Outlook (work or school)" links next to the .ics and Google Calendar ones. Outlook's link carries one date, so for a repeating event it adds the date the page shows (the next one, or a date page's own date) and links that date's page; "Add to calendar (.ics)" still brings every date. Turn them off with the beacon_outlook_links filter.
 
@@ -293,8 +300,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 = 0.43.0 =
 * New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
 * Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
-
-= 0.42.0 =
-* The week, month and day views now page in place: the previous / next arrows, "This week", "Back to month" and a month's day numbers load the new dates without reloading the whole page, so the page stays where you scrolled to. The address still changes (links can be shared, Back and Forward work), keyboard focus stays on the arrow, and without JavaScript the arrows work as plain links like before. Turn it off with the beacon_inline_nav filter.
 
 Older versions: see changelog.txt.

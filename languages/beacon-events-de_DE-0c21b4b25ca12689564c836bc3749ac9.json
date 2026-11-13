@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-13T18:03:09+00:00",
+    "translation-revision-date": "2026-11-13T20:03:05+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "assets\/editor.js",
     "domain": "messages",
@@ -63,6 +63,12 @@
             ],
             "Each event's featured image, when it has one. Images make the page heavier to load.": [
                 "Das Beitragsbild jeder Veranstaltung, wenn sie eines hat. Mit Bildern l\u00e4dt die Seite langsamer."
+            ],
+            "Subscribe links": [
+                "Abo-Links"
+            ],
+            "Under the calendar: subscribe in Google Calendar, Outlook or Apple Calendar to the events this block shows.": [
+                "Unter dem Kalender: die Veranstaltungen dieses Blocks in Google Kalender, Outlook oder Apple Kalender abonnieren."
             ],
             "\"Print this month\" link": [
                 "Link \u201eDiesen Monat drucken\u201c"

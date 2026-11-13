@@ -296,6 +296,10 @@ final class Views {
 				'type'    => 'boolean',
 				'default' => false,
 			),
+			'subscribe' => array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
 		);
 		wp_register_script( 'beacon-events-editor', BEACON_URL . 'assets/editor.js', array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-server-side-render', 'wp-i18n' ), BEACON_VERSION, true );
 		wp_set_script_translations( 'beacon-events-editor', 'beacon-events', BEACON_DIR . 'languages' );
@@ -348,6 +352,7 @@ final class Views {
 					'print'     => '',
 					'show_venue' => '',
 					'images'     => '',
+					'subscribe'  => '',
 				),
 				$atts,
 				'beacon_events'
@@ -413,12 +418,49 @@ final class Views {
 			$a['week'] = $bw; }
 		// phpcs:enable
 		if ( $view === 'week' ) {
-			return $bar . self::week( $a ); }
+			return $bar . self::week( $a ) . self::subscribe_line( $a, $view ); }
 		if ( $view === 'month' ) {
-			return $bar . self::month( $a ); }
+			return $bar . self::month( $a ) . self::subscribe_line( $a, $view ); }
 		if ( $view === 'day' ) {
-			return $bar . self::day( $a ); }
-		return $bar . self::list( $a );
+			return $bar . self::day( $a ) . self::subscribe_line( $a, $view ); }
+		return $bar . self::list( $a ) . self::subscribe_line( $a, $view );
+	}
+
+	/**
+	 * "Subscribe: Google Calendar · Outlook.com · Microsoft 365 · Apple Calendar / Outlook app · .ics file" under a
+	 * view: the feed of the events this view can show (its category / venue / organizer limits, or what the filter bar
+	 * picked). Block toggle "Subscribe links", shortcode subscribe="yes", filter beacon_show_subscribe. Not under a
+	 * compact list. The Events Calendar shows such a menu under its views, so its shortcodes turn it on after a move.
+	 */
+	private static function subscribe_line( array $a, string $view ): string {
+		$on = filter_var( $a['subscribe'] ?? false, FILTER_VALIDATE_BOOLEAN ) && ! ( 'list' === $view && 'compact' === ( $a['layout'] ?? '' ) );
+		if ( ! apply_filters( 'beacon_show_subscribe', $on, $a ) ) {
+			return ''; }
+		$args = array( 'beacon_ical' => 'all' );
+		foreach ( self::TAX_ATTR as $attr ) {
+			$slugs = self::slugs( (string) ( $a[ $attr ] ?? '' ) );
+			if ( $slugs ) {
+				$args[ 'beacon_' . $attr ] = implode( ',', $slugs ); }
+		}
+		return '<p class="beacon-subscribe">' . esc_html__( 'Subscribe:', 'beacon-events' ) . ' ' . self::subscribe_links( add_query_arg( $args, home_url( '/' ) ) ) . '</p>';
+	}
+
+	/** The links for one feed address: Google's add-by-URL, Outlook's "subscribe from web", webcal:// and the file itself. */
+	private static function subscribe_links( string $feed ): string {
+		$webcal = (string) preg_replace( '#^https?://#i', 'webcal://', $feed );
+		$ms     = '/calendar/0/addfromweb/?' . http_build_query( array( 'url' => $feed, 'name' => self::plain( (string) get_bloginfo( 'name' ) ) ), '', '&', PHP_QUERY_RFC3986 );
+		$links  = array(
+			array( 'https://calendar.google.com/calendar/render?cid=' . rawurlencode( $webcal ), __( 'Google Calendar', 'beacon-events' ), true ),
+			array( 'https://outlook.live.com' . $ms, __( 'Outlook.com', 'beacon-events' ), true ),
+			array( 'https://outlook.office.com' . $ms, __( 'Microsoft 365', 'beacon-events' ), true ),
+			array( $webcal, __( 'Apple Calendar / Outlook app', 'beacon-events' ), false ),
+			array( $feed, __( '.ics file', 'beacon-events' ), false ),
+		);
+		$out = array();
+		foreach ( $links as $l ) {
+			$out[] = '<a href="' . esc_url( $l[0], array( 'http', 'https', 'webcal' ) ) . '" rel="nofollow"' . ( $l[2] ? ' target="_blank"' : '' ) . '>' . esc_html( $l[1] ) . '</a>';
+		}
+		return implode( '&nbsp;<span class="beacon-sep">·</span> ', $out ); // a wrapped line never starts with "·"
 	}
 
 	/**
@@ -1345,7 +1387,7 @@ final class Views {
 		}
 		if ( $t->description ) {
 			$out .= '<div class="beacon-term-description">' . wp_kses_post( wpautop( $t->description ) ) . '</div>'; }
-		$out .= '<p class="beacon-term-subscribe"><a class="beacon-ical" href="' . esc_url( self::ical_url( $t ) ) . '">' . esc_html__( 'Subscribe to these events (.ics)', 'beacon-events' ) . '</a></p>';
+		$out .= '<p class="beacon-term-subscribe">' . esc_html__( 'Subscribe to these events:', 'beacon-events' ) . ' ' . self::subscribe_links( self::ical_url( $t ) ) . '</p>';
 		return '<div class="beacon-term-details">' . $out . '</div>';
 	}
 
@@ -1368,7 +1410,7 @@ final class Views {
 			if ( $addr ) {
 				$extra .= '<p class="beacon-term-address">' . esc_html( $addr ) . ' <a class="beacon-map" href="' . esc_url( 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $t->name . ', ' . $addr ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Map', 'beacon-events' ) . '</a></p>'; }
 		}
-		$extra .= '<p class="beacon-term-subscribe"><a class="beacon-ical" href="' . esc_url( self::ical_url( $t ) ) . '">' . esc_html__( 'Subscribe to these events (.ics)', 'beacon-events' ) . '</a></p>';
+		$extra .= '<p class="beacon-term-subscribe">' . esc_html__( 'Subscribe to these events:', 'beacon-events' ) . ' ' . self::subscribe_links( self::ical_url( $t ) ) . '</p>';
 		return $description . $extra;
 	}
 

@@ -1,5 +1,11 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.48.0 =
+* New "Subscribe links" switch for the Events block (and subscribe="yes" for the shortcode): under the calendar, one line lets visitors subscribe to its events in Google Calendar, Outlook.com, Microsoft 365, Apple Calendar or the Outlook app, or download the .ics file. The feed follows the calendar's own category, venue and organizer limits. Off by default.
+* Category, venue and organizer pages now offer the same subscribe links instead of only the .ics file.
+* Moved from The Events Calendar? Its [tribe_events] calendars showed a "Subscribe to calendar" menu, and after the move they show these links in its place.
+* The calendar feed now takes several categories, venues or organizers (?beacon_category=a,b): events in any of them.
+
 = 0.47.0 =
 * Event pages now have "Add to Outlook.com" and "Add to Outlook (work or school)" links next to the .ics and Google Calendar ones. Outlook's link carries one date, so for a repeating event it adds the date the page shows (the next one, or a date page's own date) and links that date's page; "Add to calendar (.ics)" still brings every date. Turn them off with the beacon_outlook_links filter.
 

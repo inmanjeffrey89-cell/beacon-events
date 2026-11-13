@@ -13,7 +13,7 @@
 .beacon-badge{display:inline-block;font-size:.75em;line-height:1.4;padding:0 .45em;border:1px solid currentColor;border-radius:.6em;opacity:.8;vertical-align:middle;margin-left:.3em}
 .beacon-cancelled .beacon-title,.beacon-cell-event.beacon-cancelled .beacon-cell-title{text-decoration:line-through;opacity:.7}
 .beacon-join{display:inline-block;margin-left:.4em;padding:.1em .6em;border:1px solid currentColor;border-radius:.4em;text-decoration:none;font-size:.9em}
-.beacon-changes .beacon-detail-value{opacity:.85}.beacon-dates ul{list-style:none;margin:0;padding:0}.beacon-dates li{display:flex;flex-wrap:wrap;column-gap:.6em;margin:0 0 .35em}.beacon-term-details{margin-bottom:1.5em}.beacon-term-address{margin:0 0 .5em}.beacon-term-subscribe{margin:.5em 0 0;font-size:.9em}
+.beacon-changes .beacon-detail-value{opacity:.85}.beacon-dates ul{list-style:none;margin:0;padding:0}.beacon-dates li{display:flex;flex-wrap:wrap;column-gap:.6em;margin:0 0 .35em}.beacon-term-details{margin-bottom:1.5em}.beacon-term-address{margin:0 0 .5em}.beacon-term-subscribe{margin:.5em 0 0;font-size:.9em}.beacon-subscribe{margin:.8em 0 0;font-size:.9em}.beacon-subscribe a,.beacon-term-subscribe a{white-space:nowrap}
 .beacon-filters{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;margin-bottom:1em}.beacon-filters select,.beacon-filters input[type=search]{width:auto;max-width:100%;box-sizing:border-box;height:2.4em;font:inherit;font-size:.9em;line-height:normal;padding:0 .5em;border:1px solid #8c8f94;border-radius:4px}.beacon-filters .beacon-apply{box-sizing:border-box;height:2.4em;font:inherit;font-size:.9em;line-height:normal;padding:0 1.1em;cursor:pointer}.beacon-view-switch{display:inline-flex;flex-wrap:wrap;gap:.2em .9em;font-size:.9em}.beacon-view-switch label{display:inline-flex;align-items:center;gap:.3em;cursor:pointer}.beacon-view-switch input{margin:0}
 .beacon-compact{list-style:none;margin-bottom:1.5em;padding:0}.beacon-compact .beacon-event{gap:.5em}.beacon-compact .beacon-date{flex:0 0 auto;min-width:6em;opacity:.8}.beacon-compact .beacon-time{min-width:0}
 .beacon-dayview{margin-bottom:1.5em}.beacon-dayview .beacon-day-events{margin-top:.5em}.beacon-back{margin:0 0 .5em;font-size:.9em}a.beacon-daynum{text-decoration:none}
@@ -36,7 +36,7 @@
 @media (max-width:640px){.beacon-cell-event .beacon-thumb{display:none}}
 .beacon-list .beacon-has-thumb{flex-wrap:nowrap;align-items:flex-start;padding:.5em 0}.beacon-list .beacon-thumb-link{flex:0 0 7em}.beacon-list .beacon-thumb{aspect-ratio:auto;max-height:9em}.beacon-row-main{display:block;flex:1 1 0;min-width:0;overflow-wrap:break-word}.beacon-row-main .beacon-time{display:block;min-width:0;margin-bottom:.15em}
 @media (max-width:480px){.beacon-list .beacon-thumb-link{flex-basis:5em}}
-@media print{.beacon-thumb{display:none}}
+@media print{.beacon-thumb,.beacon-subscribe{display:none}}
 .beacon-loading{opacity:.55;transition:opacity .15s}.beacon-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .beacon-tz-note{margin:0 0 .5em;font-size:.85em;opacity:.8}
 .beacon-detail[hidden]{display:none}

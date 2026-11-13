@@ -220,6 +220,7 @@ final class Compat {
 					$view = self::view( $get( 'view' ) ?: 'month', array( 'month' => 'month', 'week' => 'week', 'day' => 'day' ) );
 					// the full calendar comes with its search bar unless the page turned it off
 					$extra['filters'] = in_array( strtolower( $get( 'tribe-bar' ) ), array( 'false', '0', 'no', 'off' ), true ) ? '' : '1';
+					$extra['subscribe'] = '1'; // and its "Subscribe to calendar" menu under the view
 				} elseif ( 'tribe_mini_calendar' === $tag ) {
 					$view = 'month';
 				} elseif ( 'tribe_this_week' === $tag ) {
