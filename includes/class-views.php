@@ -200,6 +200,39 @@ final class Views {
 	public static function register_assets(): void {
 		wp_register_style( 'beacon-events', BEACON_URL . 'assets/beacon.css', array(), BEACON_VERSION );   // enqueued only when a view renders
 		wp_register_script( 'beacon-events-nav', BEACON_URL . 'assets/nav.js', array(), BEACON_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_register_script( 'beacon-events-visitor-time', BEACON_URL . 'assets/visitor-time.js', array(), BEACON_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_add_inline_script(
+			'beacon-events-visitor-time',
+			'window.beaconVT=' . wp_json_encode(
+				array(
+					/* translators: %s: the visitor's time zone as their browser names it, e.g. "GMT+9" or "PST" */
+					'note' => __( 'Times are shown in your time zone (%s).', 'beacon-events' ),
+					'h12'  => ! self::clock_class(), // the site's own clock: 12-hour unless its time format has no am/pm
+				)
+			) . ';',
+			'before'
+		);
+	}
+
+	/**
+	 * Does this event's time also go out in the visitor's own zone (Settings → Visitors in other time zones: online events
+	 * or every event)? The server still writes the event's own time; assets/visitor-time.js rewrites it in a browser
+	 * whose clock is at another offset at that moment, and says so. Filter beacon_visitor_time to decide per event.
+	 */
+	public static function visitor_time( int $event_id ): bool {
+		$mode = (string) get_option( Settings::OPT_VISITOR_TIME, '' );
+		$on   = 'all' === $mode || ( 'online' === $mode && '1' === (string) get_post_meta( $event_id, Events::META['online'], true ) );
+		return (bool) apply_filters( 'beacon_visitor_time', $on, $event_id );
+	}
+
+	/** A time wrapped for the visitor-time script: its UTC start (and end), and the date it falls on where it is written. */
+	private static function vt( string $text, \DateTimeImmutable $s, ?\DateTimeImmutable $e, bool $short = false ): string {
+		wp_enqueue_script( 'beacon-events-visitor-time' );
+		$utc = new \DateTimeZone( 'UTC' );
+		return '<span class="beacon-vt" data-bt-s="' . esc_attr( $s->setTimezone( $utc )->format( 'Y-m-d\TH:i:s\Z' ) ) . '"'
+			. ( $e && $e > $s ? ' data-bt-e="' . esc_attr( $e->setTimezone( $utc )->format( 'Y-m-d\TH:i:s\Z' ) ) . '"' : '' )
+			. ' data-bt-day="' . esc_attr( $s->format( 'Y-m-d' ) ) . '" data-bt-off="' . esc_attr( (string) ( $s->getOffset() / 60 ) ) . '"'
+			. ( $short ? ' data-bt-short="1"' : '' ) . '>' . $text . '</span>';
 	}
 
 	/** Week / month / day paging without a full page reload (assets/nav.js; plain links still work without it). Filter beacon_inline_nav to false to turn it off. */
@@ -582,7 +615,8 @@ final class Views {
 		$t = wp_date( get_option( 'time_format' ), $s->getTimestamp(), $s->getTimezone() );
 		if ( $e > $s && $e->format( 'Y-m-d' ) === $s->format( 'Y-m-d' ) ) {
 			$t .= ' – ' . wp_date( get_option( 'time_format' ), $e->getTimestamp(), $e->getTimezone() ); }
-		return esc_html( $t . self::zone_label( $s ) );
+		$out = esc_html( $t . self::zone_label( $s ) );
+		return self::visitor_time( (int) $r['event_id'] ) ? self::vt( $out, $s, $e > $s && $e->format( 'Y-m-d' ) === $s->format( 'Y-m-d' ) ? $e : null ) : $out;
 	}
 
 	/** The event's link text: what the organizer typed, else "Tickets & info". */
@@ -607,8 +641,9 @@ final class Views {
 
 	/** Start time only (month cells), in the event's zone. Escaped. */
 	private static function when_start( array $r ): string {
-		$s = self::local( $r['start_utc'], (int) $r['event_id'] );
-		return esc_html( wp_date( get_option( 'time_format' ), $s->getTimestamp(), $s->getTimezone() ) . self::zone_label( $s ) );
+		$s   = self::local( $r['start_utc'], (int) $r['event_id'] );
+		$out = esc_html( wp_date( get_option( 'time_format' ), $s->getTimestamp(), $s->getTimezone() ) . self::zone_label( $s ) );
+		return self::visitor_time( (int) $r['event_id'] ) ? self::vt( $out, $s, null, true ) : $out;
 	}
 
 	/** ' beacon-24h' when the site's time format has no am/pm ("18:00"), so lists can use a narrower time column. */
@@ -1220,6 +1255,9 @@ final class Views {
 			$badge = ' <span class="beacon-badge beacon-badge-moved">' . esc_html( sprintf( __( 'Moved from %s', 'beacon-events' ), wp_date( get_option( 'date_format' ), ( new \DateTimeImmutable( $on['orig'], $tz ) )->getTimestamp(), $tz ) ) ) . '</span>';
 		}
 		$rows = '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'When', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( $when ) . $badge . '</span></div>';
+		if ( ! $e['all_day'] && self::visitor_time( $id ) ) {
+			// filled in (and shown) by assets/visitor-time.js only for a visitor whose clock is at another offset
+			$rows .= '<div class="beacon-detail beacon-your-time" hidden><span class="beacon-detail-label">' . esc_html__( 'Your time', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . self::vt( '', $s, $en, false ) . '</span></div>'; }
 		if ( $e['rrule'] ) {
 			$all  = $on ? ' <a class="beacon-all-dates" href="' . esc_url( (string) get_permalink( $id ) ) . '">' . esc_html__( 'All dates', 'beacon-events' ) . '</a>' : '';
 			$rows .= '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'Repeats', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( Recurrence::describe( $e['rrule'] ) ) . $all . '</span></div>'; }

@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Events → Settings: feeds, sync log, and the "delete everything on uninstall" switch. One page, no tabs. */
 final class Settings {
 	const OPT_DELETE = 'beacon_delete_on_uninstall';
+	const OPT_VISITOR_TIME = 'beacon_visitor_time'; // '' (each event's own zone), 'online' or 'all': see Views::visitor_time()
 
 	public static function init(): void {
 		add_action( 'admin_menu', fn() => add_submenu_page( 'edit.php?post_type=' . Events::CPT, __( 'Beacon Settings', 'beacon-events' ), __( 'Settings', 'beacon-events' ), 'manage_options', 'beacon-settings', array( __CLASS__, 'page' ) ) );
@@ -35,6 +36,14 @@ final class Settings {
 		echo '<input type="hidden" name="action" value="beacon_save_settings">';
 		echo '<h2>' . esc_html__( 'Calendar feeds', 'beacon-events' ) . '</h2><p class="description">' . esc_html__( 'One per line: an ICS URL, optionally followed by a space and a category slug. Google Calendar: Settings → your calendar → "Public address in iCal format". Synced hourly; every sync is logged below.', 'beacon-events' ) . '</p>';
 		echo '<textarea name="feeds" rows="5" class="large-text code">' . esc_textarea( implode( "\n", array_map( fn( $f ) => trim( ( $f['url'] ?? '' ) . ' ' . ( $f['category'] ?? '' ) ), $feeds ) ) ) . '</textarea>';
+		$vt = (string) get_option( self::OPT_VISITOR_TIME, '' );
+		echo '<h2>' . esc_html__( 'Visitors in other time zones', 'beacon-events' ) . '</h2><p class="description">' . esc_html__( 'Times are always written in each event\'s own time zone. A visitor whose clock is somewhere else can also see them in their own time zone, worked out by their browser.', 'beacon-events' ) . '</p>';
+		foreach ( array(
+			''       => __( 'Show times in the event\'s time zone only', 'beacon-events' ),
+			'online' => __( 'Also show online events in the visitor\'s own time zone', 'beacon-events' ),
+			'all'    => __( 'Also show every event in the visitor\'s own time zone', 'beacon-events' ),
+		) as $v => $label ) {
+			echo '<label style="display:block;margin:.3em 0"><input type="radio" name="visitor_time" value="' . esc_attr( $v ) . '" ' . checked( $vt, $v, false ) . '> ' . esc_html( $label ) . '</label>'; }
 		echo '<h2>' . esc_html__( 'Uninstall', 'beacon-events' ) . '</h2><label><input type="checkbox" name="delete_on_uninstall" value="1" ' . checked( get_option( self::OPT_DELETE ), '1', false ) . '> ' . esc_html__( 'Delete all events, venues, categories, settings and the occurrence table when the plugin is uninstalled. Off by default so an accidental uninstall loses nothing.', 'beacon-events' ) . '</label>';
 		echo '<h2>' . esc_html__( 'Export', 'beacon-events' ) . '</h2><p><code>' . esc_html( add_query_arg( 'beacon_ical', 'all', home_url( '/' ) ) ) . '</code> — ' . esc_html__( 'subscribe to this in any calendar app.', 'beacon-events' ) . ' ' . esc_html__( 'Add &beacon_category=slug, &beacon_venue=slug or &beacon_organizer=slug for one category, venue or organizer; every venue, organizer and category page also links to its own feed.', 'beacon-events' ) . '</p>';
 		submit_button();
@@ -81,6 +90,8 @@ final class Settings {
 		$old = Ics::feeds();
 		update_option( Ics::OPT_FEEDS, $feeds, false );
 		update_option( self::OPT_DELETE, empty( $_POST['delete_on_uninstall'] ) ? '0' : '1', false );
+		$vt = isset( $_POST['visitor_time'] ) ? sanitize_key( wp_unslash( $_POST['visitor_time'] ) ) : '';
+		update_option( self::OPT_VISITOR_TIME, in_array( $vt, array( 'online', 'all' ), true ) ? $vt : '' );
 		if ( $skipped ) {
 			set_transient( 'beacon_feeds_skipped_' . get_current_user_id(), $skipped, 10 * MINUTE_IN_SECONDS ); }
 		// A feed just added should show its events now, not at the next hourly sync.

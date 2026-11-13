@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.44.0
+Stable tag: 0.45.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,9 @@ Yes, since 0.39.0. Every date has its own address, /event/<name>/<date>/, that s
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs made in Beacon are always kept (tickets and attendees that came over with the import are deleted with their event; they are still in the old plugin), and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
+= Can visitors see times in their own time zone? =
+Yes, since 0.45.0, if you want them to. Every time is written in its event's own time zone. In Settings you can also show online events, or every event, in each visitor's own time zone: a visitor whose clock is somewhere else sees the time converted by their browser, with the zone's name ("8:30 AM GMT+9") and a line saying so, and the event's own time stays as the tooltip. A time that falls on another day for them names that day, and an event page adds a "Your time" line. Visitors in your own time zone see nothing different. All-day events stay as they are.
+
 = Do my events keep their SEO titles and descriptions? =
 Yes, since 0.44.0. When events move in from The Events Calendar or any of the other plugins Beacon imports from, each event's own SEO settings come along: the custom title, meta description, focus keyword, robots and canonical settings and social titles from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO. The old plugin's primary-category choice and its per-event schema stay behind, because they point at that plugin's categories and Beacon writes its own Event markup. The dry run tells you how many events have their own SEO settings, per SEO plugin. A CSV import has no old post, so there is nothing to bring.
 
@@ -269,6 +272,9 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.45.0 =
+* New setting, Visitors in other time zones: show online events, or every event, in each visitor's own time zone as well. Their browser converts the time and names the zone, the views say so in one line, a time that lands on another day names that day, and an event page gets a "Your time" line. Off by default; visitors in the site's time zone see no change.
+
 = 0.44.0 =
 * Moving events in now keeps each event's own SEO settings: the custom title, meta description, focus keyword, robots, canonical and social fields from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO, for every plugin Beacon imports from. The old plugin's primary category and per-event schema are left behind. The dry run, the import summary and `wp beacon import` say how many events kept them, per SEO plugin.
 
@@ -290,9 +296,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.40.0 =
 * New: a "Show venue" switch in the Events block's settings (list, week and day views) and show_venue="no" for the [beacon_events] shortcode. Turn it off when all your events happen in one place, so each row isn't followed by your own name.
-
-= 0.39.0 =
-* New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
-* Thanks to PeepSo for pointing out, on Reddit, that Google expects each event date to have its own page.
 
 Older versions: see changelog.txt.

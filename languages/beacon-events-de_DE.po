@@ -22,22 +22,22 @@ msgstr "Ein schlanker, ehrlicher Veranstaltungskalender. Wiederkehrende Termine,
 
 #: beacon-events.php
 #: includes/class-events.php:255
-#: includes/class-settings.php:22
+#: includes/class-settings.php:23
 #: includes/elementor-widget.php:14
 msgid "Beacon Events"
 msgstr "Beacon Events"
 
 #: includes/class-admin.php:11
 #: includes/class-admin.php:62
-#: includes/class-settings.php:50
-#: includes/class-views.php:1222
+#: includes/class-settings.php:59
+#: includes/class-views.php:1257
 #: assets/editor-panel.js:251
 msgid "When"
 msgstr "Wann"
 
 #: includes/class-admin.php:63
 #: includes/class-admin.php:130
-#: includes/class-views.php:1225
+#: includes/class-views.php:1263
 #: assets/editor-panel.js:260
 msgid "Repeats"
 msgstr "Wiederholung"
@@ -73,8 +73,8 @@ msgstr "Ende"
 
 #: includes/class-admin.php:128
 #: includes/class-views.php:124
-#: includes/class-views.php:581
-#: includes/class-views.php:889
+#: includes/class-views.php:614
+#: includes/class-views.php:924
 #: assets/editor-panel.js:253
 msgid "All day"
 msgstr "Ganztägig"
@@ -208,7 +208,7 @@ msgid "Button text"
 msgstr "Button-Text"
 
 #: includes/class-admin.php:192
-#: includes/class-views.php:590
+#: includes/class-views.php:624
 #: assets/editor-panel.js:259
 msgid "Tickets & info"
 msgstr "Tickets & Infos"
@@ -249,8 +249,8 @@ msgid "As scheduled"
 msgstr "Wie geplant"
 
 #: includes/class-admin.php:205
-#: includes/class-views.php:566
-#: includes/class-views.php:1217
+#: includes/class-views.php:599
+#: includes/class-views.php:1252
 #: assets/editor-panel.js:180
 msgid "Cancelled"
 msgstr "Abgesagt"
@@ -329,7 +329,7 @@ msgid "Pattern"
 msgstr "Muster"
 
 #: includes/class-combine.php:463
-#: includes/class-views.php:1243
+#: includes/class-views.php:1281
 msgid "Dates"
 msgstr "Termine"
 
@@ -584,7 +584,7 @@ msgid "Import CSV"
 msgstr "CSV importieren"
 
 #: includes/class-import.php:203
-#: includes/class-settings.php:39
+#: includes/class-settings.php:48
 msgid "Export"
 msgstr "Export"
 
@@ -895,7 +895,7 @@ msgid "Paste its public iCal address and Beacon checks it every hour."
 msgstr "Füge seine öffentliche iCal-Adresse ein, und Beacon prüft sie stündlich."
 
 #: includes/class-onboarding.php:132
-#: includes/class-settings.php:12
+#: includes/class-settings.php:13
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -1181,79 +1181,99 @@ msgctxt "user role"
 msgid "Event organizer"
 msgstr "Veranstalter"
 
-#: includes/class-settings.php:12
+#: includes/class-settings.php:13
 msgid "Beacon Settings"
 msgstr "Beacon-Einstellungen"
 
-#: includes/class-settings.php:25
+#: includes/class-settings.php:26
 msgid "Saved, and the feeds were synced: the result is in the log below."
 msgstr "Gespeichert, und die Feeds wurden synchronisiert: Das Ergebnis steht im Protokoll unten."
 
-#: includes/class-settings.php:25
+#: includes/class-settings.php:26
 msgid "Saved."
 msgstr "Gespeichert."
 
-#: includes/class-settings.php:27
+#: includes/class-settings.php:28
 msgid "Feeds synced: the result is in the log below."
 msgstr "Feeds synchronisiert: Das Ergebnis steht im Protokoll unten."
 
-#: includes/class-settings.php:32
+#: includes/class-settings.php:33
 msgid "These lines were not calendar addresses and were left out: %s"
 msgstr "Diese Zeilen waren keine Kalenderadressen und wurden weggelassen: %s"
 
-#: includes/class-settings.php:36
+#: includes/class-settings.php:37
 msgid "Calendar feeds"
 msgstr "Kalender-Feeds"
 
-#: includes/class-settings.php:36
+#: includes/class-settings.php:37
 msgid "One per line: an ICS URL, optionally followed by a space and a category slug. Google Calendar: Settings → your calendar → \"Public address in iCal format\". Synced hourly; every sync is logged below."
 msgstr "Eine pro Zeile: eine ICS-URL, optional gefolgt von einem Leerzeichen und einem Kategorie-Slug. Google Kalender: Einstellungen → dein Kalender → „Öffentliche Adresse im iCal-Format“. Wird stündlich synchronisiert; jeder Abgleich wird unten protokolliert."
 
-#: includes/class-settings.php:38
+#: includes/class-settings.php:40
+msgid "Visitors in other time zones"
+msgstr "Besucher in anderen Zeitzonen"
+
+#: includes/class-settings.php:40
+msgid "Times are always written in each event's own time zone. A visitor whose clock is somewhere else can also see them in their own time zone, worked out by their browser."
+msgstr "Zeiten stehen immer in der Zeitzone der jeweiligen Veranstaltung. Wer woanders ist, kann sie zusätzlich in der eigenen Zeitzone sehen; das rechnet der Browser um."
+
+#: includes/class-settings.php:42
+msgid "Show times in the event's time zone only"
+msgstr "Zeiten nur in der Zeitzone der Veranstaltung zeigen"
+
+#: includes/class-settings.php:43
+msgid "Also show online events in the visitor's own time zone"
+msgstr "Online-Veranstaltungen zusätzlich in der Zeitzone der Besucher zeigen"
+
+#: includes/class-settings.php:44
+msgid "Also show every event in the visitor's own time zone"
+msgstr "Alle Veranstaltungen zusätzlich in der Zeitzone der Besucher zeigen"
+
+#: includes/class-settings.php:47
 msgid "Uninstall"
 msgstr "Deinstallieren"
 
-#: includes/class-settings.php:38
+#: includes/class-settings.php:47
 msgid "Delete all events, venues, categories, settings and the occurrence table when the plugin is uninstalled. Off by default so an accidental uninstall loses nothing."
 msgstr "Beim Deinstallieren alle Veranstaltungen, Orte, Kategorien, Einstellungen und die Termintabelle löschen. Standardmäßig aus, damit bei einem versehentlichen Deinstallieren nichts verloren geht."
 
-#: includes/class-settings.php:39
+#: includes/class-settings.php:48
 msgid "subscribe to this in any calendar app."
 msgstr "in jeder Kalender-App abonnieren."
 
-#: includes/class-settings.php:39
+#: includes/class-settings.php:48
 msgid "Add &beacon_category=slug, &beacon_venue=slug or &beacon_organizer=slug for one category, venue or organizer; every venue, organizer and category page also links to its own feed."
 msgstr "Hänge &beacon_category=slug, &beacon_venue=slug oder &beacon_organizer=slug an, um nur eine Kategorie, einen Ort oder einen Veranstalter zu bekommen; jede Orts-, Veranstalter- und Kategorieseite verlinkt außerdem ihren eigenen Feed."
 
-#: includes/class-settings.php:45
+#: includes/class-settings.php:54
 msgid "Sync feeds now"
 msgstr "Feeds jetzt synchronisieren"
 
-#: includes/class-settings.php:47
+#: includes/class-settings.php:56
 msgid "Sync log"
 msgstr "Sync-Protokoll"
 
-#: includes/class-settings.php:49
+#: includes/class-settings.php:58
 msgid "No syncs yet."
 msgstr "Noch keine Synchronisierung."
 
-#: includes/class-settings.php:50
+#: includes/class-settings.php:59
 msgid "Feed"
 msgstr "Feed"
 
-#: includes/class-settings.php:50
+#: includes/class-settings.php:59
 msgid "Created"
 msgstr "Angelegt"
 
-#: includes/class-settings.php:50
+#: includes/class-settings.php:59
 msgid "Updated"
 msgstr "Aktualisiert"
 
-#: includes/class-settings.php:50
+#: includes/class-settings.php:59
 msgid "Removed → draft"
 msgstr "Entfernt → Entwurf"
 
-#: includes/class-settings.php:50
+#: includes/class-settings.php:59
 msgid "Errors"
 msgstr "Fehler"
 
@@ -1270,7 +1290,7 @@ msgid "Categories: "
 msgstr "Kategorien: "
 
 #: includes/class-views.php:168
-#: includes/class-views.php:425
+#: includes/class-views.php:458
 msgid "Venue"
 msgstr "Ort"
 
@@ -1307,55 +1327,59 @@ msgstr "Die Seite /events/: nächste Veranstaltungen nach Tagen gruppiert."
 msgid "Upcoming events"
 msgstr "Nächste Veranstaltungen"
 
-#: includes/class-views.php:419
+#: includes/class-views.php:209
+msgid "Times are shown in your time zone (%s)."
+msgstr "Die Zeiten werden in deiner Zeitzone angezeigt (%s)."
+
+#: includes/class-views.php:452
 msgid "Category"
 msgstr "Kategorie"
 
-#: includes/class-views.php:419
+#: includes/class-views.php:452
 msgid "All categories"
 msgstr "Alle Kategorien"
 
-#: includes/class-views.php:425
+#: includes/class-views.php:458
 msgid "All venues"
 msgstr "Alle Orte"
 
-#: includes/class-views.php:430
+#: includes/class-views.php:463
 msgid "Search events"
 msgstr "Veranstaltungen durchsuchen"
 
-#: includes/class-views.php:431
+#: includes/class-views.php:464
 #: includes/elementor-widget.php:27
 #: assets/editor.js:10
 msgid "View"
 msgstr "Ansicht"
 
-#: includes/class-views.php:431
+#: includes/class-views.php:464
 #: includes/elementor-widget.php:31
 #: assets/editor.js:10
 msgid "List"
 msgstr "Liste"
 
-#: includes/class-views.php:431
+#: includes/class-views.php:464
 #: includes/elementor-widget.php:32
 #: assets/editor.js:10
 msgid "Week"
 msgstr "Woche"
 
-#: includes/class-views.php:431
+#: includes/class-views.php:464
 #: includes/elementor-widget.php:33
 #: assets/editor.js:10
 msgid "Month"
 msgstr "Monat"
 
-#: includes/class-views.php:432
+#: includes/class-views.php:465
 msgid "Apply"
 msgstr "Anwenden"
 
-#: includes/class-views.php:568
+#: includes/class-views.php:601
 msgid "Rescheduled"
 msgstr "Verschoben"
 
-#: includes/class-views.php:621
+#: includes/class-views.php:656
 #: includes/import/class-source-eo.php:85
 #: includes/import/class-source-ep.php:71
 #: includes/import/class-source-etn.php:64
@@ -1368,129 +1392,133 @@ msgstr "Verschoben"
 msgid "(Untitled event)"
 msgstr "(Veranstaltung ohne Titel)"
 
-#: includes/class-views.php:627
-#: includes/class-views.php:645
-#: includes/class-views.php:652
 #: includes/class-views.php:662
+#: includes/class-views.php:680
+#: includes/class-views.php:687
+#: includes/class-views.php:697
 msgid "Online"
 msgstr "Online"
 
-#: includes/class-views.php:662
+#: includes/class-views.php:697
 msgid "Join online"
 msgstr "Online teilnehmen"
 
-#: includes/class-views.php:663
+#: includes/class-views.php:698
 msgid "(the joining link is sent when you sign up)"
 msgstr "(den Link zur Teilnahme bekommst du nach der Anmeldung)"
 
-#: includes/class-views.php:673
-#: includes/class-views.php:1273
-#: includes/class-views.php:1298
+#: includes/class-views.php:708
+#: includes/class-views.php:1311
+#: includes/class-views.php:1336
 msgid "Map"
 msgstr "Karte"
 
-#: includes/class-views.php:690
+#: includes/class-views.php:725
 msgid "%s cancelled"
 msgstr "%s abgesagt"
 
-#: includes/class-views.php:692
+#: includes/class-views.php:727
 msgid "%1$s moved to %2$s"
 msgstr "%1$s verschoben auf %2$s"
 
-#: includes/class-views.php:747
+#: includes/class-views.php:782
 msgid "No upcoming events."
 msgstr "Keine anstehenden Veranstaltungen."
 
-#: includes/class-views.php:829
+#: includes/class-views.php:864
 msgid "Previous day"
 msgstr "Vorheriger Tag"
 
-#: includes/class-views.php:829
+#: includes/class-views.php:864
 msgid "Next day"
 msgstr "Nächster Tag"
 
-#: includes/class-views.php:831
+#: includes/class-views.php:866
 msgid "← Back to month"
 msgstr "← Zurück zum Monat"
 
-#: includes/class-views.php:833
+#: includes/class-views.php:868
 msgid "No events on this day."
 msgstr "An diesem Tag keine Veranstaltungen."
 
-#: includes/class-views.php:869
+#: includes/class-views.php:904
 msgid "Previous week"
 msgstr "Vorherige Woche"
 
-#: includes/class-views.php:869
+#: includes/class-views.php:904
 msgid "Next week"
 msgstr "Nächste Woche"
 
-#: includes/class-views.php:871
+#: includes/class-views.php:906
 msgid "This week"
 msgstr "Diese Woche"
 
-#: includes/class-views.php:873
+#: includes/class-views.php:908
 msgid "No events this week."
 msgstr "Diese Woche keine Veranstaltungen."
 
-#: includes/class-views.php:882
+#: includes/class-views.php:917
 msgid "No events"
 msgstr "Keine Termine"
 
-#: includes/class-views.php:985
+#: includes/class-views.php:1020
 msgid "Previous month"
 msgstr "Vorheriger Monat"
 
-#: includes/class-views.php:985
+#: includes/class-views.php:1020
 msgid "Next month"
 msgstr "Nächster Monat"
 
-#: includes/class-views.php:1026
+#: includes/class-views.php:1061
 msgid "Print this month"
 msgstr "Diesen Monat drucken"
 
-#: includes/class-views.php:1072
+#: includes/class-views.php:1107
 msgid "matching \"%s\""
 msgstr "passend zu „%s“"
 
-#: includes/class-views.php:1095
+#: includes/class-views.php:1130
 msgid "Print"
 msgstr "Drucken"
 
-#: includes/class-views.php:1095
+#: includes/class-views.php:1130
 msgid "← Back to the calendar"
 msgstr "← Zurück zum Kalender"
 
-#: includes/class-views.php:1220
+#: includes/class-views.php:1255
 msgid "Moved from %s"
 msgstr "Verschoben vom %s"
 
-#: includes/class-views.php:1224
+#: includes/class-views.php:1260
+msgid "Your time"
+msgstr "Deine Zeit"
+
+#: includes/class-views.php:1262
 msgid "All dates"
 msgstr "Alle Termine"
 
-#: includes/class-views.php:1228
+#: includes/class-views.php:1266
 msgid "Changes"
 msgstr "Änderungen"
 
-#: includes/class-views.php:1231
+#: includes/class-views.php:1269
 msgid "Where"
 msgstr "Wo"
 
-#: includes/class-views.php:1255
+#: includes/class-views.php:1293
 msgid "Next dates"
 msgstr "Nächste Termine"
 
-#: includes/class-views.php:1258
+#: includes/class-views.php:1296
 msgid "Add to calendar (.ics)"
 msgstr "Zum Kalender hinzufügen (.ics)"
 
-#: includes/class-views.php:1258
+#: includes/class-views.php:1296
 msgid "Add to Google Calendar"
 msgstr "Zu Google Kalender hinzufügen"
 
-#: includes/class-views.php:1277
-#: includes/class-views.php:1300
+#: includes/class-views.php:1315
+#: includes/class-views.php:1338
 msgid "Subscribe to these events (.ics)"
 msgstr "Diese Veranstaltungen abonnieren (.ics)"
 
