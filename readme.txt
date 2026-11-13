@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.45.0
+Stable tag: 0.46.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -272,6 +272,9 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.46.0 =
+* After two weeks of use, the Events screen asks a site's administrators once for a review on wordpress.org, in one line with "Write a review", "Maybe later" (asks again in two months) and "Don't ask again". It only shows to administrators of sites with at least three events of their own, never next to the "Create a calendar page" line, and never as an admin notice. Turn it off with the beacon_review_line filter.
+
 = 0.45.0 =
 * New setting, Visitors in other time zones: show online events, or every event, in each visitor's own time zone as well. Their browser converts the time and names the zone, the views say so in one line, a time that lands on another day names that day, and an event page gets a "Your time" line. Off by default; visitors in the site's time zone see no change.
 
@@ -293,8 +296,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.41.0 =
 * New: a "Show images" switch in the Events block's settings for the week and month views, and images="yes" for the [beacon_events] shortcode. Each event with a featured image shows it above its title, loaded only as it scrolls into view. Off by default, so calendars that are already set up stay as light as they are; the printed month never shows them.
-
-= 0.40.0 =
-* New: a "Show venue" switch in the Events block's settings (list, week and day views) and show_venue="no" for the [beacon_events] shortcode. Turn it off when all your events happen in one place, so each row isn't followed by your own name.
 
 Older versions: see changelog.txt.

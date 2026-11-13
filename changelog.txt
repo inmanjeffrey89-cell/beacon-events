@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.46.0 =
+* After two weeks of use, the Events screen asks a site's administrators once for a review on wordpress.org, in one line with "Write a review", "Maybe later" (asks again in two months) and "Don't ask again". It only shows to administrators of sites with at least three events of their own, never next to the "Create a calendar page" line, and never as an admin notice. Turn it off with the beacon_review_line filter.
+
 = 0.45.0 =
 * New setting, Visitors in other time zones: show online events, or every event, in each visitor's own time zone as well. Their browser converts the time and names the zone, the views say so in one line, a time that lands on another day names that day, and an event page gets a "Your time" line. Off by default; visitors in the site's time zone see no change.
 

@@ -23,6 +23,7 @@ final class Onboarding {
 		add_action( 'admin_post_beacon_sample_remove', array( __CLASS__, 'remove_samples' ) );
 		add_action( 'admin_post_beacon_calendar_page', array( __CLASS__, 'create_page' ) );
 		add_action( 'admin_post_beacon_calendar_hint_hide', array( __CLASS__, 'hide_calendar_hint' ) );
+		add_action( 'admin_post_beacon_review', array( __CLASS__, 'review' ) );
 	}
 
 	public static function action_links( $links ): array {
@@ -36,7 +37,7 @@ final class Onboarding {
 			return; }
 		wp_register_style( 'beacon-onboarding', false, array(), BEACON_VERSION );
 		wp_enqueue_style( 'beacon-onboarding' );
-		wp_add_inline_style( 'beacon-onboarding', '.beacon-start{background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2271b1;padding:4px 20px 16px;margin:12px 0 8px;max-width:60em}.beacon-start h2{margin:14px 0 6px}.beacon-start ol{margin:0 0 0 1.4em}.beacon-start li{margin:10px 0}.beacon-start li strong{display:block;margin-bottom:4px}.beacon-start form{display:inline}.beacon-start .button{margin:2px 6px 2px 0}.beacon-start-samples{margin:8px 0}.beacon-start-samples form{display:inline}' );
+		wp_add_inline_style( 'beacon-onboarding', '.beacon-start{background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2271b1;padding:4px 20px 16px;margin:12px 0 8px;max-width:60em}.beacon-start h2{margin:14px 0 6px}.beacon-start ol{margin:0 0 0 1.4em}.beacon-start li{margin:10px 0}.beacon-start li strong{display:block;margin-bottom:4px}.beacon-start form{display:inline}.beacon-start .button{margin:2px 6px 2px 0}.beacon-start-samples{margin:8px 0}.beacon-start-samples form{display:inline}.beacon-review-line{background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2271b1;padding:10px 14px;margin:12px 0 8px;max-width:60em}.beacon-review-line form{display:block;margin-top:8px}.beacon-review-line .button-link{margin-left:10px}' );
 	}
 
 	/** Events the user made or imported, not counting samples, trash or auto-drafts. */
@@ -80,7 +81,8 @@ final class Onboarding {
 		$flag = isset( $_GET['beacon_start'] ) ? sanitize_key( wp_unslash( $_GET['beacon_start'] ) ) : '';
 		if ( 'removed' === $flag ) {
 			echo '<p class="beacon-start-samples">' . esc_html__( 'The sample events are gone.', 'beacon-events' ) . '</p>'; }
-		if ( self::own_events() > 0 ) {
+		$own = self::own_events();
+		if ( $own > 0 ) {
 			if ( $samples ) {
 				echo '<p class="beacon-start-samples">' . esc_html( sprintf( /* translators: %d: number of sample events */ _n( '%d sample event is still on your calendar.', '%d sample events are still on your calendar.', count( $samples ), 'beacon-events' ), count( $samples ) ) ) . ' ' . self::button( 'beacon_sample_remove', __( 'Remove sample events', 'beacon-events' ), 'button-link' ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- button() escapes
 			}
@@ -88,6 +90,8 @@ final class Onboarding {
 			// only shows while there are no events): one line until there is a calendar page, or they say no thanks.
 			if ( self::wants_calendar_hint() ) {
 				echo '<p class="beacon-start-samples">' . esc_html__( 'Want your events on a page of their own?', 'beacon-events' ) . ' ' . self::button( 'beacon_calendar_page', __( 'Create a calendar page', 'beacon-events' ), 'button button-primary' ) . ' ' . self::button( 'beacon_calendar_hint_hide', __( 'No thanks', 'beacon-events' ), 'button-link' ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- button() escapes
+			} elseif ( self::wants_review_line( $own ) ) {
+				echo '<div class="beacon-start-samples beacon-review-line">' . esc_html__( "Beacon Events has been running your calendar for a while now. If it's doing its job, a short review on wordpress.org helps other people find it.", 'beacon-events' ) . ' <form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">' . wp_nonce_field( 'beacon_review', '_wpnonce', true, false ) . '<input type="hidden" name="action" value="beacon_review"><button type="submit" name="beacon_do" value="go" formtarget="_blank" class="button button-primary">' . esc_html__( 'Write a review', 'beacon-events' ) . '</button> <button type="submit" name="beacon_do" value="later" class="button-link">' . esc_html__( 'Maybe later', 'beacon-events' ) . '</button> <button type="submit" name="beacon_do" value="never" class="button-link">' . esc_html__( "Don't ask again", 'beacon-events' ) . '</button></form></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every part escaped above
 			}
 			return $views;
 		}
@@ -144,6 +148,70 @@ final class Onboarding {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one lookup, only on the Events screen while the line could show
 		$found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM %i WHERE post_status = 'publish' AND post_type IN ('page','post','wp_template','wp_block') AND ( post_content LIKE %s OR post_content LIKE %s ) LIMIT 1", $wpdb->posts, '%' . $wpdb->esc_like( '<!-- wp:beacon/events' ) . '%', '%' . $wpdb->esc_like( '[beacon_events' ) . '%' ) );
 		return ! $found;
+	}
+
+	const OPT_SINCE   = 'beacon_since';       // when this site started keeping its events in Beacon (Unix time), for the review line
+	const META_REVIEW = 'beacon_review_hint'; // user meta: 'done' = never ask again; a Unix time = not before then
+	const REVIEW_URL  = 'https://wordpress.org/support/plugin/beacon-events/reviews/#new-post';
+
+	/**
+	 * When the site started using Beacon: its earliest hand-made event (post date) or its earliest import (the stamp an
+	 * import leaves on each event, 0.38.0+), worked out once and kept. Samples don't count; without either, today.
+	 */
+	public static function since(): int {
+		$since = (int) get_option( self::OPT_SINCE, 0 );
+		if ( $since > 0 ) {
+			return $since; }
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- two lookups, once per site, on the Events screen
+		$made = $wpdb->get_var( $wpdb->prepare( "SELECT MIN(p.post_date_gmt) FROM %i p LEFT JOIN %i m ON m.post_id = p.ID AND m.meta_key = '_beacon_import' WHERE p.post_type = %s AND p.post_status = 'publish' AND m.meta_id IS NULL AND p.post_date_gmt > '1971-01-01'", $wpdb->posts, $wpdb->postmeta, Events::CPT ) );
+		$imp  = $wpdb->get_var( $wpdb->prepare( 'SELECT MIN(CAST(meta_value AS UNSIGNED)) FROM %i WHERE meta_key = %s', $wpdb->postmeta, Import_Undo::POST_META ) );
+		// phpcs:enable
+		$since = time();
+		if ( $made ) {
+			$since = min( $since, (int) strtotime( $made . ' UTC' ) ); }
+		if ( $imp ) {
+			$since = min( $since, (int) $imp ); }
+		add_option( self::OPT_SINCE, $since, '', false );
+		return $since;
+	}
+
+	/**
+	 * One review line on the Events screen, for the site's admins only: at least 3 events of their own, two weeks of use,
+	 * and the user hasn't answered it ("Maybe later" waits 60 days). Filter beacon_review_line → false hides it.
+	 */
+	private static function wants_review_line( int $own ): bool {
+		if ( $own < 3 || ! current_user_can( 'manage_options' ) || ! apply_filters( 'beacon_review_line', true ) ) {
+			return false; }
+		$said = get_user_meta( get_current_user_id(), self::META_REVIEW, true );
+		if ( 'done' === $said || ( is_numeric( $said ) && time() < (int) $said ) ) {
+			return false; }
+		return time() - self::since() >= 14 * DAY_IN_SECONDS;
+	}
+
+	/** "Write a review" (opens wordpress.org in a new tab), "Maybe later" (60 days), "Don't ask again". */
+	public static function review(): void {
+		check_admin_referer( 'beacon_review' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'beacon-events' ), 403 ); }
+		$do = isset( $_POST['beacon_do'] ) ? sanitize_key( wp_unslash( $_POST['beacon_do'] ) ) : '';
+		if ( 'later' === $do ) {
+			update_user_meta( get_current_user_id(), self::META_REVIEW, (string) ( time() + 60 * DAY_IN_SECONDS ) );
+			self::back( 'later' );
+		}
+		update_user_meta( get_current_user_id(), self::META_REVIEW, 'done' );
+		if ( 'go' === $do ) {
+			add_filter(
+				'allowed_redirect_hosts',
+				static function ( $hosts ) {
+					$hosts[] = 'wordpress.org';
+					return $hosts;
+				}
+			);
+			wp_safe_redirect( self::REVIEW_URL );
+			exit;
+		}
+		self::back( 'never' );
 	}
 
 	public static function hide_calendar_hint(): void {
