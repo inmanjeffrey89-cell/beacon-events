@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.44.0 =
+* Moving events in now keeps each event's own SEO settings: the custom title, meta description, focus keyword, robots, canonical and social fields from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO, for every plugin Beacon imports from. The old plugin's primary category and per-event schema are left behind. The dry run, the import summary and `wp beacon import` say how many events kept them, per SEO plugin.
+
 = 0.43.2 =
 * "Show images" now works in the list view too (grouped by day): each event's featured image sits on the left, with its time and title beside it, so a list of shows or classes can carry their posters. Turn it on in the Events block's settings or with images="yes" on the [beacon_events] shortcode. Off by default; the compact list stays text only.
 

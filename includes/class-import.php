@@ -250,6 +250,9 @@ final class Import {
 			if ( ! empty( $r['links'] ) ) {
 				/* translators: %d: number of events */
 				$lines[] = sprintf( _n( '%d event has a website or ticket address; it would become the event\'s "Tickets & info" button.', '%d events have a website or ticket address; it would become each event\'s "Tickets & info" button.', (int) $r['links'], 'beacon-events' ), (int) $r['links'] ); }
+			if ( ! empty( $r['seo'] ) ) {
+				/* translators: %s: SEO plugins with the number of events, e.g. "Yoast SEO (12), Rank Math (3)" */
+				$lines[] = sprintf( __( 'Events with their own SEO title, description or keyword would keep them: %s.', 'beacon-events' ), self::seo_names( $r ) ); }
 			if ( ! empty( $r['extras'] ) ) {
 				/* translators: 1: number of events, 2: field names, e.g. "cost" */
 				$lines[] = sprintf( _n( '%1$d event has fields Beacon doesn\'t show (%2$s); they would be kept in hidden meta (_beacon_import_extra).', '%1$d events have fields Beacon doesn\'t show (%2$s); they would be kept in hidden meta (_beacon_import_extra).', (int) $r['extras'], 'beacon-events' ), (int) $r['extras'], self::extra_names( $r ) ); }
@@ -295,6 +298,9 @@ final class Import {
 		if ( ! empty( $r['links'] ) ) {
 			/* translators: %d: number of events */
 			$lines[] = sprintf( _n( '%d event got a "Tickets & info" button from its website or ticket address.', '%d events got a "Tickets & info" button from their website or ticket address.', (int) $r['links'], 'beacon-events' ), (int) $r['links'] ); }
+		if ( ! empty( $r['seo'] ) ) {
+			/* translators: %s: SEO plugins with the number of events, e.g. "Yoast SEO (12), Rank Math (3)" */
+			$lines[] = sprintf( __( 'Events kept their own SEO title, description and keyword: %s.', 'beacon-events' ), self::seo_names( $r ) ); }
 		if ( ! empty( $r['extras'] ) ) {
 			/* translators: 1: number of events, 2: field names, e.g. "cost" */
 			$lines[] = sprintf( _n( '%1$d event had fields Beacon doesn\'t show (%2$s); they were kept in hidden meta (_beacon_import_extra).', '%1$d events had fields Beacon doesn\'t show (%2$s); they were kept in hidden meta (_beacon_import_extra).', (int) $r['extras'], 'beacon-events' ), (int) $r['extras'], self::extra_names( $r ) ); }
@@ -325,6 +331,7 @@ final class Import {
 			'extras'       => 0,
 			'extra_keys'   => array(),
 			'links'        => 0,
+			'seo'          => array(),
 			'tz_fallbacks' => 0,
 			'tickets'      => 0,
 			'attendees'    => 0,
@@ -716,6 +723,9 @@ final class Import {
 		if ( ! empty( $n['extra'] ) ) {
 			update_post_meta( $id, '_beacon_import_extra', $n['extra'] ); }
 		self::count_extras( $n, $state );
+		$src_post = self::source_post( $n, $state );
+		if ( $src_post ) {
+			self::count_seo( Seo::copy_from( $src_post, (int) $id ), $state ); } // 0.44.0: the event's own SEO title, description, keyword…
 		if ( ! empty( $n['series'] ) ) {
 			self::remember_series( (string) $n['series'], (int) $id ); }
 		if ( $n['note'] ) {
@@ -807,6 +817,9 @@ final class Import {
 		if ( ! $n['thumbnail_id'] && $n['image_url'] && ! ( $existing && has_post_thumbnail( (int) $existing[0] ) ) ) {
 			++$state['images']; }
 		self::count_extras( $n, $state );
+		$src_post = self::source_post( $n, $state );
+		if ( $src_post ) {
+			self::count_seo( Seo::copy_from( $src_post ), $state ); } // read-only: no target
 		if ( $n['note'] ) {
 			$state['notes'][] = sprintf( '"%s" (#%s): %s', $n['title'], $n['src_id'], $n['note'] ); }
 	}
@@ -840,6 +853,29 @@ final class Import {
 			++$state['extras'];
 			$state['extra_keys'] = array_slice( array_values( array_unique( array_merge( (array) ( $state['extra_keys'] ?? array() ), $left ) ) ), 0, 8 );
 		}
+	}
+
+	/** Sources whose event id (src_id) is the event's own WordPress post; Events Manager and My Calendar pass src_post. */
+	const POST_SOURCES = array( 'tec', 'eventon', 'wpem', 'wpems', 'eventin', 'eventprime', 'eventorganiser', 'sugarcalendar', 'mec', 'ai1ec' );
+
+	/** The old event's WordPress post, for its SEO settings (0 for a CSV row or a source without one). */
+	private static function source_post( array $n, array $state ): int {
+		$id = isset( $n['src_post'] ) ? (int) $n['src_post'] : ( in_array( $state['source'] ?? '', self::POST_SOURCES, true ) ? (int) ( $n['src_id'] ?? 0 ) : 0 );
+		return $id > 0 && get_post_type( $id ) && Events::CPT !== get_post_type( $id ) ? $id : 0;
+	}
+
+	/** Counts, per SEO plugin, the events whose own SEO settings came over (or would, in a dry run). */
+	private static function count_seo( array $names, array &$state ): void {
+		foreach ( $names as $name ) {
+			$state['seo'][ $name ] = (int) ( $state['seo'][ $name ] ?? 0 ) + 1; }
+	}
+
+	/** "Yoast SEO (12), Rank Math (3)" for the summary. */
+	private static function seo_names( array $r ): string {
+		$out = array();
+		foreach ( (array) ( $r['seo'] ?? array() ) as $name => $n ) {
+			$out[] = $name . ' (' . (int) $n . ')'; }
+		return implode( ', ', $out );
 	}
 
 	const OPT_SERIES = 'beacon_tec_series'; // Events Calendar Pro series slug => the Beacon event it became (not autoloaded; read on /series/ 404s only)

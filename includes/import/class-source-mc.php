@@ -150,6 +150,7 @@ final class Source_MC {
 		return array(
 			'uid'          => self::KEY . '-' . (int) $r->event_id,
 			'src_id'       => (int) $r->event_id,
+			'src_post'     => $post ? (int) $post->ID : 0,
 			'title'        => $title,
 			'content'      => trim( (string) preg_replace( '/\[\/?my_calendar[a-z_]*[^\]]*\]/i', '', $desc ) ),
 			'excerpt'      => (string) $r->event_short,

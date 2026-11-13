@@ -139,6 +139,7 @@ final class Source_EM {
 		return array(
 			'uid'          => self::KEY . '-' . (int) $event_id,
 			'src_id'       => (int) $event_id,
+			'src_post'     => (int) $p->ID,
 			'title'        => $title,
 			'content'      => trim( (string) preg_replace( '/\[\/?(event|events|locations|location)[_-]?[^\]]*\]/i', '', (string) $p->post_content ) ),
 			'excerpt'      => $p->post_excerpt,

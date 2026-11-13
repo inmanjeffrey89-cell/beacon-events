@@ -159,6 +159,11 @@ final class CLI {
 			\WP_CLI::log( sprintf( 'Would download %d featured images.', $state['images'] ) ); }
 		if ( $state['tickets'] || $state['attendees'] ) {
 			\WP_CLI::log( sprintf( 'Tickets set up on %d events; %d attendees brought over.', $state['tickets'], $state['attendees'] ) ); }
+		if ( ! empty( $state['seo'] ) ) {
+			$seo = array();
+			foreach ( (array) $state['seo'] as $name => $count ) {
+				$seo[] = $name . ' (' . (int) $count . ')'; }
+			\WP_CLI::log( ( $state['dry'] ? 'Would keep their own SEO settings: ' : 'Kept their own SEO settings: ' ) . implode( ', ', $seo ) . '.' ); }
 		foreach ( $state['notes'] as $note ) {
 			\WP_CLI::log( 'Note: ' . $note ); }
 		foreach ( $state['errors'] as $err ) {

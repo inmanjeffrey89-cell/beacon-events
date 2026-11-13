@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.43.2
+Stable tag: 0.44.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 * **Search engines understand your events.** schema.org Event markup on every event page, one entry per upcoming date.
 * **Venues with addresses.** Each venue has a street address, shown on the event with a map link — no API key, no embedded map slowing the page down.
 * **Export.** Every event has "Add to calendar (.ics)" and "Add to Google Calendar" links, and your whole calendar has a subscribable feed.
-* **A free alternative to The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) and All-in-One Event Calendar, and it brings your events over from any of them.** Events → Import / Export copies events, venues, organizers, categories, images and recurring rules in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Changed your mind? Undo the import in one click, and turn the old plugin back on. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
+* **A free alternative to The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) and All-in-One Event Calendar, and it brings your events over from any of them.** Events → Import / Export copies events, venues, organizers, categories, images, recurring rules and each event's own SEO title and description in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Changed your mind? Undo the import in one click, and turn the old plugin back on. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
 * **Uninstalls clean.** Turn on "delete all data on uninstall" and the plugin removes everything it created — events, venues, categories, settings, its table.
 
 = External services =
@@ -175,6 +175,9 @@ Yes, since 0.39.0. Every date has its own address, /event/<name>/<date>/, that s
 = Can I undo an import? =
 Yes. After an import, its source on Events → Import / Export shows "Undo this import". It permanently deletes the events that were imported, and the venues, organizers and categories the import created once nothing uses them. The import never changed the other plugin's events, so turning that plugin back on brings your old calendar back as it was. Events with bookings or RSVPs made in Beacon are always kept (tickets and attendees that came over with the import are deleted with their event; they are still in the old plugin), and so are events you changed after the import unless you tick the box to delete them too. On the command line: `wp beacon undo <source>` lists what would go, and `--yes` deletes it.
 
+= Do my events keep their SEO titles and descriptions? =
+Yes, since 0.44.0. When events move in from The Events Calendar or any of the other plugins Beacon imports from, each event's own SEO settings come along: the custom title, meta description, focus keyword, robots and canonical settings and social titles from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO. The old plugin's primary-category choice and its per-event schema stay behind, because they point at that plugin's categories and Beacon writes its own Event markup. The dry run tells you how many events have their own SEO settings, per SEO plugin. A CSV import has no old post, so there is nothing to bring.
+
 = Can I move my events from Sugar Calendar? =
 Yes, from Sugar Calendar Lite or Pro, with it still active or already deactivated. Events → Import / Export copies events with their times and timezones, all-day and multi-day events, locations (the location box becomes a venue, with the address when there is one), calendars (they become categories with their colours), featured images, online events with their Zoom or custom links, and repeats: daily, weekly on one or several days, every other week, monthly by date or by "fourth Tuesday", and yearly, with their end date or count. Repeating events are free in Beacon Events. A joining link Sugar Calendar showed to attendees only is not put on the public page; the import report lists those links so you can decide. Once Sugar Calendar is deactivated, its /events/… and calendar links are redirected to the imported events and categories.
 
@@ -266,6 +269,9 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.44.0 =
+* Moving events in now keeps each event's own SEO settings: the custom title, meta description, focus keyword, robots, canonical and social fields from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO, for every plugin Beacon imports from. The old plugin's primary category and per-event schema are left behind. The dry run, the import summary and `wp beacon import` say how many events kept them, per SEO plugin.
+
 = 0.43.2 =
 * "Show images" now works in the list view too (grouped by day): each event's featured image sits on the left, with its time and title beside it, so a list of shows or classes can carry their posters. Turn it on in the Events block's settings or with images="yes" on the [beacon_events] shortcode. Off by default; the compact list stays text only.
 
@@ -288,9 +294,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 = 0.39.0 =
 * New: a page for each date of a repeating event, at /event/<name>/<date>/. It shows that date (moved or cancelled dates say so), links to all dates, and is its own page for search engines, with its own canonical address (with or without an SEO plugin) and event data for just that date; the event's main page now lists its next dates and points each date's event data at its own page, as Google's event results ask. Calendar views link a repeating event to the date you clicked. Beacon Events Pro 0.12.1 opens the booking form on that date.
 * Thanks to PeepSo for pointing out, on Reddit, that Google expects each event date to have its own page.
-
-= 0.38.7 =
-* Event schema for search engines: each date of a repeating event now has its own stable @id (the event's address plus the date, kept when a date is moved), and the venue and organizer are linked to their own pages with an @id, so they read as the same place and organizer across all their events.
-* Thanks to PeepSo for flagging, on Reddit, that event schema needs stable identities after a migration.
 
 Older versions: see changelog.txt.
