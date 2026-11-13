@@ -1,7 +1,7 @@
 /* Layout only. No colours, no fonts — everything inherits the theme. Every element has a class hook. */
 .beacon-list{margin-bottom:1.5em}.beacon-day{margin:0 0 1.25em}.beacon-day-heading{margin:0 0 .35em;font-size:1em;font-weight:600}
 .beacon-day-events{list-style:none;margin:0;padding:0}.beacon-event{display:flex;gap:.75em;align-items:baseline;padding:.25em 0;flex-wrap:wrap}
-.beacon-time{flex:0 0 auto;min-width:9.7em;opacity:.8;font-variant-numeric:tabular-nums}.beacon-24h .beacon-time{min-width:7em}.beacon-venue{opacity:.7}.beacon-venue::before{content:"· "}.beacon-body{flex:1 1 14em;min-width:0;overflow-wrap:break-word}.beacon-row-link{margin-left:.25em;white-space:nowrap}
+.beacon-time{flex:0 0 auto;min-width:9.7em;opacity:.8;font-variant-numeric:tabular-nums}.beacon-24h .beacon-time{min-width:7em}.beacon-venue{opacity:.7}.beacon-cost{opacity:.7}.beacon-cost::before{content:"· "}.beacon-venue::before{content:"· "}.beacon-body{flex:1 1 14em;min-width:0;overflow-wrap:break-word}.beacon-row-link{margin-left:.25em;white-space:nowrap}
 .beacon-month-nav{display:flex;align-items:center;justify-content:space-between;margin:0 0 .5em}.beacon-month-title{margin:0;font-size:1.1em}
 .beacon-prev,.beacon-next{text-decoration:none;font-size:1.4em;line-height:1;padding:0 .4em}
 .beacon-grid{width:100%;border-collapse:collapse;table-layout:fixed}.beacon-grid th{text-align:left;font-weight:600;padding:.3em .4em;font-size:.85em}

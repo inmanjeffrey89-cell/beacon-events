@@ -1,5 +1,9 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.49.0 =
+* Events have a Cost field: write what it costs the way you'd say it ("$15", "Free", "$10 – $20") and it shows on the event page and in list views. Set it in the event's When panel (or the classic box), or with a "cost" column in a CSV import.
+* Moving in from The Events Calendar, Modern Events Calendar or All-in-One Event Calendar now brings each event's cost into that field, with the old plugin's currency symbol ("$15", "25 €", 0 as "Free"), instead of listing it as a field Beacon doesn't show.
+
 = 0.48.0 =
 * New "Subscribe links" switch for the Events block (and subscribe="yes" for the shortcode): under the calendar, one line lets visitors subscribe to its events in Google Calendar, Outlook.com, Microsoft 365, Apple Calendar or the Outlook app, or download the .ics file. The feed follows the calendar's own category, venue and organizer limits. Off by default.
 * Category, venue and organizer pages now offer the same subscribe links instead of only the .ics file.

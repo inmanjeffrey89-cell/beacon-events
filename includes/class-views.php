@@ -773,6 +773,12 @@ final class Views {
 		return implode( ' <span class="beacon-sep">·</span> ', $parts );
 	}
 
+	/** The event's cost as written ("$15", "Free"), for its page and list rows; filter beacon_show_cost → false hides it. */
+	private static function cost_on( int $id ): string {
+		$cost = (string) get_post_meta( $id, Events::META['cost'], true );
+		return '' !== $cost && apply_filters( 'beacon_show_cost', true, $id ) ? $cost : '';
+	}
+
 	/** "Add to Google Calendar" URL for an event: first occurrence in UTC, plus the repeat rule when there is one. */
 	public static function google_url( int $id ): string {
 		$e = Events::get( $id );
@@ -874,7 +880,8 @@ final class Views {
 			$venue = $show_venue ? self::venue( $id ) : '';
 			$url   = esc_url( Events::date_url( $id, (string) ( $r['orig_ymd'] ?? '' ) ) );
 			$img   = $images ? self::thumb( $id ) : '';
-			$row   = '<span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . $url . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . self::row_link( $r ) . '</span>';
+			$cost  = self::cost_on( $id );
+			$row   = '<span class="beacon-time">' . self::when( $r ) . '</span> <span class="beacon-body"><a class="beacon-title" href="' . $url . '">' . self::title( $r ) . '</a>' . self::badge( $r ) . ( $venue ? '&nbsp;<span class="beacon-venue">' . $venue . '</span>' : '' ) . ( '' !== $cost ? '&nbsp;<span class="beacon-cost">' . esc_html( $cost ) . '</span>' : '' ) . self::row_link( $r ) . '</span>';
 			if ( $img ) {
 				// picture on the left, time and text beside it; the picture links to the event too, out of the tab order
 				$row = '<a class="beacon-thumb-link" href="' . $url . '" tabindex="-1" aria-hidden="true">' . $img . '</a><span class="beacon-row-main">' . $row . '</span>';
@@ -1335,6 +1342,9 @@ final class Views {
 		$where = self::where( $id );
 		if ( $where ) {
 			$rows .= '<div class="beacon-detail"><span class="beacon-detail-label">' . esc_html__( 'Where', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . $where . '</span></div>'; }
+		$cost = self::cost_on( $id );
+		if ( '' !== $cost ) {
+			$rows .= '<div class="beacon-detail beacon-cost-row"><span class="beacon-detail-label">' . esc_html__( 'Cost', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( $cost ) . '</span></div>'; }
 		if ( Events::has_date_links( $id ) ) {
 			// Dates with a registration page each (Blackbaud, Altru, Eventbrite sessions): one button can't serve them all,
 			// so the next dates are listed, each with its own link.

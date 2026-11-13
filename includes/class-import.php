@@ -618,6 +618,7 @@ final class Import {
 				'online_url' => '',
 				'link'       => '',
 				'link_label' => '',
+				'cost'       => '',
 				'venue'      => null,
 				'organizers' => array(),
 				'categories' => array(),
@@ -695,6 +696,7 @@ final class Import {
 		[ $link, $label ] = self::link_from( $n );
 		update_post_meta( $id, Events::META['link'], $link );
 		update_post_meta( $id, Events::META['link_label'], $label );
+		update_post_meta( $id, Events::META['cost'], self::cost_from( $n ) );
 		if ( $n['thumbnail_id'] ) {
 			set_post_thumbnail( $id, (int) $n['thumbnail_id'] );
 		} elseif ( $n['image_url'] && ! has_post_thumbnail( $id ) ) {
@@ -840,9 +842,12 @@ final class Import {
 		if ( $link ) {
 			$state['links'] = (int) ( $state['links'] ?? 0 ) + 1; }
 		$left = array();
+		$cost = self::cost_from( $n );
 		foreach ( (array) ( $n['extra'] ?? array() ) as $k => $v ) {
 			if ( is_scalar( $v ) ? '' === trim( (string) $v ) : empty( $v ) ) {
 				continue; }
+			if ( '' !== $cost && in_array( $k, array( 'cost', 'is_free' ), true ) ) {
+				continue; } // 0.49.0: the cost has a field of its own
 			if ( $link && is_string( $v ) && esc_url_raw( trim( $v ) ) === $link ) {
 				continue; }
 			if ( is_string( $v ) && self::is_self_link( $v, (string) ( $n['slug'] ?? '' ), (int) ( $n['src_id'] ?? 0 ) ) ) {
@@ -853,6 +858,21 @@ final class Import {
 			++$state['extras'];
 			$state['extra_keys'] = array_slice( array_values( array_unique( array_merge( (array) ( $state['extra_keys'] ?? array() ), $left ) ) ), 0, 8 );
 		}
+	}
+
+	/**
+	 * The event's cost as written (0.49.0): the source's own cost when it gives one, else a "cost" kept in its extras
+	 * (Modern Events Calendar, All-in-One Event Calendar), "Free" for an event marked free there.
+	 */
+	public static function cost_from( array $n ): string {
+		$cost = trim( (string) ( $n['cost'] ?? '' ) );
+		if ( '' === $cost ) {
+			$x    = (array) ( $n['extra'] ?? array() );
+			$cost = is_scalar( $x['cost'] ?? null ) ? trim( (string) $x['cost'] ) : '';
+			if ( '' === $cost && ! empty( $x['is_free'] ) ) {
+				$cost = __( 'Free', 'beacon-events' ); }
+		}
+		return mb_substr( sanitize_text_field( $cost ), 0, 100 );
 	}
 
 	/** Sources whose event id (src_id) is the event's own WordPress post; Events Manager and My Calendar pass src_post. */

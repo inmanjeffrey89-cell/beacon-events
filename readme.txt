@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.48.0
+Stable tag: 0.49.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,7 +219,7 @@ The free importer moves events, venues, organizers and categories, and shows how
 Yes, with WP-CLI, which helps when you are moving several sites. `wp beacon sources` lists what it finds from each supported plugin, and `wp beacon import tec` (or em, ai1ec, mec, wpem, eventon, wpems) runs the same import as the Import / Export screen, with a progress bar and the same report. Beacon Events Pro's ticket and attendee import runs too when it is active. Running it again updates instead of duplicating.
 
 = Can I import from a spreadsheet? =
-Yes. Save it as CSV with a header row (title and start are the only required columns; venue, address, organizer, categories, repeat rule, skip dates, online link and image URL are optional) and upload it on Events → Import / Export. Export gives you every event in the same format, and an edited export comes back as updates.
+Yes. Save it as CSV with a header row (title and start are the only required columns; venue, address, organizer, categories, repeat rule, skip dates, online link, image URL and cost are optional) and upload it on Events → Import / Export. Export gives you every event in the same format, and an edited export comes back as updates.
 
 = Can I cancel or move just one date of a recurring event? =
 Yes. Under the rule in the editor sidebar (or the When box in the classic editor) the next few dates are listed; mark one cancelled and it stays on the calendar as cancelled, or move it to another time. Skipped dates, by contrast, disappear entirely.
@@ -273,6 +273,10 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.49.0 =
+* Events have a Cost field: write what it costs the way you'd say it ("$15", "Free", "$10 – $20") and it shows on the event page and in list views. Set it in the event's When panel (or the classic box), or with a "cost" column in a CSV import.
+* Moving in from The Events Calendar, Modern Events Calendar or All-in-One Event Calendar now brings each event's cost into that field, with the old plugin's currency symbol ("$15", "25 €", 0 as "Free"), instead of listing it as a field Beacon doesn't show.
+
 = 0.48.0 =
 * New "Subscribe links" switch for the Events block (and subscribe="yes" for the shortcode): under the calendar, one line lets visitors subscribe to its events in Google Calendar, Outlook.com, Microsoft 365, Apple Calendar or the Outlook app, or download the .ics file. The feed follows the calendar's own category, venue and organizer limits. Off by default.
 * Category, venue and organizer pages now offer the same subscribe links instead of only the .ics file.
@@ -296,9 +300,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.43.1 =
 * Undo an import now removes events whose only bookings came over with the import. Moving from The Events Calendar with Event Tickets (or WP Events Manager) and Beacon Events Pro brings the old tickets and attendees across, and until now those copies counted as bookings, so the undo kept every ticketed event. The copies are deleted with their event (they are still in the old plugin); events with bookings made in Beacon are kept as before.
-
-= 0.43.0 =
-* New: an "Event organizer" user role. Organizers add, publish and edit their own events, pick categories, add venues and upload images, but can't write posts or pages or touch other people's events, and they land on their events list after logging in. Works with WooCommerce, which otherwise sends people who can't write posts to My Account.
-* Events now have permissions of their own (edit_beacon_events and the rest). Every existing role keeps exactly what it had with posts, so nothing changes for Administrators, Editors, Authors, Contributors or other plugins' roles; a role editor can now switch event rights on or off separately.
 
 Older versions: see changelog.txt.

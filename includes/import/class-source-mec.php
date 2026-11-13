@@ -56,6 +56,32 @@ final class Source_MEC {
 		return array_map( 'intval', (array) $ids );
 	}
 
+	/**
+	 * MEC's cost the way MEC prints it (its render_price): a number gets the site's currency symbol, or the currency code
+	 * when no symbol is set, before or after it (with or without a space, MEC's "currency_sign"); 0 is "Free"; text stays
+	 * as written. Digits are kept as typed (MEC adds its decimals).
+	 */
+	public static function cost( string $raw ): string {
+		$raw = trim( $raw );
+		if ( '' === $raw || ! is_numeric( $raw ) ) {
+			return $raw; }
+		if ( 0.0 === (float) $raw ) {
+			return __( 'Free', 'beacon-events' ); }
+		$set  = (array) ( ( (array) get_option( 'mec_options', array() ) )['settings'] ?? array() );
+		$sign = trim( (string) ( $set['currency_symptom'] ?? '' ) );
+		$sign = '' !== $sign ? $sign : trim( (string) ( $set['currency'] ?? '' ) );
+		switch ( (string) ( $set['currency_sign'] ?? '' ) ) {
+			case 'after':
+				return $raw . $sign;
+			case 'after_space':
+				return $raw . ' ' . $sign;
+			case 'before_space':
+				return $sign . ' ' . $raw;
+			default:
+				return $sign . $raw;
+		}
+	}
+
 	/** MEC's single-event and category slugs (both can be changed in its settings). */
 	public static function slugs(): array {
 		$set = (array) ( ( (array) get_option( 'mec_options', array() ) )['settings'] ?? array() );
@@ -140,13 +166,13 @@ final class Source_MEC {
 		}
 		$extra = array_filter(
 			array(
-				'cost'      => (string) $m( 'mec_cost' ),
 				'more_info' => (string) $m( 'mec_more_info' ),
 			),
 			'strlen'
 		);
 		return array(
 			'uid'          => self::KEY . '-' . (int) $p->ID,
+			'cost'         => self::cost( (string) $m( 'mec_cost' ) ),
 			'src_id'       => (int) $p->ID,
 			'title'        => $title,
 			'content'      => trim( (string) preg_replace( '/\[\/?MEC[^\]]*\]/i', '', (string) $p->post_content ) ),

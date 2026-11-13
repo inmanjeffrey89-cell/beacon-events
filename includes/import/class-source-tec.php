@@ -63,6 +63,23 @@ final class Source_TEC {
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status NOT IN ('trash','auto-draft') AND post_parent = 0 ORDER BY ID ASC LIMIT %d OFFSET %d", self::SRC, $limit, $offset ) ) );
 	}
 
+	/**
+	 * TEC's cost with its currency: a number gets the event's symbol before or after it (TEC stores the symbol
+	 * HTML-encoded, "&#x24;"), 0 is "Free", a range "10 - 20" becomes "$10 – $20", anything else ("Donation", "$5
+	 * members") stays as written. Numbers keep the digits they were typed with (TEC itself adds decimals: "$10.00").
+	 */
+	public static function cost( string $raw, string $symbol, string $position ): string {
+		$raw    = trim( $raw );
+		$symbol = trim( html_entity_decode( $symbol, ENT_QUOTES, 'UTF-8' ) );
+		$num   = '\d+(?:[.,]\d+)?';
+		$money = fn( string $v ) => '' === $symbol ? $v : ( 'suffix' === $position ? $v . $symbol : $symbol . $v );
+		if ( preg_match( '/^' . $num . '$/', $raw ) ) {
+			return 0.0 === (float) str_replace( ',', '.', $raw ) ? __( 'Free', 'beacon-events' ) : $money( $raw ); }
+		if ( preg_match( '/^(' . $num . ')\s*(?:-|–|—|to)\s*(' . $num . ')$/u', $raw, $r ) ) {
+			return $money( $r[1] ) . ' – ' . $money( $r[2] ); }
+		return $raw;
+	}
+
 	/** One TEC event → the normalized shape Import::import_event() takes, or null to skip (with a note in $state). */
 	public static function map( $tec_id, array &$state ): ?array {
 		$tec_id = (int) $tec_id;
@@ -108,13 +125,13 @@ final class Source_TEC {
 		}
 		$extra = array_filter(
 			array(
-				'cost' => $m( '_EventCost' ),
-				'url'  => $m( '_EventURL' ),
+				'url' => $m( '_EventURL' ),
 			)
 		);
 		return array(
 			'uid'          => self::KEY . '-' . $tec_id,
 			'src_id'       => $tec_id,
+			'cost'         => self::cost( $m( '_EventCost' ), $m( '_EventCurrencySymbol' ), $m( '_EventCurrencyPosition' ) ),
 			'title'        => $src->post_title,
 			'content'      => self::clean_content( $src->post_content ),
 			'excerpt'      => $src->post_excerpt,

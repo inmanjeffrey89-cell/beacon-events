@@ -190,6 +190,7 @@ final class Admin {
 		echo '<div class="beacon-full beacon-online"><label><input type="checkbox" name="beacon[online]" value="1" ' . checked( $e['online'], true, false ) . '> ' . esc_html__( 'Online event', 'beacon-events' ) . '</label><input type="url" name="beacon[online_url]" value="' . esc_attr( $e['online_url'] ) . '" placeholder="' . esc_attr__( 'Meeting link, e.g. https://zoom.us/j/…', 'beacon-events' ) . '"></div>';
 		echo '<div class="beacon-full"><label>' . esc_html__( 'Tickets & info link', 'beacon-events' ) . '</label><input type="url" name="beacon[link]" value="' . esc_attr( $e['link'] ) . '" placeholder="' . esc_attr__( 'e.g. your Eventbrite or Square page', 'beacon-events' ) . '"></div>';
 		echo '<div><label>' . esc_html__( 'Button text', 'beacon-events' ) . '</label><input type="text" name="beacon[link_label]" value="' . esc_attr( $e['link_label'] ) . '" placeholder="' . esc_attr__( 'Tickets & info', 'beacon-events' ) . '"></div>';
+		echo '<div><label>' . esc_html__( 'Cost', 'beacon-events' ) . '</label><input type="text" name="beacon[cost]" value="' . esc_attr( $e['cost'] ) . '" placeholder="' . esc_attr__( 'e.g. $15, Free or $10 – $20', 'beacon-events' ) . '"></div>';
 		echo '</div><p class="beacon-sentence">' . esc_html( Recurrence::describe( $e['rrule'] ) ) . '</p>';
 		// Per-date changes: cancel one date or move it, without touching the rule. Rows come from the last save.
 		$occ = $e['rrule'] ? Events::occurrences_for_edit( $post->ID, 8 ) : array();
@@ -336,6 +337,7 @@ final class Admin {
 		update_post_meta( $post_id, Events::META['online_url'], Events::sanitize_url( (string) ( $raw_links['online_url'] ?? '' ) ) );
 		update_post_meta( $post_id, Events::META['link'], Events::sanitize_url( (string) ( $raw_links['link'] ?? '' ) ) );
 		update_post_meta( $post_id, Events::META['link_label'], sanitize_text_field( (string) ( $in['link_label'] ?? '' ) ) );
+		update_post_meta( $post_id, Events::META['cost'], mb_substr( sanitize_text_field( (string) ( $in['cost'] ?? '' ) ), 0, 100 ) );
 		// Per-date changes: the box shows the next few dates; overrides for dates it did not show are kept as they were.
 		$ov = Events::get( $post_id )['overrides'];
 		foreach ( (array) ( $in['ov'] ?? array() ) as $ymd => $row ) {

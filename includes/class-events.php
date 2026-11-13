@@ -19,6 +19,7 @@ final class Events {
 		'overrides'  => '_beacon_overrides',
 		'link'       => '_beacon_link',        // "Tickets & info" button: an outside ticket page (Eventbrite, Square…) or website
 		'link_label' => '_beacon_link_label',
+		'cost'       => '_beacon_cost',        // what it costs, as written: "$15", "Free", "$10 – $20" (0.49.0)
 	);
 	const HORIZON = '_beacon_horizon';              // last date a series was materialised to (Y-m-d)
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
@@ -376,6 +377,7 @@ final class Events {
 			'online_url' => $m( 'online_url' ),
 			'link'       => $m( 'link' ),
 			'link_label' => $m( 'link_label' ),
+			'cost'       => $m( 'cost' ),
 			'overrides'  => self::decode_overrides( $m( 'overrides' ) ),
 		);
 	}

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-13T20:03:05+00:00",
+    "translation-revision-date": "2026-11-13T21:07:21+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "assets\/editor-panel.js",
     "domain": "messages",
@@ -84,6 +84,12 @@
             ],
             "Tickets & info": [
                 "Tickets & Infos"
+            ],
+            "Cost": [
+                "Preis"
+            ],
+            "e.g. $15, Free or $10 \u2013 $20": [
+                "z. B. 15 \u20ac, Kostenlos oder 10 \u20ac \u2013 20 \u20ac"
             ],
             "Upcoming dates": [
                 "N\u00e4chste Termine"
@@ -206,6 +212,9 @@
             ],
             "Optional: a button to your Eventbrite, Square or other page.": [
                 "Optional: ein Button zu deiner Eventbrite-, Square- oder anderen Seite."
+            ],
+            "Optional. Shown as you write it on the event page and in lists.": [
+                "Optional. Wird so angezeigt, wie du es schreibst: auf der Veranstaltungsseite und in Listen."
             ],
             "Every (interval)": [
                 "Alle (Intervall)"

@@ -14,7 +14,7 @@ use Beacon\Import;
  */
 final class Source_CSV {
 	const KEY     = 'csv';
-	const COLUMNS = array( 'uid', 'title', 'start', 'end', 'all_day', 'timezone', 'repeat', 'skip_dates', 'venue', 'address', 'organizer', 'categories', 'online', 'online_url', 'status', 'excerpt', 'description', 'image_url', 'slug', 'link', 'link_label' );
+	const COLUMNS = array( 'uid', 'title', 'start', 'end', 'all_day', 'timezone', 'repeat', 'skip_dates', 'venue', 'address', 'organizer', 'categories', 'online', 'online_url', 'status', 'excerpt', 'description', 'image_url', 'slug', 'link', 'link_label', 'cost' );
 
 	public static function label(): string {
 		return __( 'CSV file', 'beacon-events' ); }
@@ -167,6 +167,7 @@ final class Source_CSV {
 			'online_url' => Events::sanitize_url( $g( 'online_url' ) ),
 			'link'       => Events::sanitize_url( $g( 'link' ) ),
 			'link_label' => $g( 'link_label' ),
+			'cost'       => $g( 'cost' ),
 			'venue'      => $g( 'venue' ) !== '' ? array(
 				'name'    => $g( 'venue' ),
 				'address' => $g( 'address' ),
@@ -231,6 +232,7 @@ final class Source_CSV {
 				$p->post_name,
 				$e['link'],
 				$e['link_label'],
+				$e['cost'],
 			);
 			// spreadsheet formula injection guard: a leading =, +, -, @ becomes text
 			fputcsv( $out, array_map( fn( $v ) => preg_match( '/^[=+\-@]/', (string) $v ) ? "'" . $v : $v, $row ) );
