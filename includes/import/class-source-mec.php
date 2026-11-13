@@ -141,6 +141,7 @@ final class Source_MEC {
 				$venue = array(
 					'name'    => $t['name'],
 					'address' => (string) get_term_meta( $lid, 'address', true ),
+					'website' => (string) get_term_meta( $lid, 'url', true ),
 					'src_id'  => $lid,
 				);
 			}
@@ -151,8 +152,11 @@ final class Source_MEC {
 			$t = $oid > 1 ? self::term( $oid, 'mec_organizer' ) : null;
 			if ( $t ) {
 				$orgs[] = array(
-					'name'   => $t['name'],
-					'src_id' => $oid,
+					'name'    => $t['name'],
+					'phone'   => (string) get_term_meta( $oid, 'tel', true ),
+					'email'   => (string) get_term_meta( $oid, 'email', true ),
+					'website' => (string) get_term_meta( $oid, 'url', true ),
+					'src_id'  => $oid,
 				);
 			}
 		}

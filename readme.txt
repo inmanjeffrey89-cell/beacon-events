@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.49.0
+Stable tag: 0.50.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -273,6 +273,10 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.50.0 =
+* Venues have a phone and website, and organizers a phone, email and website (Events → Venues / Organizers). The event page shows them under "Where" and in a new "Organizer" row, with each organizer linked to their own page, and venue and organizer pages show them too. Email addresses are written so that address-harvesting bots can't read them.
+* Moving in from The Events Calendar brings its venues' phone and website and its organizers' phone, email, website and description along; from Modern Events Calendar, its organizers' phone, email and website and its locations' website. A re-import never overwrites details you've filled in yourself.
+
 = 0.49.0 =
 * Events have a Cost field: write what it costs the way you'd say it ("$15", "Free", "$10 – $20") and it shows on the event page and in list views. Set it in the event's When panel (or the classic box), or with a "cost" column in a CSV import.
 * Moving in from The Events Calendar, Modern Events Calendar or All-in-One Event Calendar now brings each event's cost into that field, with the old plugin's currency symbol ("$15", "25 €", 0 as "Free"), instead of listing it as a field Beacon doesn't show.
@@ -297,8 +301,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.43.2 =
 * "Show images" now works in the list view too (grouped by day): each event's featured image sits on the left, with its time and title beside it, so a list of shows or classes can carry their posters. Turn it on in the Events block's settings or with images="yes" on the [beacon_events] shortcode. Off by default; the compact list stays text only.
-
-= 0.43.1 =
-* Undo an import now removes events whose only bookings came over with the import. Moving from The Events Calendar with Event Tickets (or WP Events Manager) and Beacon Events Pro brings the old tickets and attendees across, and until now those copies counted as bookings, so the undo kept every ticketed event. The copies are deleted with their event (they are still in the old plugin); events with bookings made in Beacon are kept as before.
 
 Older versions: see changelog.txt.

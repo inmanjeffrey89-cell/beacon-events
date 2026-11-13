@@ -731,6 +731,41 @@ final class Views {
 	}
 
 	/** The "Where" value: name, address, and a map link — no API key, no embed, nothing loaded from third parties. */
+	const META_PHONE   = 'beacon_phone';   // venue / organizer term meta (0.50.0)
+	const META_EMAIL   = 'beacon_email';   // organizer
+	const META_WEBSITE = 'beacon_website'; // venue / organizer
+
+	/** A venue's or organizer's phone, email and website as one escaped line (email obfuscated for harvesters), or ''. */
+	public static function contact( \WP_Term $t ): string {
+		$parts = array();
+		$phone = (string) get_term_meta( $t->term_id, self::META_PHONE, true );
+		if ( '' !== $phone ) {
+			$parts[] = '<a class="beacon-phone" href="' . esc_url( 'tel:' . preg_replace( '/[^0-9+]/', '', $phone ), array( 'tel' ) ) . '">' . esc_html( $phone ) . '</a>'; }
+		$email = 'beacon_organizer' === $t->taxonomy ? sanitize_email( (string) get_term_meta( $t->term_id, self::META_EMAIL, true ) ) : '';
+		if ( '' !== $email ) {
+			$parts[] = '<a class="beacon-email" href="' . esc_url( 'mailto:' . antispambot( $email ), array( 'mailto' ) ) . '">' . esc_html( antispambot( $email ) ) . '</a>'; }
+		$web = (string) get_term_meta( $t->term_id, self::META_WEBSITE, true );
+		if ( '' !== $web ) {
+			$host    = (string) wp_parse_url( $web, PHP_URL_HOST );
+			$parts[] = '<a class="beacon-website" href="' . esc_url( $web ) . '" target="_blank" rel="noopener">' . esc_html( '' !== $host ? preg_replace( '/^www\./', '', $host ) : $web ) . '</a>'; }
+		$parts = (array) apply_filters( 'beacon_contact_parts', $parts, $t );
+		return $parts ? '<span class="beacon-contact">' . implode( '&nbsp;<span class="beacon-sep">·</span> ', $parts ) . '</span>' : '';
+	}
+
+	/** "Organizer" value on an event page: each organizer linked to their page, with their contact line. */
+	private static function organizers( int $id ): string {
+		$orgs = get_the_terms( $id, 'beacon_organizer' );
+		if ( ! $orgs || is_wp_error( $orgs ) || ! apply_filters( 'beacon_show_organizer', true, $id ) ) {
+			return ''; }
+		$out = array();
+		foreach ( $orgs as $o ) {
+			$link  = get_term_link( $o );
+			$name  = is_wp_error( $link ) ? esc_html( $o->name ) : '<a class="beacon-organizer" href="' . esc_url( $link ) . '">' . esc_html( $o->name ) . '</a>';
+			$out[] = '<span class="beacon-organizer-item">' . $name . self::contact( $o ) . '</span>';
+		}
+		return implode( ' ', $out );
+	}
+
 	private static function where( int $id ): string {
 		$v   = get_the_terms( $id, 'beacon_venue' );
 		$out = '';
@@ -748,6 +783,7 @@ final class Views {
 		$out .= esc_html( $v[0]->name );
 		if ( $addr ) {
 			$out .= '<span class="beacon-address">' . esc_html( $addr ) . '</span> <a class="beacon-map" href="' . esc_url( 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $v[0]->name . ', ' . $addr ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Map', 'beacon-events' ) . '</a>'; }
+		$out .= self::contact( $v[0] );
 		if ( get_post_meta( $id, Events::META['online'], true ) === '1' ) {
 			$out .= '</span>'; }
 		return $out;
@@ -1345,6 +1381,10 @@ final class Views {
 		$cost = self::cost_on( $id );
 		if ( '' !== $cost ) {
 			$rows .= '<div class="beacon-detail beacon-cost-row"><span class="beacon-detail-label">' . esc_html__( 'Cost', 'beacon-events' ) . '</span> <span class="beacon-detail-value">' . esc_html( $cost ) . '</span></div>'; }
+		$orgs = self::organizers( $id );
+		if ( '' !== $orgs ) {
+			$count = count( (array) get_the_terms( $id, 'beacon_organizer' ) );
+			$rows .= '<div class="beacon-detail beacon-organizer-row"><span class="beacon-detail-label">' . esc_html( _nx( 'Organizer', 'Organizers', $count, 'event page label', 'beacon-events' ) ) . '</span> <span class="beacon-detail-value">' . $orgs . '</span></div>'; }
 		if ( Events::has_date_links( $id ) ) {
 			// Dates with a registration page each (Blackbaud, Altru, Eventbrite sessions): one button can't serve them all,
 			// so the next dates are listed, each with its own link.
@@ -1395,6 +1435,9 @@ final class Views {
 			if ( $addr ) {
 				$out .= '<p class="beacon-term-address">' . esc_html( $addr ) . ' <a class="beacon-map" href="' . esc_url( 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $t->name . ', ' . $addr ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Map', 'beacon-events' ) . '</a></p>'; }
 		}
+		$contact = in_array( $t->taxonomy, array( 'beacon_venue', 'beacon_organizer' ), true ) ? self::contact( $t ) : '';
+		if ( '' !== $contact ) {
+			$out .= '<p class="beacon-term-contact">' . $contact . '</p>'; }
 		if ( $t->description ) {
 			$out .= '<div class="beacon-term-description">' . wp_kses_post( wpautop( $t->description ) ) . '</div>'; }
 		$out .= '<p class="beacon-term-subscribe">' . esc_html__( 'Subscribe to these events:', 'beacon-events' ) . ' ' . self::subscribe_links( self::ical_url( $t ) ) . '</p>';
@@ -1420,6 +1463,9 @@ final class Views {
 			if ( $addr ) {
 				$extra .= '<p class="beacon-term-address">' . esc_html( $addr ) . ' <a class="beacon-map" href="' . esc_url( 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $t->name . ', ' . $addr ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Map', 'beacon-events' ) . '</a></p>'; }
 		}
+		$contact = in_array( $t->taxonomy, array( 'beacon_venue', 'beacon_organizer' ), true ) ? self::contact( $t ) : '';
+		if ( '' !== $contact ) {
+			$extra .= '<p class="beacon-term-contact">' . $contact . '</p>'; }
 		$extra .= '<p class="beacon-term-subscribe">' . esc_html__( 'Subscribe to these events:', 'beacon-events' ) . ' ' . self::subscribe_links( self::ical_url( $t ) ) . '</p>';
 		return $description . $extra;
 	}

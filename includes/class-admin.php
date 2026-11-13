@@ -49,6 +49,13 @@ final class Admin {
 		add_action( 'beacon_venue_edit_form_fields', fn( $term ) => self::venue_field( (string) get_term_meta( $term->term_id, 'beacon_address', true ), true ) );
 		add_action( 'created_beacon_venue', array( __CLASS__, 'save_venue' ) );
 		add_action( 'edited_beacon_venue', array( __CLASS__, 'save_venue' ) );
+		// Phone and website for venues, plus email for organizers (0.50.0): shown under "Where" / "Organizer" and on their pages.
+		foreach ( array( 'beacon_venue', 'beacon_organizer' ) as $tax ) {
+			add_action( $tax . '_add_form_fields', fn() => self::contact_fields( $tax, 0, false ) );
+			add_action( $tax . '_edit_form_fields', fn( $term ) => self::contact_fields( $tax, (int) $term->term_id, true ) );
+			add_action( 'created_' . $tax, array( __CLASS__, 'save_contact' ) );
+			add_action( 'edited_' . $tax, array( __CLASS__, 'save_contact' ) );
+		}
 		// Categories can carry a colour: a dot in lists, a bar in the month grid. Empty = none (the default).
 		add_action( 'beacon_category_add_form_fields', fn() => self::color_field( '' ) );
 		add_action( 'beacon_category_edit_form_fields', fn( $term ) => self::color_field( (string) get_term_meta( $term->term_id, 'beacon_color', true ), true ) );
@@ -292,6 +299,36 @@ final class Admin {
 			delete_term_meta( $term_id, 'beacon_color' );
 		} else {
 			update_term_meta( $term_id, 'beacon_color', $color ); }
+	}
+
+	public static function contact_fields( string $tax, int $term_id, bool $edit ): void {
+		$fields = array( Views::META_PHONE => array( __( 'Phone', 'beacon-events' ), 'tel', '' ) );
+		if ( 'beacon_organizer' === $tax ) {
+			$fields[ Views::META_EMAIL ] = array( __( 'Email', 'beacon-events' ), 'email', '' ); }
+		$fields[ Views::META_WEBSITE ] = array( __( 'Website', 'beacon-events' ), 'url', 'https://' );
+		foreach ( $fields as $key => $f ) {
+			$value = $term_id ? (string) get_term_meta( $term_id, $key, true ) : '';
+			$input = '<input type="' . esc_attr( $f[1] ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" class="regular-text" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $f[2] ) . '">';
+			if ( $edit ) {
+				echo '<tr class="form-field"><th scope="row"><label for="' . esc_attr( $key ) . '">' . esc_html( $f[0] ) . '</label></th><td>' . $input . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput -- $input built from escaped parts
+			} else {
+				echo '<div class="form-field"><label for="' . esc_attr( $key ) . '">' . esc_html( $f[0] ) . '</label>' . $input . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput -- $input built from escaped parts
+			}
+		}
+		if ( ! $edit ) {
+			echo '<p class="description">' . esc_html__( 'Phone, email and website are optional; they show on the event page and on this page.', 'beacon-events' ) . '</p>'; }
+	}
+
+	public static function save_contact( int $term_id ): void {
+		// WordPress verifies the term form nonce and capability before firing created_/edited_ hooks.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST[ Views::META_PHONE ] ) ) {
+			update_term_meta( $term_id, Views::META_PHONE, sanitize_text_field( wp_unslash( $_POST[ Views::META_PHONE ] ) ) ); }
+		if ( isset( $_POST[ Views::META_EMAIL ] ) ) {
+			update_term_meta( $term_id, Views::META_EMAIL, sanitize_email( wp_unslash( $_POST[ Views::META_EMAIL ] ) ) ); }
+		if ( isset( $_POST[ Views::META_WEBSITE ] ) ) {
+			update_term_meta( $term_id, Views::META_WEBSITE, Events::sanitize_url( (string) wp_unslash( $_POST[ Views::META_WEBSITE ] ) ) ); } // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Events::sanitize_url (esc_url_raw)
+		// phpcs:enable
 	}
 
 	public static function save_venue( int $term_id ): void {

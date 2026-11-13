@@ -1106,6 +1106,7 @@ final class Import {
 		$addr = trim( (string) ( $v['address'] ?? '' ) );
 		if ( $addr && ! get_term_meta( $term_id, 'beacon_address', true ) ) {
 			update_term_meta( $term_id, 'beacon_address', sanitize_text_field( $addr ) ); }
+		self::contact_meta( $term_id, $v );
 		if ( ! empty( $v['src_id'] ) ) {
 			update_term_meta( $term_id, '_beacon_' . $state['source'] . '_id', (int) $v['src_id'] ); }
 		return $term_id;
@@ -1130,7 +1131,28 @@ final class Import {
 		}
 		if ( ! empty( $o['src_id'] ) ) {
 			update_term_meta( $term_id, '_beacon_' . $state['source'] . '_id', (int) $o['src_id'] ); }
+		self::contact_meta( $term_id, $o );
+		$about = trim( (string) ( $o['description'] ?? '' ) );
+		$had   = get_term_field( 'description', $term_id, 'beacon_organizer', 'raw' );
+		if ( '' !== $about && ! is_wp_error( $had ) && '' === trim( (string) $had ) ) {
+			wp_update_term( $term_id, 'beacon_organizer', array( 'description' => wp_kses_post( $about ) ) ); }
 		return $term_id;
+	}
+
+	/**
+	 * A venue's or organizer's phone, email and website from the old plugin (0.50.0), each only where the term has none
+	 * yet, so a re-import or a second source never overwrites what the site already filled in.
+	 */
+	private static function contact_meta( int $term_id, array $c ): void {
+		$clean = array(
+			Views::META_PHONE   => sanitize_text_field( (string) ( $c['phone'] ?? '' ) ),
+			Views::META_EMAIL   => sanitize_email( (string) ( $c['email'] ?? '' ) ),
+			Views::META_WEBSITE => Events::sanitize_url( (string) ( $c['website'] ?? '' ) ),
+		);
+		foreach ( $clean as $key => $value ) {
+			if ( '' !== $value && '' === (string) get_term_meta( $term_id, $key, true ) ) {
+				update_term_meta( $term_id, $key, $value ); }
+		}
 	}
 
 	/** Nested source category → beacon_category term, parents first. Same-name terms under the same parent are reused. */

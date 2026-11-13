@@ -103,6 +103,8 @@ final class Source_TEC {
 				$venue  = array(
 					'name'    => trim( $v->post_title ),
 					'address' => implode( ', ', array_filter( array( $g( '_VenueAddress' ), $g( '_VenueCity' ), trim( $region . ' ' . $g( '_VenueZip' ) ), $g( '_VenueCountry' ) ) ) ),
+					'phone'   => $g( '_VenuePhone' ),
+					'website' => $g( '_VenueURL' ),
 					'src_id'  => $vid,
 				);
 				break;
@@ -112,9 +114,14 @@ final class Source_TEC {
 		foreach ( array_filter( array_map( 'intval', (array) get_post_meta( $tec_id, '_EventOrganizerID', false ) ) ) as $oid ) {
 			$o = get_post( $oid );
 			if ( $o && $o->post_type === 'tribe_organizer' && trim( $o->post_title ) !== '' ) {
+				$og     = fn( string $k ) => trim( (string) get_post_meta( $oid, $k, true ) );
 				$orgs[] = array(
-					'name'   => trim( $o->post_title ),
-					'src_id' => $oid,
+					'name'        => trim( $o->post_title ),
+					'phone'       => $og( '_OrganizerPhone' ),
+					'email'       => $og( '_OrganizerEmail' ),
+					'website'     => $og( '_OrganizerWebsite' ),
+					'description' => self::clean_content( (string) $o->post_content ),
+					'src_id'      => $oid,
 				); }
 		}
 		$cats = array();
