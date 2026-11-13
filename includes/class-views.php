@@ -773,6 +773,30 @@ final class Views {
 		return 'https://calendar.google.com/calendar/render?' . http_build_query( array_filter( $q ), '', '&', PHP_QUERY_RFC3986 );
 	}
 
+	/**
+	 * "Add to Outlook" URL for one date of an event: Outlook.com, or Microsoft 365 (work or school) with $work. Outlook's
+	 * compose link takes times in UTC and, for all-day events, the day after the last as the end; it has no repeat rule.
+	 * $orig = the date's original Y-m-d for a series, so the note links to that date's own page.
+	 */
+	public static function outlook_url( int $id, \DateTimeImmutable $s, ?\DateTimeImmutable $en, bool $work = false, string $orig = '' ): string {
+		$e   = Events::get( $id );
+		$utc = new \DateTimeZone( 'UTC' );
+		$q   = array( 'rru' => 'addevent' );
+		if ( $e['all_day'] ) {
+			$q['startdt'] = $s->format( 'Y-m-d' );
+			$q['enddt']   = ( $en ? $en : $s )->modify( '+1 day' )->format( 'Y-m-d' );
+			$q['allday']  = 'true';
+		} else {
+			$q['startdt'] = $s->setTimezone( $utc )->format( 'Y-m-d\TH:i:s\Z' );
+			$q['enddt']   = ( $en ? $en : $s->modify( '+1 hour' ) )->setTimezone( $utc )->format( 'Y-m-d\TH:i:s\Z' );
+			$q['allday']  = 'false';
+		}
+		$q['subject']  = self::plain( get_the_title( $id ) );
+		$q['body']     = $e['rrule'] && '' !== $orig ? Events::date_url( $id, $orig ) : (string) get_permalink( $id );
+		$q['location'] = self::location( $id );
+		return 'https://' . ( $work ? 'outlook.office.com' : 'outlook.live.com' ) . '/calendar/action/compose?' . http_build_query( array_filter( $q, 'strlen' ), '', '&', PHP_QUERY_RFC3986 );
+	}
+
 	/** Upcoming list, grouped by day — or, with layout="compact", one line per event (sidebars, footers). */
 	public static function list( array $a ): string {
 		$show_venue = self::venue_on( $a );
@@ -1229,7 +1253,8 @@ final class Views {
 		} catch ( \Exception $x ) {
 			$tz = self::tz(); }
 		$s  = new \DateTimeImmutable( $e['start'], $tz );
-		$en = $e['end'] ? new \DateTimeImmutable( $e['end'], $tz ) : null;
+		$en    = $e['end'] ? new \DateTimeImmutable( $e['end'], $tz ) : null;
+		$shown = '';
 		if ( $e['rrule'] ) {
 			// A series shows its next date (someone looking in October wants the next class, not September's first one);
 			// the Repeats row says how it goes on. A finished series keeps its first date.
@@ -1240,8 +1265,9 @@ final class Views {
 			$on = self::date_page_for( $id );
 			foreach ( $on ? array( $on ) : Events::occurrences_for_edit( $id, 20 ) as $o ) {
 				if ( $on || $o['status'] !== 'cancelled' ) {
-					$s  = ( new \DateTimeImmutable( $o['start'], $otz ) )->setTimezone( $tz );
-					$en = $en ? ( new \DateTimeImmutable( $o['end'], $otz ) )->setTimezone( $tz ) : null;
+					$s     = ( new \DateTimeImmutable( $o['start'], $otz ) )->setTimezone( $tz );
+					$en    = $en ? ( new \DateTimeImmutable( $o['end'], $otz ) )->setTimezone( $tz ) : null;
+					$shown = (string) ( $o['orig'] ?? '' );
 					break; }
 			}
 		}
@@ -1293,7 +1319,14 @@ final class Views {
 					$rows .= '<div class="beacon-detail beacon-dates" id="beacon-dates"><span class="beacon-detail-label">' . esc_html__( 'Next dates', 'beacon-events' ) . '</span> <ul class="beacon-detail-value">' . implode( '', $items ) . '</ul></div>'; }
 			}
 		}
-		$rows .= '<div class="beacon-detail beacon-add"><a class="beacon-ical" href="' . esc_url( add_query_arg( array( 'beacon_ical' => $id ), home_url( '/' ) ) ) . '">' . esc_html__( 'Add to calendar (.ics)', 'beacon-events' ) . '</a> <a class="beacon-google" href="' . esc_url( self::google_url( $id ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Add to Google Calendar', 'beacon-events' ) . '</a></div>';
+		$outlook = '';
+		if ( ! ( $on && 'cancelled' === $on['status'] ) && apply_filters( 'beacon_outlook_links', true, $id ) ) {
+			// Outlook's add-event link carries one date, no repeat rule: a series adds the date shown here (the .ics has them all)
+			$tip      = $e['rrule'] ? ' title="' . esc_attr__( 'Adds this date. For every date, use Add to calendar (.ics).', 'beacon-events' ) . '"' : '';
+			$outlook  = ' <a class="beacon-outlook" href="' . esc_url( self::outlook_url( $id, $s, $en, false, $shown ) ) . '" target="_blank" rel="noopener"' . $tip . '>' . esc_html__( 'Add to Outlook.com', 'beacon-events' ) . '</a>';
+			$outlook .= ' <a class="beacon-outlook-work" href="' . esc_url( self::outlook_url( $id, $s, $en, true, $shown ) ) . '" target="_blank" rel="noopener"' . $tip . '>' . esc_html__( 'Add to Outlook (work or school)', 'beacon-events' ) . '</a>';
+		}
+		$rows .= '<div class="beacon-detail beacon-add"><a class="beacon-ical" href="' . esc_url( add_query_arg( array( 'beacon_ical' => $id ), home_url( '/' ) ) ) . '">' . esc_html__( 'Add to calendar (.ics)', 'beacon-events' ) . '</a> <a class="beacon-google" href="' . esc_url( self::google_url( $id ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Add to Google Calendar', 'beacon-events' ) . '</a>' . $outlook . '</div>';
 		wp_enqueue_style( 'beacon-events' );
 		return '<div class="beacon-single">' . $rows . '</div>';
 	}

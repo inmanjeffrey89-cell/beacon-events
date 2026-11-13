@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.47.0 =
+* Event pages now have "Add to Outlook.com" and "Add to Outlook (work or school)" links next to the .ics and Google Calendar ones. Outlook's link carries one date, so for a repeating event it adds the date the page shows (the next one, or a date page's own date) and links that date's page; "Add to calendar (.ics)" still brings every date. Turn them off with the beacon_outlook_links filter.
+
 = 0.46.0 =
 * After two weeks of use, the Events screen asks a site's administrators once for a review on wordpress.org, in one line with "Write a review", "Maybe later" (asks again in two months) and "Don't ask again". It only shows to administrators of sites with at least three events of their own, never next to the "Create a calendar page" line, and never as an admin notice. Turn it off with the beacon_review_line filter.
 
