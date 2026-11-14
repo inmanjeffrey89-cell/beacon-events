@@ -14,7 +14,7 @@ Free events calendar for one-off and recurring events, with Google Calendar sync
 
 Beacon Events is an events calendar for single events and repeating ones alike: a one-night workshop, a show's run, a weekly class. It does the basics properly and doesn't charge you for them. **[See it running](https://beacon-events.duckdns.org/demo/)** on a stock Twenty Twenty-Five site: month grid with the filter bar, day view, event pages, venue pages.
 
-https://www.youtube.com/watch?v=_X5LTwl0Y3I
+https://www.youtube.com/watch?v=AsMpg-RBY8w
 
 **Who it's for.** Churches publishing weekly services and a monthly potluck. Yoga, pilates, fitness, dance and martial-arts studios, gyms and music schools with a weekly class schedule, shown as a timetable, and class sign-ups with Pro. Libraries and schools with story times, term dates and board meetings. Senior living communities and community centers with a monthly activity calendar that also goes up on the noticeboard. Cooking schools, paint and sip studios, pottery, glass and craft studios, art classes, makerspaces and nature centers selling workshop tickets. Wineries, breweries, taprooms and farms with tastings, beer releases, trivia nights, markets and seasonal events, and small museums with member and non-member tickets. Bars, restaurants and music venues listing live music, gigs and concerts, and a weekly happy hour. Clubs, meetups and volunteer groups, and anyone running online events on Zoom or Google Meet.
 
@@ -28,10 +28,10 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 * **Accessible.** The month view is a real table with column headers, each day link carries its full date for screen readers, and on Twenty Twenty-Five every view passes axe-core's automated WCAG 2.1 AA checks, colour contrast included.
 * **Sell tickets where you like.** Each event can link to its Eventbrite, Square or other ticket page with its own button text ("Buy on Eventbrite", "Book now"). Or sell on the event page itself with the optional add-on, with no per-ticket fee.
 * **Up and running in a minute.** Click "Get started": add a few sample events to see the calendar working (one click removes them), and let it make a Calendar page for you.
-* **Every event in its own timezone.** A class in Boston shows 10 am Boston time even if your site is set to Chicago, with the zone's abbreviation when they differ.
+* **Every event in its own timezone.** A class in Boston shows 10 am Boston time even if your site is set to Chicago, with the zone's abbreviation when they differ. Turn on one setting and visitors in other time zones see the times in their own, for online events or for all of them.
 * **Online events.** Flip "Online event", paste the meeting link, and visitors get a Join button; calendar apps get the link too.
 * **Search engines understand your events.** schema.org Event markup on every event page, one entry per upcoming date.
-* **Venues with addresses.** Each venue has a street address, shown on the event with a map link — no API key, no embedded map slowing the page down.
+* **The details people look for.** Each event can show its cost as you'd say it ("$15", "Free", "$10 – $20"), and its organizer with their phone, email and website. Venues have a street address with a map link (no API key, no embedded map slowing the page down) and their own phone and website. Venue and organizer pages list their events.
 * **Export.** Every event has "Add to calendar (.ics)", "Add to Google Calendar" and "Add to Outlook" links (Outlook.com, and Outlook for work or school accounts), and your whole calendar has a subscribable feed. Turn on "Subscribe links" on a calendar and visitors can subscribe to its events in Google Calendar, Outlook.com, Microsoft 365 or Apple Calendar in one click; category, venue and organizer pages have the same links.
 * **A free alternative to The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) and All-in-One Event Calendar, and it brings your events over from any of them.** Events → Import / Export copies events, venues, organizers, categories, images, recurring rules and each event's own SEO title and description in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Changed your mind? Undo the import in one click, and turn the old plugin back on. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
 * **Uninstalls clean.** Turn on "delete all data on uninstall" and the plugin removes everything it created — events, venues, categories, settings, its table.
@@ -78,11 +78,7 @@ Click **Get started** under the plugin's name on the Plugins screen. The Events 
 2. Put the **Events** block on a page (or the shortcode below). Choose list, week, month or day, and switch on the filter bar if you have several categories or venues.
 3. Moving from another plugin? Events → Import / Export. Have a Google Calendar? Events → Settings → paste its iCal address.
 
-That is the whole setup. Everything else — colours, venues with maps, online events, per-date changes — is optional.
-
-The same steps as a 90-second video:
-
-https://www.youtube.com/watch?v=AsMpg-RBY8w
+That is the whole setup. Everything else — colours, venues with maps, online events, per-date changes — is optional. The video at the top of this page shows these steps in 90 seconds.
 
 = Roadmap =
 
