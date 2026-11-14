@@ -226,19 +226,31 @@ final class Import {
 		echo ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Download the report, one row per event (CSV)', 'beacon-events' ) . '</a>';
 	}
 
+	/** "2 venues, 1 organizer and 3 categories" with each noun in the right number (it read "1 organizers" before 0.51.0). */
+	private static function terms_line( array $r ): string {
+		$v = (int) ( $r['venues'] ?? 0 );
+		$o = (int) ( $r['organizers'] ?? 0 );
+		$c = (int) ( $r['categories'] ?? 0 );
+		return sprintf(
+			/* translators: 1: "2 venues", 2: "1 organizer", 3: "3 categories" */
+			__( '%1$s, %2$s and %3$s', 'beacon-events' ),
+			sprintf( /* translators: %d: number of venues */ _n( '%d venue', '%d venues', $v, 'beacon-events' ), $v ),
+			sprintf( /* translators: %d: number of organizers */ _n( '%d organizer', '%d organizers', $o, 'beacon-events' ), $o ),
+			sprintf( /* translators: %d: number of categories */ _n( '%d category', '%d categories', $c, 'beacon-events' ), $c )
+		);
+	}
+
 	private static function report( array $r ): void {
 		if ( ! empty( $r['dry'] ) ) {
 			echo '<div class="notice notice-info inline" style="margin:0 0 1em"><p><strong>' . esc_html__( 'Dry run, nothing was written.', 'beacon-events' ) . '</strong> ' . esc_html(
 				sprintf(
-					/* translators: 1: source, 2: would create, 3: would update, 4: skipped, 5: venues, 6: organizers, 7: categories, 8: time */
-					__( '%1$s: the import would create %2$d events and update %3$d (%4$d skipped), and add %5$d venues, %6$d organizers and %7$d categories. Checked %8$s.', 'beacon-events' ),
+					/* translators: 1: source, 2: "12 events", 3: would update, 4: skipped, 5: "2 venues, 1 organizer and 3 categories", 6: time */
+					__( '%1$s: the import would create %2$s and update %3$d (%4$d skipped), and add %5$s. Checked %6$s.', 'beacon-events' ),
 					self::label( (string) ( $r['source'] ?? '' ) ),
-					$r['created'],
+					sprintf( /* translators: %d: number of events */ _n( '%d event', '%d events', (int) $r['created'], 'beacon-events' ), (int) $r['created'] ),
 					$r['updated'],
 					$r['skipped'],
-					$r['venues'],
-					$r['organizers'],
-					$r['categories'],
+					self::terms_line( $r ),
 					$r['finished']
 				)
 			);
@@ -267,15 +279,13 @@ final class Import {
 		}
 		echo '<div class="notice notice-success inline" style="margin:0 0 1em"><p>' . esc_html(
 			sprintf(
-				/* translators: 1: source, 2: created, 3: updated, 4: skipped, 5: venues, 6: organizers, 7: categories, 8: time */
-				__( '%1$s: imported %2$d new events and updated %3$d (%4$d skipped); %5$d venues, %6$d organizers and %7$d categories created. Finished %8$s.', 'beacon-events' ),
+				/* translators: 1: source, 2: "12 new events", 3: updated, 4: skipped, 5: "2 venues, 1 organizer and 3 categories", 6: time */
+				__( '%1$s: imported %2$s and updated %3$d (%4$d skipped); %5$s created. Finished %6$s.', 'beacon-events' ),
 				self::label( (string) ( $r['source'] ?? '' ) ),
-				$r['created'],
+				sprintf( /* translators: %d: number of events */ _n( '%d new event', '%d new events', (int) $r['created'], 'beacon-events' ), (int) $r['created'] ),
 				$r['updated'],
 				$r['skipped'],
-				$r['venues'],
-				$r['organizers'],
-				$r['categories'],
+				self::terms_line( $r ),
 				$r['finished']
 			)
 		) . ' <a href="' . esc_url( admin_url( 'edit.php?post_type=' . Events::CPT ) ) . '">' . esc_html__( 'See the events', 'beacon-events' ) . '</a>';

@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.50.0
+Stable tag: 0.51.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -264,15 +264,18 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 == Screenshots ==
 
-1. The month view, inheriting the theme.
+1. The month view on a wide page, in the theme's own fonts: category colours, the filter bar, "Print this month", and subscribe links for Google Calendar, Outlook and Apple Calendar.
 2. The list view, grouped by day.
-3. Editing an event: when, how often, where — in one box.
-4. Feeds and the sync log.
-5. Import from The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar, or a CSV file: one click, nothing deleted.
+3. Editing an event in the block editor: dates, time zone, a ticket link, the cost, how it repeats and when it stops, and changes to single dates (cancel, move, or a ticket link of its own), all in one panel.
+4. Settings: paste a Google Calendar's share link (or any iCal address) and it syncs right away, then every hour, with each sync in the log; times for visitors in other time zones; your own subscribable feed.
+5. Moving from The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) or All-in-One Event Calendar, or a CSV file: one click, nothing in the old plugin changed, a dry run and an undo, and weekly copies combined into one repeating event.
 6. The week view as a class timetable, with the filter bar. On a phone the days stack into rows.
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.51.0 =
+* The import summary counts in the right number ("1 new event", "1 organizer and 1 category"); it said "1 organizers" before.
+
 = 0.50.0 =
 * Venues have a phone and website, and organizers a phone, email and website (Events → Venues / Organizers). The event page shows them under "Where" and in a new "Organizer" row, with each organizer linked to their own page, and venue and organizer pages show them too. Email addresses are written so that address-harvesting bots can't read them.
 * Moving in from The Events Calendar brings its venues' phone and website and its organizers' phone, email, website and description along; from Modern Events Calendar, its organizers' phone, email and website and its locations' website. A re-import never overwrites details you've filled in yourself.
@@ -298,8 +301,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.44.0 =
 * Moving events in now keeps each event's own SEO settings: the custom title, meta description, focus keyword, robots, canonical and social fields from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO, for every plugin Beacon imports from. The old plugin's primary category and per-event schema are left behind. The dry run, the import summary and `wp beacon import` say how many events kept them, per SEO plugin.
-
-= 0.43.2 =
-* "Show images" now works in the list view too (grouped by day): each event's featured image sits on the left, with its time and title beside it, so a list of shows or classes can carry their posters. Turn it on in the Events block's settings or with images="yes" on the [beacon_events] shortcode. Off by default; the compact list stays text only.
 
 Older versions: see changelog.txt.

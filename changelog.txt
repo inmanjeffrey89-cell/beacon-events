@@ -1,5 +1,8 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.51.0 =
+* The import summary counts in the right number ("1 new event", "1 organizer and 1 category"); it said "1 organizers" before.
+
 = 0.50.0 =
 * Venues have a phone and website, and organizers a phone, email and website (Events → Venues / Organizers). The event page shows them under "Where" and in a new "Organizer" row, with each organizer linked to their own page, and venue and organizer pages show them too. Email addresses are written so that address-harvesting bots can't read them.
 * Moving in from The Events Calendar brings its venues' phone and website and its organizers' phone, email, website and description along; from Modern Events Calendar, its organizers' phone, email and website and its locations' website. A re-import never overwrites details you've filled in yourself.
