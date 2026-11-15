@@ -1283,9 +1283,10 @@ final class Import {
 		} elseif ( ! defined( 'EVENT_ORGANISER_VER' ) && is_404() && is_array( $eo = get_option( Source_EO::OPT_LINKS ) ) && ( $to = self::eo_redirect( $path, $eo ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found,Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			// Event Organiser: /events/event/<slug>/, /events/venue/<slug>/, its categories, tags and date archives (its URL
 			// bases as recorded at import); looked up only on a 404 after an Event Organiser import, so other sites pay nothing
-		} elseif ( preg_match( '#^event/([^/]+)/?$#', $path, $m ) && is_404() && ( $series = Combine::series_for_slug( sanitize_title( $m[1] ) ) ) ) {
-			// a single copy that was combined into a repeating event; links from emails keep their query (a cancel or
-			// payment-return link carries its token there)
+		} elseif ( preg_match( '#^(?:event|' . preg_quote( Events::bases()['event'], '#' ) . ')/([^/]+)/?$#', $path, $m ) && is_404() && ( $series = Combine::series_for_slug( sanitize_title( $m[1] ) ) ) ) {
+			// a single copy that was combined into a repeating event, at /event/ or at Beacon's own base while another calendar
+			// plugin holds /event/ (/beacon-event/); links from emails keep their query (a cancel or payment-return link carries
+			// its token there)
 			$to = (string) get_permalink( $series );
 			if ( $_GET ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- passed on unchanged to the same site
 				$to = add_query_arg( urlencode_deep( map_deep( wp_unslash( $_GET ), 'sanitize_text_field' ) ), $to ); } // phpcs:ignore WordPress.Security.NonceVerification.Recommended

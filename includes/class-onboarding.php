@@ -279,6 +279,21 @@ final class Onboarding {
 			array( 'qa', __( 'Sample: Online Q&A', 'beacon-events' ), $at( '+10 days', '19:00' ), $at( '+10 days', '20:00' ), '', false, true, null, $community ),
 			array( 'market', __( 'Sample: Holiday Market', 'beacon-events' ), $at( '+24 days', '00:00' ), $at( '+25 days', '23:59' ), '', true, false, array( 'name' => __( 'Riverside Park Pavilion', 'beacon-events' ), 'address' => '' ), $community ),
 		);
+		// a price on three samples and an organizer with contact details on the workshop, so a first look shows those fields too
+		$extra  = array(
+			'yoga'    => array( 'cost' => __( '$10 drop-in', 'beacon-events' ) ),
+			'pottery' => array(
+				'cost'       => __( '$45, clay and firing included', 'beacon-events' ),
+				'organizers' => array(
+					array(
+						'name'    => __( 'Riverside Arts Club', 'beacon-events' ),
+						'email'   => 'hello@example.com',
+						'website' => 'https://example.com/',
+					),
+				),
+			),
+			'potluck' => array( 'cost' => __( 'Free', 'beacon-events' ) ),
+		);
 		$names  = self::sample_term_names();
 		$before = array();
 		foreach ( $names as $tax => $list ) {
@@ -291,7 +306,7 @@ final class Onboarding {
 		self::$making = true;
 		foreach ( $events as $e ) {
 			Import::import_event(
-				array(
+				( $extra[ $e[0] ] ?? array() ) + array(
 					'uid'        => 'sample-' . $e[0],
 					'src_id'     => $e[0],
 					'title'      => $e[1],
@@ -324,12 +339,13 @@ final class Onboarding {
 
 	private static function sample_term_names(): array {
 		return array(
-			'beacon_venue'    => array( __( 'Main Studio', 'beacon-events' ), __( 'Riverside Park Pavilion', 'beacon-events' ) ),
-			'beacon_category' => array( __( 'Classes', 'beacon-events' ), __( 'Workshops', 'beacon-events' ), __( 'Community', 'beacon-events' ) ),
+			'beacon_venue'     => array( __( 'Main Studio', 'beacon-events' ), __( 'Riverside Park Pavilion', 'beacon-events' ) ),
+			'beacon_category'  => array( __( 'Classes', 'beacon-events' ), __( 'Workshops', 'beacon-events' ), __( 'Community', 'beacon-events' ) ),
+			'beacon_organizer' => array( __( 'Riverside Arts Club', 'beacon-events' ) ),
 		);
 	}
 
-	/** Deletes the sample events, then any sample venue or category nothing else uses. */
+	/** Deletes the sample events, then any sample venue, category or organizer nothing else uses. */
 	public static function remove_samples(): void {
 		self::guard( 'beacon_sample_remove' );
 		if ( ! current_user_can( 'delete_others_posts' ) ) { // samples were made by someone else, usually the admin

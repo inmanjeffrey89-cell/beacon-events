@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.51.0
+Stable tag: 0.52.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -269,6 +269,13 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.52.0 =
+* The Map link searches Google Maps for the venue's real name; names with "&" were sent as "&amp;".
+* An organizer with the same name as the event's venue and no contact details of its own isn't listed again under Organizer (a venue that runs its own events).
+* The Subscribe links wrap on narrow screens instead of running off the side (seen on Twenty Twenty-One's venue pages on phones).
+* The sample events show a price and an organizer, so a first look at the calendar shows those fields too.
+* An event's old address from before it was combined into a repeating event now redirects while another calendar plugin is still active too (Beacon's addresses then start with /beacon-event/).
+
 = 0.51.0 =
 * The import summary counts in the right number ("1 new event", "1 organizer and 1 category"); it said "1 organizers" before.
 
@@ -294,8 +301,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.45.0 =
 * New setting, Visitors in other time zones: show online events, or every event, in each visitor's own time zone as well. Their browser converts the time and names the zone, the views say so in one line, a time that lands on another day names that day, and an event page gets a "Your time" line. Off by default; visitors in the site's time zone see no change.
-
-= 0.44.0 =
-* Moving events in now keeps each event's own SEO settings: the custom title, meta description, focus keyword, robots, canonical and social fields from Yoast SEO, Rank Math, SEOPress, The SEO Framework and All in One SEO, for every plugin Beacon imports from. The old plugin's primary category and per-event schema are left behind. The dry run, the import summary and `wp beacon import` say how many events kept them, per SEO plugin.
 
 Older versions: see changelog.txt.

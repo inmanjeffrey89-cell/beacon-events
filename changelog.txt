@@ -1,5 +1,12 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.52.0 =
+* The Map link searches Google Maps for the venue's real name; names with "&" were sent as "&amp;".
+* An organizer with the same name as the event's venue and no contact details of its own isn't listed again under Organizer (a venue that runs its own events).
+* The Subscribe links wrap on narrow screens instead of running off the side (seen on Twenty Twenty-One's venue pages on phones).
+* The sample events show a price and an organizer, so a first look at the calendar shows those fields too.
+* An event's old address from before it was combined into a repeating event now redirects while another calendar plugin is still active too (Beacon's addresses then start with /beacon-event/).
+
 = 0.51.0 =
 * The import summary counts in the right number ("1 new event", "1 organizer and 1 category"); it said "1 organizers" before.
 
