@@ -4,7 +4,7 @@
 	var el = wp.element.createElement, F = wp.element.Fragment, __ = wp.i18n.__;
 	var useSelect = wp.data.useSelect, useDispatch = wp.data.useDispatch;
 	var useState = wp.element.useState, useEffect = wp.element.useEffect, apiFetch = wp.apiFetch;
-	var Panel = ( wp.editor && wp.editor.PluginDocumentSettingPanel ) || wp.editPost.PluginDocumentSettingPanel, TextControl = wp.components.TextControl, SelectControl = wp.components.SelectControl, ToggleControl = wp.components.ToggleControl, CheckboxControl = wp.components.CheckboxControl, Flex = wp.components.Flex, FlexItem = wp.components.FlexItem;
+	var Panel = ( wp.editor && wp.editor.PluginDocumentSettingPanel ) || wp.editPost.PluginDocumentSettingPanel, TextControl = wp.components.TextControl, SelectControl = wp.components.SelectControl, ToggleControl = wp.components.ToggleControl, CheckboxControl = wp.components.CheckboxControl, Flex = wp.components.Flex, FlexItem = wp.components.FlexItem, Button = wp.components.Button;
 	var _n = wp.i18n._n, _x = wp.i18n._x, sprintf = wp.i18n.sprintf;
 	var CFG = window.beaconPanel || {};
 	// Weekday names in the editor's language come from WordPress (beaconPanel.days / .dabbr, from $wp_locale).
@@ -155,6 +155,9 @@
 		var meta = useSelect( function ( sel ) { return sel( 'core/editor' ).getEditedPostAttribute( 'meta' ) || {}; }, [] );
 		var editPost = useDispatch( 'core/editor' ).editPost;
 		var set = function ( k, v ) { var m = {}; m[ k ] = v; editPost( { meta: m } ); };
+		var details = []; try { details = JSON.parse( meta._beacon_details || '[]' ); } catch ( x ) { details = []; } if ( ! Array.isArray( details ) ) { details = []; }
+		var setDetails = function ( d ) { set( '_beacon_details', d.length ? JSON.stringify( d ) : '' ); };
+		var setDetail = function ( i, patch ) { var n = details.slice(); n[ i ] = Object.assign( {}, n[ i ], patch ); setDetails( n ); };
 		var r = parse( meta._beacon_rrule ); r.BYPOS = r.BYDAY.length && r.BYDAY.every( function ( d ) { return /^-?\d[A-Z]{2}$/.test( d ); } ) ? r.BYDAY.join( ',' ) : '';
 		var setRule = function ( patch ) { var n = Object.assign( {}, r, patch ); set( '_beacon_rrule', build( n ) ); };
 		var allDay = meta._beacon_all_day === '1';
@@ -258,6 +261,18 @@
 			el( TextControl, { label: __( 'Tickets & info link', 'beacon-events' ), help: __( 'Optional: a button to your Eventbrite, Square or other page.', 'beacon-events' ), type: 'url', value: meta._beacon_link || '', placeholder: 'https://', onChange: function ( v ) { set( '_beacon_link', v ); }, onBlur: function () { var v = withScheme( meta._beacon_link ); if ( v !== ( meta._beacon_link || '' ) ) { set( '_beacon_link', v ); } } } ),
 			meta._beacon_link ? el( TextControl, { label: __( 'Button text', 'beacon-events' ), value: meta._beacon_link_label || '', placeholder: __( 'Tickets & info', 'beacon-events' ), onChange: function ( v ) { set( '_beacon_link_label', v ); } } ) : null,
 			el( TextControl, { label: __( 'Cost', 'beacon-events' ), help: __( 'Optional. Shown as you write it on the event page and in lists.', 'beacon-events' ), value: meta._beacon_cost || '', placeholder: __( 'e.g. $15, Free or $10 – $20', 'beacon-events' ), onChange: function ( v ) { set( '_beacon_cost', v ); } } ),
+			el( 'div', { className: 'beacon-more-details' },
+				el( 'p', { style: { fontWeight: 600, margin: '8px 0 4px' } }, __( 'More details', 'beacon-events' ) ),
+				details.map( function ( d, i ) {
+					return el( Flex, { key: 'd' + i, align: 'flex-end', gap: 2, style: { marginBottom: '8px' } },
+						el( FlexItem, { style: { flex: '1 1 40%' } }, el( TextControl, { label: __( 'Label', 'beacon-events' ), value: d.label || '', placeholder: __( 'Teacher', 'beacon-events' ), onChange: function ( v ) { setDetail( i, { label: v } ); } } ) ),
+						el( FlexItem, { style: { flex: '1 1 60%' } }, el( TextControl, { label: __( 'Value', 'beacon-events' ), value: d.value || '', placeholder: __( 'Lea Smith', 'beacon-events' ), onChange: function ( v ) { setDetail( i, { value: v } ); } } ) ),
+						el( Button, { variant: 'tertiary', isDestructive: true, label: __( 'Remove this detail', 'beacon-events' ), icon: 'no-alt', onClick: function () { var n = details.slice(); n.splice( i, 1 ); setDetails( n ); } } )
+					);
+				} ),
+				el( Button, { variant: 'secondary', onClick: function () { setDetails( details.concat( [ { label: '', value: '' } ] ) ); } }, __( 'Add a detail', 'beacon-events' ) ),
+				el( 'p', { className: 'components-base-control__help', style: { marginTop: '8px' } }, __( 'Optional rows for the event page, such as who is teaching or the age range. A row needs both a label and a value.', 'beacon-events' ) )
+			),
 			el( SelectControl, { label: __( 'Repeats', 'beacon-events' ), value: r.FREQ, options: [ { label: __( 'Does not repeat', 'beacon-events' ), value: '' }, { label: __( 'Daily', 'beacon-events' ), value: 'DAILY' }, { label: __( 'Weekly', 'beacon-events' ), value: 'WEEKLY' }, { label: __( 'Monthly', 'beacon-events' ), value: 'MONTHLY' }, { label: __( 'Yearly', 'beacon-events' ), value: 'YEARLY' } ], onChange: function ( v ) { setRule( { FREQ: v } ); } } ),
 			r.FREQ ? el( F, {},
 				el( NumberField, { label: __( 'Every (interval)', 'beacon-events' ), min: 1, max: 52, value: r.INTERVAL, onChange: function ( n ) { setRule( { INTERVAL: n } ); } } ),

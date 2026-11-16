@@ -14,7 +14,7 @@ use Beacon\Import;
  */
 final class Source_CSV {
 	const KEY     = 'csv';
-	const COLUMNS = array( 'uid', 'title', 'start', 'end', 'all_day', 'timezone', 'repeat', 'skip_dates', 'venue', 'address', 'organizer', 'categories', 'online', 'online_url', 'status', 'excerpt', 'description', 'image_url', 'slug', 'link', 'link_label', 'cost' );
+	const COLUMNS = array( 'uid', 'title', 'start', 'end', 'all_day', 'timezone', 'repeat', 'skip_dates', 'venue', 'address', 'organizer', 'categories', 'online', 'online_url', 'status', 'excerpt', 'description', 'image_url', 'slug', 'link', 'link_label', 'cost', 'details' );
 
 	public static function label(): string {
 		return __( 'CSV file', 'beacon-events' ); }
@@ -149,7 +149,7 @@ final class Source_CSV {
 		$rrule   = $g( 'repeat' ) !== '' ? $g( 'repeat' ) : $g( 'rrule' );
 		if ( $rrule ) {
 			$rrule = Import::normalize_rrule( strtoupper( preg_replace( '/^RRULE:/i', '', $rrule ) ), $note ); }
-		return array(
+		$n = array(
 			'uid'        => $uid,
 			'src_id'     => (int) $index + 2,
 			'title'      => $title,
@@ -178,6 +178,9 @@ final class Source_CSV {
 			'extra'      => array(),
 			'note'       => $note,
 		);
+		if ( array_key_exists( 'details', $r ) ) {
+			$n['details'] = Events::details_from_lines( $g( 'details' ) ); } // only when the file has the column, so an older export leaves them alone
+		return $n;
 	}
 
 	/* ---------------- export ---------------- */
@@ -233,6 +236,7 @@ final class Source_CSV {
 				$e['link'],
 				$e['link_label'],
 				$e['cost'],
+				implode( "\n", array_map( fn( $d ) => $d['label'] . ': ' . $d['value'], $e['details'] ) ),
 			);
 			// spreadsheet formula injection guard: a leading =, +, -, @ becomes text
 			fputcsv( $out, array_map( fn( $v ) => preg_match( '/^[=+\-@]/', (string) $v ) ? "'" . $v : $v, $row ) );

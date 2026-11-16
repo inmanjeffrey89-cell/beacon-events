@@ -198,6 +198,8 @@ final class Admin {
 		echo '<div class="beacon-full"><label>' . esc_html__( 'Tickets & info link', 'beacon-events' ) . '</label><input type="url" name="beacon[link]" value="' . esc_attr( $e['link'] ) . '" placeholder="' . esc_attr__( 'e.g. your Eventbrite or Square page', 'beacon-events' ) . '"></div>';
 		echo '<div><label>' . esc_html__( 'Button text', 'beacon-events' ) . '</label><input type="text" name="beacon[link_label]" value="' . esc_attr( $e['link_label'] ) . '" placeholder="' . esc_attr__( 'Tickets & info', 'beacon-events' ) . '"></div>';
 		echo '<div><label>' . esc_html__( 'Cost', 'beacon-events' ) . '</label><input type="text" name="beacon[cost]" value="' . esc_attr( $e['cost'] ) . '" placeholder="' . esc_attr__( 'e.g. $15, Free or $10 – $20', 'beacon-events' ) . '"></div>';
+		$lines = implode( "\n", array_map( fn( $d ) => $d['label'] . ': ' . $d['value'], $e['details'] ) );
+		echo '<div class="beacon-full"><label for="beacon-details">' . esc_html__( 'More details', 'beacon-events' ) . '</label><textarea id="beacon-details" name="beacon[details]" rows="3" placeholder="' . esc_attr__( "Teacher: Lea Smith\nAges: 8 and up", 'beacon-events' ) . '">' . esc_textarea( $lines ) . '</textarea><span class="description">' . esc_html__( 'Optional. One per line, as "Label: value". Shown on the event page.', 'beacon-events' ) . '</span></div>';
 		echo '</div><p class="beacon-sentence">' . esc_html( Recurrence::describe( $e['rrule'] ) ) . '</p>';
 		// Per-date changes: cancel one date or move it, without touching the rule. Rows come from the last save.
 		$occ = $e['rrule'] ? Events::occurrences_for_edit( $post->ID, 8 ) : array();
@@ -253,7 +255,7 @@ final class Admin {
 			if ( in_array( $key, $skip, true ) ) {
 				continue; }
 			foreach ( $values as $v ) {
-				add_post_meta( $new, $key, maybe_unserialize( $v ) ); }
+				add_post_meta( $new, $key, wp_slash( maybe_unserialize( $v ) ) ); } // slashed: add_post_meta() unslashes, which breaks JSON escapes
 		}
 		foreach ( get_object_taxonomies( Events::CPT ) as $tax ) {
 			$terms = wp_get_object_terms( $id, $tax, array( 'fields' => 'ids' ) );
@@ -375,6 +377,7 @@ final class Admin {
 		update_post_meta( $post_id, Events::META['link'], Events::sanitize_url( (string) ( $raw_links['link'] ?? '' ) ) );
 		update_post_meta( $post_id, Events::META['link_label'], sanitize_text_field( (string) ( $in['link_label'] ?? '' ) ) );
 		update_post_meta( $post_id, Events::META['cost'], mb_substr( sanitize_text_field( (string) ( $in['cost'] ?? '' ) ), 0, 100 ) );
+		Events::save_details( $post_id, Events::details_from_lines( (string) ( $raw_links['details'] ?? '' ) ) );
 		// Per-date changes: the box shows the next few dates; overrides for dates it did not show are kept as they were.
 		$ov = Events::get( $post_id )['overrides'];
 		foreach ( (array) ( $in['ov'] ?? array() ) as $ymd => $row ) {

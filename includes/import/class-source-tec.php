@@ -4,6 +4,7 @@ namespace Beacon\Import;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+use Beacon\Events;
 use Beacon\Import;
 
 /** The Events Calendar (free and Pro, versions 5 and 6): read straight from the database, TEC active or not. */
@@ -160,7 +161,35 @@ final class Source_TEC {
 			'extra'        => $extra,
 			'note'         => $note,
 			'series'       => self::series_slug( (int) $tec_id ),
+			'details'      => self::additional_fields( (int) $tec_id ),
 		);
+	}
+
+	/**
+	 * Events Calendar Pro's "Additional Fields" (Events → Settings → Additional Fields): the list lives in the TEC options
+	 * (tribe_events_calendar_options → custom-fields: name _ecp_custom_N, label, type), each event's value in post meta
+	 * _ecp_custom_N, checkbox choices joined by "|" (Pro's Custom_Meta, 7.4). Readable with Pro switched off. Shown the way
+	 * Pro shows them: choices joined by ", ", a website field as a link.
+	 */
+	private static function additional_fields( int $tec_id ): array {
+		static $fields = null;
+		if ( null === $fields ) {
+			$o      = get_option( 'tribe_events_calendar_options', array() );
+			$fields = is_array( $o ) && is_array( $o['custom-fields'] ?? null ) ? array_values( array_filter( $o['custom-fields'], fn( $f ) => is_array( $f ) && ! empty( $f['name'] ) && isset( $f['label'] ) && '' !== trim( (string) $f['label'] ) ) ) : array();
+		}
+		$rows = array();
+		foreach ( $fields as $f ) {
+			$v = trim( str_replace( '|', ', ', (string) get_post_meta( $tec_id, (string) $f['name'], true ) ) );
+			if ( '' === $v ) {
+				continue; }
+			if ( 'url' === ( $f['type'] ?? '' ) ) {
+				$v = Events::sanitize_url( $v ); }
+			$rows[] = array(
+				'label' => wp_strip_all_tags( (string) $f['label'] ),
+				'value' => $v,
+			);
+		}
+		return $rows;
 	}
 
 	/** Events Calendar Pro (6+) groups events into series (tribe_event_series, /series/<slug>/) through its own relationship table. */

@@ -829,6 +829,21 @@ final class Views {
 		return implode( ' <span class="beacon-sep">·</span> ', $parts );
 	}
 
+	/** The event's More details rows (label + value) for its page; filter beacon_show_details → false hides them. */
+	public static function details_on( int $id ): array {
+		$rows = Events::decode_details( (string) get_post_meta( $id, Events::META['details'], true ) );
+		return $rows && apply_filters( 'beacon_show_details', true, $id ) ? $rows : array();
+	}
+
+	/** One value as HTML: a bare web address becomes a link; otherwise the kept formatting (links, bold, italic). */
+	public static function detail_value( string $v ): string {
+		if ( preg_match( '#^https?://\S+$#i', $v ) ) {
+			$host = (string) wp_parse_url( $v, PHP_URL_HOST );
+			return '<a href="' . esc_url( $v ) . '" target="_blank" rel="noopener">' . esc_html( preg_replace( '/^www\./', '', $host ) . rtrim( (string) wp_parse_url( $v, PHP_URL_PATH ), '/' ) ) . '</a>';
+		}
+		return Events::kses_detail( $v );
+	}
+
 	/** The event's cost as written ("$15", "Free"), for its page and list rows; filter beacon_show_cost → false hides it. */
 	private static function cost_on( int $id ): string {
 		$cost = (string) get_post_meta( $id, Events::META['cost'], true );
@@ -1405,6 +1420,8 @@ final class Views {
 		if ( '' !== $orgs ) {
 			$count = substr_count( $orgs, 'class="beacon-organizer-item"' );
 			$rows .= '<div class="beacon-detail beacon-organizer-row"><span class="beacon-detail-label">' . esc_html( _nx( 'Organizer', 'Organizers', $count, 'event page label', 'beacon-events' ) ) . '</span> <span class="beacon-detail-value">' . $orgs . '</span></div>'; }
+		foreach ( self::details_on( $id ) as $d ) {
+			$rows .= '<div class="beacon-detail beacon-more-row"><span class="beacon-detail-label">' . esc_html( $d['label'] ) . '</span> <span class="beacon-detail-value">' . self::detail_value( $d['value'] ) . '</span></div>'; }
 		if ( Events::has_date_links( $id ) ) {
 			// Dates with a registration page each (Blackbaud, Altru, Eventbrite sessions): one button can't serve them all,
 			// so the next dates are listed, each with its own link.

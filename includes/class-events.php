@@ -20,6 +20,7 @@ final class Events {
 		'link'       => '_beacon_link',        // "Tickets & info" button: an outside ticket page (Eventbrite, Square…) or website
 		'link_label' => '_beacon_link_label',
 		'cost'       => '_beacon_cost',        // what it costs, as written: "$15", "Free", "$10 – $20" (0.49.0)
+		'details'    => '_beacon_details',     // more rows for the event page: JSON [{"label":"Caller","value":"Lea Smith"}] (0.53.0)
 	);
 	const HORIZON = '_beacon_horizon';              // last date a series was materialised to (Y-m-d)
 	const REFRESH = 'beacon_refresh_occurrences';   // daily: keeps every open-ended series two years ahead
@@ -338,6 +339,7 @@ final class Events {
 			'overrides'  => array( __CLASS__, 'sanitize_overrides' ),
 			'start'      => array( __CLASS__, 'sanitize_datetime' ),
 			'end'        => array( __CLASS__, 'sanitize_datetime' ),
+			'details'    => array( __CLASS__, 'sanitize_details' ),
 		);
 		foreach ( self::META as $name => $key ) {
 			register_post_meta(
@@ -378,7 +380,86 @@ final class Events {
 			'link'       => $m( 'link' ),
 			'link_label' => $m( 'link_label' ),
 			'cost'       => $m( 'cost' ),
+			'details'    => self::decode_details( $m( 'details' ) ),
 			'overrides'  => self::decode_overrides( $m( 'overrides' ) ),
+		);
+	}
+
+	/* ---------------- more details ---------------- */
+
+	/** Most rows an event keeps, and the longest label and value. */
+	const DETAILS_MAX = 20;
+
+	/**
+	 * More details rows for an event's page ("Caller: Lea Smith", "Ages: 8 and up"), stored as JSON. Accepts the JSON
+	 * string the editors and REST send, or an array of { label, value } (the importers). Rows without a label or a value
+	 * are dropped; labels are plain text, values keep the light formatting The Events Calendar Pro allowed in its
+	 * Additional Fields (links, bold, italic). Returns '' when nothing is left, so the meta stays empty.
+	 *
+	 * @param string|array $in JSON or a list of rows.
+	 */
+	public static function sanitize_details( $in ): string {
+		$rows = is_array( $in ) ? $in : json_decode( (string) $in, true );
+		$out  = array();
+		foreach ( is_array( $rows ) ? $rows : array() as $r ) {
+			if ( ! is_array( $r ) ) {
+				continue; }
+			$label = mb_substr( trim( sanitize_text_field( (string) ( $r['label'] ?? '' ) ) ), 0, 60 );
+			$value = mb_substr( trim( self::kses_detail( (string) ( $r['value'] ?? '' ) ) ), 0, 500 );
+			if ( '' === $label || '' === $value ) {
+				continue; }
+			$out[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+			if ( count( $out ) >= self::DETAILS_MAX ) {
+				break; }
+		}
+		return $out ? (string) wp_json_encode( $out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) : '';
+	}
+
+	/** Saves the rows (an array or JSON). Slashed, because update_post_meta() unslashes and would break the JSON's escapes. */
+	public static function save_details( int $id, $rows ): void {
+		update_post_meta( $id, self::META['details'], wp_slash( self::sanitize_details( $rows ) ) );
+	}
+
+	/** "Label: value" lines (the classic editor's box, CSV text) to rows; a line without a colon is skipped. */
+	public static function details_from_lines( string $text ): array {
+		$rows = array();
+		foreach ( preg_split( '/\r\n|\r|\n/', $text ) as $line ) {
+			$at = strpos( $line, ':' );
+			if ( false === $at ) {
+				continue; }
+			$rows[] = array(
+				'label' => trim( substr( $line, 0, $at ) ),
+				'value' => trim( substr( $line, $at + 1 ) ),
+			);
+		}
+		return $rows;
+	}
+
+	/** The stored rows as an array (anything malformed is skipped). */
+	public static function decode_details( string $json ): array {
+		if ( '' === $json ) {
+			return array(); }
+		$clean = self::sanitize_details( $json );
+		return '' === $clean ? array() : (array) json_decode( $clean, true );
+	}
+
+	/** A value may keep links and bold/italic, nothing else (the same tags The Events Calendar Pro allowed). */
+	public static function kses_detail( string $v ): string {
+		return wp_kses(
+			$v,
+			array(
+				'a'      => array(
+					'href'  => array(),
+					'title' => array(),
+				),
+				'b'      => array(),
+				'i'      => array(),
+				'strong' => array(),
+				'em'     => array(),
+			)
 		);
 	}
 

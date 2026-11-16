@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.52.0
+Stable tag: 0.53.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 * **Every event in its own timezone.** A class in Boston shows 10 am Boston time even if your site is set to Chicago, with the zone's abbreviation when they differ. Turn on one setting and visitors in other time zones see the times in their own, for online events or for all of them.
 * **Online events.** Flip "Online event", paste the meeting link, and visitors get a Join button; calendar apps get the link too.
 * **Search engines understand your events.** schema.org Event markup on every event page, one entry per upcoming date.
-* **The details people look for.** Each event can show its cost as you'd say it ("$15", "Free", "$10 – $20"), and its organizer with their phone, email and website. Venues have a street address with a map link (no API key, no embedded map slowing the page down) and their own phone and website. Venue and organizer pages list their events.
+* **The details people look for.** Each event can show its cost as you'd say it ("$15", "Free", "$10 – $20"), and its organizer with their phone, email and website. Venues have a street address with a map link (no API key, no embedded map slowing the page down) and their own phone and website. Venue and organizer pages list their events. Anything else goes in More details, a label and a value each ("Teacher: Lea Smith", "Ages: 8 and up").
 * **Export.** Every event has "Add to calendar (.ics)", "Add to Google Calendar" and "Add to Outlook" links (Outlook.com, and Outlook for work or school accounts), and your whole calendar has a subscribable feed. Turn on "Subscribe links" on a calendar and visitors can subscribe to its events in Google Calendar, Outlook.com, Microsoft 365 or Apple Calendar in one click; category, venue and organizer pages have the same links.
 * **A free alternative to The Events Calendar, Events Manager, Event Organiser, EventPrime, My Calendar, Sugar Calendar, Eventin, Modern Events Calendar, EventON, WP Event Manager, WP Events Manager (ThimPress) and All-in-One Event Calendar, and it brings your events over from any of them.** Events → Import / Export copies events, venues, organizers, categories, images, recurring rules and each event's own SEO title and description in one click, without touching the old plugin. A dry run shows first what would be created, updated or skipped, and both the dry run and the import can be downloaded as a report with one row per event. Changed your mind? Undo the import in one click, and turn the old plugin back on. Deactivate the old plugin when you are happy; old links are redirected. Weekly classes that were entered one date at a time (the only way in plugins that charge for repeating events) can be combined into one repeating event in a click. Anything else comes in through a CSV file, and every event can go out as one.
 * **Uninstalls clean.** Turn on "delete all data on uninstall" and the plugin removes everything it created — events, venues, categories, settings, its table.
@@ -139,7 +139,7 @@ No. The stylesheet only does layout. Colours, fonts and spacing inherit from you
 Yes. After an import (or any time), Events → Import / Export lists the events that look like one series entered date by date: same title, time, length and venue, on a regular pattern such as every Tuesday, every other Saturday, the second Tuesday of the month or three days in a row. Copies that carry their own date in the title ("Pick Your Own Project – October 1, 2026", "Chef's Table Class 10/2/26") count as the same title, and the repeating event is named without the date. Tick the ones you want and click Combine. The earliest copy becomes the repeating event, a missing week becomes a skipped date, the other copies go to the trash, and their old links redirect to the new event. Events with tickets or RSVPs are left alone. From the command line: `wp beacon combine --dry-run`, then `wp beacon combine`.
 
 = Can I move my events from The Events Calendar or Events Manager? =
-Yes, and the migration is one click. Events → Import / Export finds what either plugin stored in your database (it works even if that plugin is already deactivated) and copies events, venues with addresses, organizers, categories, featured images, timezones and recurring rules across. Nothing is deleted. Run it again later and it updates what it imported instead of making duplicates. Old event, venue and category links are redirected to the imported items, including Events Calendar Pro's page for each date of a series (/event/yoga/2026-10-06/), its series pages (/series/yoga/), and its week, photo, map and summary views, which go to your calendar page.
+Yes, and the migration is one click. Events → Import / Export finds what either plugin stored in your database (it works even if that plugin is already deactivated) and copies events, venues with addresses, organizers, categories, featured images, timezones and recurring rules across. Nothing is deleted. Run it again later and it updates what it imported instead of making duplicates. Old event, venue and category links are redirected to the imported items, including Events Calendar Pro's page for each date of a series (/event/yoga/2026-10-06/), its series pages (/series/yoga/), and its week, photo, map and summary views, which go to your calendar page. Events Calendar Pro's Additional Fields come across as More details on each event, under the same labels.
 
 Watch the whole move, step by step (two minutes):
 
@@ -269,6 +269,11 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.53.0 =
+* New: More details on events. Add rows with a label and a value ("Teacher: Lea Smith", "Ages: 8 and up") in the When panel or the classic editor box; they show on the event page with the other details. A web address becomes a link.
+* The Events Calendar importer brings Events Calendar Pro's Additional Fields across as More details, labelled the same, with checkbox choices joined and website fields as links. The CSV import and export carry them in a "details" column.
+* Duplicate keeps text with quotes in it intact in the copy's details and per-date changes.
+
 = 0.52.0 =
 * The Map link searches Google Maps for the venue's real name; names with "&" were sent as "&amp;".
 * An organizer with the same name as the event's venue and no contact details of its own isn't listed again under Organizer (a venue that runs its own events).
@@ -298,8 +303,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.46.0 =
 * After two weeks of use, the Events screen asks a site's administrators once for a review on wordpress.org, in one line with "Write a review", "Maybe later" (asks again in two months) and "Don't ask again". It only shows to administrators of sites with at least three events of their own, never next to the "Create a calendar page" line, and never as an admin notice. Turn it off with the beacon_review_line filter.
-
-= 0.45.0 =
-* New setting, Visitors in other time zones: show online events, or every event, in each visitor's own time zone as well. Their browser converts the time and names the zone, the views say so in one line, a time that lands on another day names that day, and an event page gets a "Your time" line. Off by default; visitors in the site's time zone see no change.
 
 Older versions: see changelog.txt.

@@ -707,6 +707,8 @@ final class Import {
 		update_post_meta( $id, Events::META['link'], $link );
 		update_post_meta( $id, Events::META['link_label'], $label );
 		update_post_meta( $id, Events::META['cost'], self::cost_from( $n ) );
+		if ( array_key_exists( 'details', $n ) ) {
+			Events::save_details( $id, (array) $n['details'] ); } // only sources that have such fields (TEC Pro's Additional Fields, CSV)
 		if ( $n['thumbnail_id'] ) {
 			set_post_thumbnail( $id, (int) $n['thumbnail_id'] );
 		} elseif ( $n['image_url'] && ! has_post_thumbnail( $id ) ) {

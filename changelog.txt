@@ -1,5 +1,10 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.53.0 =
+* New: More details on events. Add rows with a label and a value ("Teacher: Lea Smith", "Ages: 8 and up") in the When panel or the classic editor box; they show on the event page with the other details. A web address becomes a link.
+* The Events Calendar importer brings Events Calendar Pro's Additional Fields across as More details, labelled the same, with checkbox choices joined and website fields as links. The CSV import and export carry them in a "details" column.
+* Duplicate keeps text with quotes in it intact in the copy's details and per-date changes.
+
 = 0.52.0 =
 * The Map link searches Google Maps for the venue's real name; names with "&" were sent as "&amp;".
 * An organizer with the same name as the event's venue and no contact details of its own isn't listed again under Organizer (a venue that runs its own events).
