@@ -384,7 +384,7 @@ final class Onboarding {
 					'post_type'    => 'page',
 					'post_status'  => 'publish',
 					'post_title'   => __( 'Calendar', 'beacon-events' ),
-					'post_content' => '<!-- wp:beacon/events {"view":"month","filters":true} /-->' . "\n\n" . '<!-- wp:heading {"level":3} -->' . "\n" . '<h3 class="wp-block-heading">' . esc_html__( 'Coming up', 'beacon-events' ) . '</h3>' . "\n" . '<!-- /wp:heading -->' . "\n\n" . '<!-- wp:beacon/events {"view":"list","layout":"compact","limit":5} /-->',
+					'post_content' => '<!-- wp:beacon/events {"view":"month","filters":true' . ( Compat::had_filter_bar() ? ',"moreFilters":true' : '' ) . '} /-->' . "\n\n" . '<!-- wp:heading {"level":3} -->' . "\n" . '<h3 class="wp-block-heading">' . esc_html__( 'Coming up', 'beacon-events' ) . '</h3>' . "\n" . '<!-- /wp:heading -->' . "\n\n" . '<!-- wp:beacon/events {"view":"list","layout":"compact","limit":5} /-->',
 				),
 				true
 			);

@@ -4,7 +4,7 @@ Tags: events calendar, recurring events, google calendar, ical, ics
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.53.0
+Stable tag: 0.54.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Recurring rules use the iCalendar RRULE standard, the same format Google Calenda
 
 * **Recurring events are free.** Daily, weekly, monthly ("second Tuesday", "last Friday", "the first and third Thursday"), yearly — with an end date or a count, dates you can skip, single dates you can cancel or move, and a ticket link per date when each date has its own registration page.
 * **Import from Google Calendar or any ICS feed, and stay in sync.** Feeds are checked hourly. Every sync is logged — created, updated, removed — so nothing drifts silently. Events that disappear from a feed are set to draft, never deleted behind your back.
-* **Views that look like your site.** List, week, month and day views as blocks, shortcodes or an Elementor widget, with an optional filter bar (category, venue, search). The week view is a class timetable: a column per day, stacked into rows on phones and narrow columns. Our stylesheet does layout only — colours and fonts come from your theme, and every element has a class you can target. Give a category a colour and its events get a dot or a bar.
+* **Views that look like your site.** List, week, month and day views as blocks, shortcodes or an Elementor widget, with an optional filter bar (category, venue, search, and with "More filters" also organizer, day of the week and time of day). The week view is a class timetable: a column per day, stacked into rows on phones and narrow columns. Our stylesheet does layout only — colours and fonts come from your theme, and every element has a class you can target. Give a category a colour and its events get a dot or a bar.
 * **A month you can print.** Under every month view, "Print this month" opens the month on a page of its own, laid out for one landscape sheet: times first, full titles, your category colours with a key, and the calendar's address at the foot. Handy for a noticeboard or the front desk.
 * **No bloat.** Styles load only on pages that show events. No add-on store, no upsell screens, no nag notices.
 * **Accessible.** The month view is a real table with column headers, each day link carries its full date for screen readers, and on Twenty Twenty-Five every view passes axe-core's automated WCAG 2.1 AA checks, colour contrast included.
@@ -52,6 +52,8 @@ One database table, `{prefix}beacon_occurrences`, holding the expanded dates of 
 `[beacon_events view="list" days="60" limit="20" category="workshops"]` — `category` takes one slug or several, comma-separated (`category="workshops,talks"` shows events in either).
 `[beacon_events view="month"]`
 `[beacon_events view="list" filters="1"]` — adds the category / venue / search bar and a list / week / month switch.
+`more_filters="yes"` — with `filters="1"`, the bar also offers organizer, day of the week and time of day (the block's switch: "More filters").
+`weekdays="sat,sun"` and `times="evening"` — only events on those days, or at that time of day (morning, afternoon, evening, night, allday), in the event's own time zone.
 `[beacon_events layout="compact" limit="5"]` — one line per event, for sidebars.
 `once="1"` — in a list, a repeating event shows only its next date (a weekly class doesn't fill a "Coming up" box).
 `[beacon_events view="week"]` — this week as a timetable, with previous/next links. It starts on the day set in Settings → General ("Week Starts On").
@@ -127,6 +129,9 @@ Yes. Enter the weekly service once as a recurring event, add special services an
 
 = How do I connect Google Calendar? =
 In Google Calendar, open the calendar's settings, make it public ("Make available to public"), and copy either its "Public address in iCal format" or its share link. Paste it under Events → Settings → Calendar feeds and save: the events come in straight away, and after that it syncs every hour ("Sync feeds now" does it on demand). webcal:// links work too. If Google ever answers with a web page instead of the calendar (say the calendar was made private), the sync stops and changes nothing, and the log says why.
+
+= I only want to show my Google Calendar on a page. Do I need all of this? =
+No. If the events live in Google Calendar (or Outlook or Apple Calendar) and you just want them on a page in your theme's fonts, our separate free block [Beacon Calendar Feed](https://wordpress.org/plugins/beacon-calendar-feed/) does only that: paste the calendar's link into the block and it shows a list or a month without turning the events into WordPress posts. Beacon Events is for when you want the events on your own site, with their own pages, categories, venues and sign-ups.
 
 = What happens if an event is removed from my Google Calendar? =
 It's set to draft on your site and the removal is written to the sync log. You decide whether to delete it.
@@ -269,6 +274,10 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 7. With Beacon Events Pro, people sign up for a class date. The form shows the places left, a full date offers a waitlist, and each booking gets a confirmation and a reminder email.
 
 == Changelog ==
+= 0.54.0 =
+* New "More filters" switch for the Events block's filter bar (more_filters="yes" for the shortcode): visitors can also pick an organizer, a day of the week and a time of day (morning, afternoon, evening, night or all-day events). These are the filters most sites set up in The Events Calendar's paid Filter Bar add-on, and a site that had Filter Bar gets them on its old calendar shortcodes and on the calendar page Beacon creates. The picks stay in the address, so a filtered view can be shared or printed.
+* The shortcode takes weekdays="sat,sun" and times="evening" to limit a calendar the same way without the bar.
+
 = 0.53.0 =
 * New: More details on events. Add rows with a label and a value ("Teacher: Lea Smith", "Ages: 8 and up") in the When panel or the classic editor box; they show on the event page with the other details. A web address becomes a link.
 * The Events Calendar importer brings Events Calendar Pro's Additional Fields across as More details, labelled the same, with checkbox choices joined and website fields as links. The CSV import and export carry them in a "details" column.
@@ -300,8 +309,5 @@ Yes. Give them the "Event organizer" role (Users → Edit user → Role). They c
 
 = 0.47.0 =
 * Event pages now have "Add to Outlook.com" and "Add to Outlook (work or school)" links next to the .ics and Google Calendar ones. Outlook's link carries one date, so for a repeating event it adds the date the page shows (the next one, or a date page's own date) and links that date's page; "Add to calendar (.ics)" still brings every date. Turn them off with the beacon_outlook_links filter.
-
-= 0.46.0 =
-* After two weeks of use, the Events screen asks a site's administrators once for a review on wordpress.org, in one line with "Write a review", "Maybe later" (asks again in two months) and "Don't ask again". It only shows to administrators of sites with at least three events of their own, never next to the "Create a calendar page" line, and never as an admin notice. Turn it off with the beacon_review_line filter.
 
 Older versions: see changelog.txt.

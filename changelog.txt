@@ -1,5 +1,9 @@
 Beacon Events changelog: every version. The readme on wordpress.org shows the latest few.
 
+= 0.54.0 =
+* New "More filters" switch for the Events block's filter bar (more_filters="yes" for the shortcode): visitors can also pick an organizer, a day of the week and a time of day (morning, afternoon, evening, night or all-day events). These are the filters most sites set up in The Events Calendar's paid Filter Bar add-on, and a site that had Filter Bar gets them on its old calendar shortcodes and on the calendar page Beacon creates. The picks stay in the address, so a filtered view can be shared or printed.
+* The shortcode takes weekdays="sat,sun" and times="evening" to limit a calendar the same way without the bar.
+
 = 0.53.0 =
 * New: More details on events. Add rows with a label and a value ("Teacher: Lea Smith", "Ages: 8 and up") in the When panel or the classic editor box; they show on the event page with the other details. A web address becomes a link.
 * The Events Calendar importer brings Events Calendar Pro's Additional Fields across as More details, labelled the same, with checkbox choices joined and website fields as links. The CSV import and export carry them in a "details" column.

@@ -300,6 +300,10 @@ final class Views {
 				'type'    => 'boolean',
 				'default' => false,
 			),
+			'moreFilters' => array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
 		);
 		wp_register_script( 'beacon-events-editor', BEACON_URL . 'assets/editor.js', array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-server-side-render', 'wp-i18n' ), BEACON_VERSION, true );
 		wp_set_script_translations( 'beacon-events-editor', 'beacon-events', BEACON_DIR . 'languages' );
@@ -353,6 +357,9 @@ final class Views {
 					'show_venue' => '',
 					'images'     => '',
 					'subscribe'  => '',
+					'more_filters' => '',
+					'weekdays'   => '',
+					'times'      => '',
 				),
 				$atts,
 				'beacon_events'
@@ -373,6 +380,8 @@ final class Views {
 				'q'         => '',
 				'day'       => '',
 				'week'      => '',
+				'weekdays'  => '',
+				'times'     => '',
 			),
 			$a
 		);
@@ -399,7 +408,22 @@ final class Views {
 			$a['q'] = $g( 'bf_q' );
 			if ( in_array( $g( 'bf_view' ), array( 'list', 'week', 'month' ), true ) ) {
 				$view = $g( 'bf_view' ); }
-			$bar = self::filter_bar( $a, $view, $own_cat, $own_venue );
+			$own_org = self::slugs( (string) $a['organizer'] );
+			$more    = self::more_filters_on( $a );
+			if ( $more ) { // organizer, day of the week, time of day: also narrow inside the block's own limits only
+				$pick = sanitize_title( $g( 'bf_org' ) );
+				if ( $pick && ( ! $own_org || in_array( $pick, $own_org, true ) ) ) {
+					$a['organizer'] = $pick; }
+				$pick = self::weekdays_of( $g( 'bf_day' ) );
+				$own  = self::weekdays_of( (string) $a['weekdays'] );
+				if ( 1 === count( $pick ) && ( ! $own || in_array( $pick[0], $own, true ) ) ) {
+					$a['weekdays'] = (string) $pick[0]; }
+				$pick = self::times_of( $g( 'bf_time' ) );
+				$own  = self::times_of( (string) $a['times'] );
+				if ( 1 === count( $pick ) && ( ! $own || in_array( $pick[0], $own, true ) ) ) {
+					$a['times'] = $pick[0]; }
+			}
+			$bar = self::filter_bar( $a, $view, $own_cat, $own_venue, $own_org, $more );
 		}
 		// a month grid's day numbers link to that day; ?beacon_day=YYYY-MM-DD switches the same block to the day view
 		$bd = isset( $_GET['beacon_day'] ) ? sanitize_text_field( wp_unslash( $_GET['beacon_day'] ) ) : '';
@@ -471,8 +495,10 @@ final class Views {
 	 * Category / venue selects, a search box and a list/month switch. Plain GET form: works without JavaScript.
 	 * $own_cat / $own_venue: the block's own limits. The selects then offer only those categories, and only the venues
 	 * those events use, so a class timetable's bar doesn't list the site's other calendars.
+	 * $more ("More filters"): organizer, day of the week and time of day selects too, the filters The Events Calendar's
+	 * paid Filter Bar add-on is most often set up with.
 	 */
-	private static function filter_bar( array $a, string $view, array $own_cat = array(), array $own_venue = array() ): string {
+	private static function filter_bar( array $a, string $view, array $own_cat = array(), array $own_venue = array(), array $own_org = array(), bool $more = false ): string {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only
 		$cur = fn( string $k ) => isset( $_GET[ $k ] ) ? sanitize_text_field( wp_unslash( $_GET[ $k ] ) ) : '';
 		// phpcs:enable
@@ -488,10 +514,29 @@ final class Views {
 			$used   = is_wp_error( $used ) ? array() : array_map( 'intval', $used );
 			$venues = $venues && ! is_wp_error( $venues ) ? array_values( array_filter( $venues, fn( $t ) => in_array( (int) $t->term_id, $used, true ) ) ) : $venues;
 		}
-		$out    = '<form class="beacon-filters" method="get" action="' . esc_url( remove_query_arg( array( 'bf_cat', 'bf_venue', 'bf_q', 'bf_view', 'beacon_month', 'beacon_day', 'beacon_week' ) ) ) . '">';
+		$orgs = array();
+		if ( $more ) {
+			$orgs = get_terms( array( 'taxonomy' => 'beacon_organizer', 'hide_empty' => true ) );
+			$orgs = is_wp_error( $orgs ) ? array() : $orgs;
+			if ( $own_org ) {
+				$orgs = array_values( array_filter( $orgs, fn( $t ) => in_array( $t->slug, $own_org, true ) ) );
+			} elseif ( $own_cat || $own_venue ) { // only the organizers of the events this block can show
+				$ids = array();
+				foreach ( array( 'beacon_category' => $own_cat, 'beacon_venue' => $own_venue ) as $tax => $own ) {
+					$terms = $own ? get_terms( array( 'taxonomy' => $tax, 'slug' => $own, 'fields' => 'ids', 'hide_empty' => false ) ) : array();
+					$in    = $terms && ! is_wp_error( $terms ) ? get_objects_in_term( array_map( 'intval', $terms ), $tax ) : array();
+					$in    = is_wp_error( $in ) ? array() : array_map( 'intval', $in );
+					$ids   = $own ? ( $ids ? array_intersect( $ids, $in ) : $in ) : $ids;
+				}
+				$used = $ids ? wp_get_object_terms( array_values( $ids ), 'beacon_organizer', array( 'fields' => 'ids' ) ) : array();
+				$used = is_wp_error( $used ) ? array() : array_map( 'intval', $used );
+				$orgs = array_values( array_filter( $orgs, fn( $t ) => in_array( (int) $t->term_id, $used, true ) ) );
+			}
+		}
+		$out    = '<form class="beacon-filters" method="get" action="' . esc_url( remove_query_arg( array_merge( self::FILTER_ARGS, array( 'beacon_month', 'beacon_day', 'beacon_week' ) ) ) ) . '">';
 		// keep the page's own query (e.g. ?pagename=calendar on plain permalinks)
 		foreach ( wp_parse_args( (string) wp_parse_url( (string) ( $_SERVER['REQUEST_URI'] ?? '' ), PHP_URL_QUERY ) ) as $k => $v ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- keys/values re-escaped below
-			if ( ! in_array( $k, array( 'bf_cat', 'bf_venue', 'bf_q', 'bf_view', 'beacon_month', 'beacon_day', 'beacon_week' ), true ) && is_string( $v ) ) {
+			if ( ! in_array( $k, array_merge( self::FILTER_ARGS, array( 'beacon_month', 'beacon_day', 'beacon_week' ) ), true ) && is_string( $v ) ) {
 				$out .= '<input type="hidden" name="' . esc_attr( sanitize_key( $k ) ) . '" value="' . esc_attr( sanitize_text_field( $v ) ) . '">'; }
 		}
 		if ( $cats && ! is_wp_error( $cats ) ) {
@@ -504,6 +549,28 @@ final class Views {
 			$out .= '<select name="bf_venue" aria-label="' . esc_attr__( 'Venue', 'beacon-events' ) . '"><option value="">' . esc_html__( 'All venues', 'beacon-events' ) . '</option>';
 			foreach ( $venues as $t ) {
 				$out .= '<option value="' . esc_attr( $t->slug ) . '" ' . selected( $cur( 'bf_venue' ), $t->slug, false ) . '>' . esc_html( $t->name ) . '</option>'; }
+			$out .= '</select>';
+		}
+		if ( count( $orgs ) > 1 ) {
+			$out .= '<select name="bf_org" aria-label="' . esc_attr__( 'Organizer', 'beacon-events' ) . '"><option value="">' . esc_html__( 'All organizers', 'beacon-events' ) . '</option>';
+			foreach ( $orgs as $t ) {
+				$out .= '<option value="' . esc_attr( $t->slug ) . '" ' . selected( $cur( 'bf_org' ), $t->slug, false ) . '>' . esc_html( $t->name ) . '</option>'; }
+			$out .= '</select>';
+		}
+		if ( $more ) {
+			$own  = self::weekdays_of( (string) ( $a['weekdays'] ?? '' ) );
+			$out .= '<select name="bf_day" aria-label="' . esc_attr__( 'Day of the week', 'beacon-events' ) . '"><option value="">' . esc_html__( 'Any day', 'beacon-events' ) . '</option>';
+			foreach ( self::weekday_names() as $n => $name ) {
+				if ( $own && ! in_array( $n, $own, true ) ) {
+					continue; }
+				$out .= '<option value="' . esc_attr( (string) $n ) . '" ' . selected( $cur( 'bf_day' ), (string) $n, false ) . '>' . esc_html( $name ) . '</option>'; }
+			$out .= '</select>';
+			$out .= '<select name="bf_time" aria-label="' . esc_attr__( 'Time of day', 'beacon-events' ) . '"><option value="">' . esc_html__( 'Any time', 'beacon-events' ) . '</option>';
+			$own = self::times_of( (string) ( $a['times'] ?? '' ) );
+			foreach ( self::time_names() as $k => $name ) {
+				if ( $own && ! in_array( $k, $own, true ) ) {
+					continue; }
+				$out .= '<option value="' . esc_attr( $k ) . '" ' . selected( $cur( 'bf_time' ), $k, false ) . '>' . esc_html( $name ) . '</option>'; }
 			$out .= '</select>';
 		}
 		$out .= '<input type="search" name="bf_q" value="' . esc_attr( $cur( 'bf_q' ) ) . '" placeholder="' . esc_attr__( 'Search events', 'beacon-events' ) . '" aria-label="' . esc_attr__( 'Search events', 'beacon-events' ) . '">';
@@ -543,7 +610,82 @@ final class Views {
 	private static function filter_all( array $rows, array $a ): array {
 		foreach ( self::TAX_ATTR as $tax => $attr ) {
 			$rows = self::filter_terms( $rows, $tax, (string) ( $a[ $attr ] ?? '' ) ); }
+		$days = self::weekdays_of( (string) ( $a['weekdays'] ?? '' ) );
+		if ( $days ) { // the weekday in the event's own zone, as its page shows it
+			$rows = array_values( array_filter( $rows, fn( $r ) => in_array( (int) self::local( $r['start_utc'], (int) $r['event_id'] )->format( 'w' ), $days, true ) ) ); }
+		$times = self::times_of( (string) ( $a['times'] ?? '' ) );
+		if ( $times ) {
+			$rows = array_values( array_filter( $rows, fn( $r ) => in_array( self::time_of_row( $r ), $times, true ) ) ); }
 		return self::filter_search( $rows, (string) ( $a['q'] ?? '' ) );
+	}
+
+	/** The filter bar's own URL arguments. */
+	const FILTER_ARGS = array( 'bf_cat', 'bf_venue', 'bf_org', 'bf_day', 'bf_time', 'bf_q', 'bf_view' );
+
+	/** Time-of-day groups by start time: morning 5:00–11:59, afternoon 12:00–16:59, evening 17:00–20:59, night 21:00–4:59. */
+	const TIMES = array( 'morning', 'afternoon', 'evening', 'night', 'allday' );
+
+	/**
+	 * "More filters" on: block toggle, shortcode more_filters="yes", filter beacon_more_filters.
+	 */
+	private static function more_filters_on( array $a ): bool {
+		$on = ! empty( $a['moreFilters'] ) || in_array( strtolower( (string) ( $a['more_filters'] ?? '' ) ), array( 'yes', '1', 'true', 'on' ), true );
+		return (bool) apply_filters( 'beacon_more_filters', $on, $a );
+	}
+
+	/** "sat,sun" / "6,0" / "Saturday" → array( 6, 0 ) (0 = Sunday, as PHP's "w"). */
+	private static function weekdays_of( string $csv ): array {
+		$names = array( 'sun' => 0, 'mon' => 1, 'tue' => 2, 'wed' => 3, 'thu' => 4, 'fri' => 5, 'sat' => 6 );
+		$out   = array();
+		foreach ( explode( ',', strtolower( $csv ) ) as $w ) {
+			$w = trim( $w );
+			if ( preg_match( '/^[0-6]$/', $w ) ) {
+				$out[] = (int) $w;
+			} elseif ( isset( $names[ substr( $w, 0, 3 ) ] ) && preg_match( '/^[a-z]+$/', $w ) ) {
+				$out[] = $names[ substr( $w, 0, 3 ) ]; }
+		}
+		return array_values( array_unique( $out ) );
+	}
+
+	/** "evening, night" → the known time-of-day groups in it. */
+	private static function times_of( string $csv ): array {
+		return array_values( array_intersect( self::TIMES, array_map( 'trim', explode( ',', strtolower( $csv ) ) ) ) );
+	}
+
+	/** Which time-of-day group a date falls in, by its start in the event's own zone. */
+	private static function time_of_row( array $r ): string {
+		if ( ! empty( $r['all_day'] ) ) {
+			return 'allday'; }
+		$h = (int) self::local( $r['start_utc'], (int) $r['event_id'] )->format( 'G' );
+		return $h >= 5 && $h < 12 ? 'morning' : ( $h >= 12 && $h < 17 ? 'afternoon' : ( $h >= 17 && $h < 21 ? 'evening' : 'night' ) );
+	}
+
+	/** Weekday names in the site's language, starting on the site's first day of the week; keys 0 (Sunday) … 6. */
+	private static function weekday_names(): array {
+		global $wp_locale;
+		$start = (int) get_option( 'start_of_week', 1 );
+		$out   = array();
+		for ( $i = 0; $i < 7; $i++ ) {
+			$n         = ( $start + $i ) % 7;
+			$out[ $n ] = $wp_locale ? $wp_locale->get_weekday( $n ) : gmdate( 'l', 259200 + $n * 86400 ); }
+		return $out;
+	}
+
+	/** The time-of-day choices with their hours in the site's time format. */
+	private static function time_names(): array {
+		$f = (string) get_option( 'time_format', 'g:i a' );
+		$t = fn( int $h ) => gmdate( $f, $h * 3600 );
+		return array(
+			/* translators: 1: start time, 2: end time */
+			'morning'   => sprintf( __( 'Morning (%1$s – %2$s)', 'beacon-events' ), $t( 5 ), $t( 12 ) ),
+			/* translators: 1: start time, 2: end time */
+			'afternoon' => sprintf( __( 'Afternoon (%1$s – %2$s)', 'beacon-events' ), $t( 12 ), $t( 17 ) ),
+			/* translators: 1: start time, 2: end time */
+			'evening'   => sprintf( __( 'Evening (%1$s – %2$s)', 'beacon-events' ), $t( 17 ), $t( 21 ) ),
+			/* translators: 1: start time, 2: end time */
+			'night'     => sprintf( __( 'Night (%1$s – %2$s)', 'beacon-events' ), $t( 21 ), $t( 5 ) ),
+			'allday'    => __( 'All-day events', 'beacon-events' ),
+		);
 	}
 
 	/**
@@ -963,7 +1105,7 @@ final class Views {
 	}
 
 	/** Query args that only re-slice the calendar page: every date and filter combination would otherwise be a new URL for crawlers. */
-	const NAV_ARGS = array( 'beacon_day', 'beacon_week', 'beacon_month', 'bf_cat', 'bf_venue', 'bf_q', 'bf_view', 'beacon_print' );
+	const NAV_ARGS = array( 'beacon_day', 'beacon_week', 'beacon_month', 'bf_cat', 'bf_venue', 'bf_org', 'bf_day', 'bf_time', 'bf_q', 'bf_view', 'beacon_print' );
 
 	/** Calendar navigation and filter pages: noindex, but keep following links to the events themselves. */
 	public static function robots_meta( array $robots ): array {
@@ -1198,6 +1340,8 @@ final class Views {
 					'bp_cat'       => (string) ( $a['category'] ?? '' ),
 					'bp_venue'     => (string) ( $a['venue'] ?? '' ),
 					'bp_org'       => (string) ( $a['organizer'] ?? '' ),
+					'bp_day'       => implode( ',', self::weekdays_of( (string) ( $a['weekdays'] ?? '' ) ) ),
+					'bp_time'      => implode( ',', self::times_of( (string) ( $a['times'] ?? '' ) ) ),
 					'bp_q'         => (string) ( $a['q'] ?? '' ),
 				),
 				'strlen'
@@ -1207,7 +1351,7 @@ final class Views {
 		return $out . '</div>';
 	}
 
-	const PRINT_ARGS = array( 'beacon_print', 'bp_cat', 'bp_venue', 'bp_org', 'bp_q' );
+	const PRINT_ARGS = array( 'beacon_print', 'bp_cat', 'bp_venue', 'bp_org', 'bp_day', 'bp_time', 'bp_q' );
 
 	/**
 	 * ?beacon_print=month: the month grid as its own page, without the theme's header, menus or sidebars, laid out for
@@ -1226,6 +1370,8 @@ final class Views {
 			'category'  => $slugs( $g( 'bp_cat' ) ),
 			'venue'     => $slugs( $g( 'bp_venue' ) ),
 			'organizer' => $slugs( $g( 'bp_org' ) ),
+			'weekdays'  => implode( ',', self::weekdays_of( $g( 'bp_day' ) ) ),
+			'times'     => implode( ',', self::times_of( $g( 'bp_time' ) ) ),
 			'q'         => $g( 'bp_q' ),
 			'print'     => 'no',
 			'printing'  => true,
@@ -1246,6 +1392,12 @@ final class Views {
 					$names[] = self::plain( $t->name ); }
 			}
 		}
+		$days = self::weekday_names();
+		foreach ( self::weekdays_of( $a['weekdays'] ) as $n ) {
+			$names[] = $days[ $n ]; }
+		$times = self::time_names();
+		foreach ( self::times_of( $a['times'] ) as $k ) {
+			$names[] = $times[ $k ]; }
 		if ( '' !== $a['q'] ) {
 			/* translators: %s: the search words the calendar was filtered by */
 			$names[] = sprintf( __( 'matching "%s"', 'beacon-events' ), $a['q'] );

@@ -113,6 +113,14 @@ final class Compat {
 	/** @var array<string,string> tag => source, filled by register() */
 	private static $owner = array();
 
+	/**
+	 * Whether this site had The Events Calendar's paid Filter Bar add-on (its folder stays after it is switched off). Of 83
+	 * Filter Bar sites checked in November 2026, 37 filtered by day of the week and 33 by time of day.
+	 */
+	public static function had_filter_bar(): bool {
+		return defined( 'WP_PLUGIN_DIR' ) && is_dir( WP_PLUGIN_DIR . '/the-events-calendar-filterbar' );
+	}
+
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'register' ), 99 ); // after every plugin registered its own
 		add_filter( 'render_block', array( __CLASS__, 'eventon_block' ), 10, 2 );
@@ -221,6 +229,8 @@ final class Compat {
 					// the full calendar comes with its search bar unless the page turned it off
 					$extra['filters'] = in_array( strtolower( $get( 'tribe-bar' ) ), array( 'false', '0', 'no', 'off' ), true ) ? '' : '1';
 					$extra['subscribe'] = '1'; // and its "Subscribe to calendar" menu under the view
+					// a site that ran TEC's paid Filter Bar keeps organizer / day / time-of-day filters next to the search
+					$extra['more_filters'] = $extra['filters'] && self::had_filter_bar() ? 'yes' : '';
 				} elseif ( 'tribe_mini_calendar' === $tag ) {
 					$view = 'month';
 				} elseif ( 'tribe_this_week' === $tag ) {

@@ -59,11 +59,13 @@ final class Elementor_TEC_Events_View extends Elementor_Compat_Widget {
 	public function atts( array $s ): array {
 		$v    = strtolower( static::first( $s, array( 'view', 'events_view', 'tribe_view', 'default_view' ) ) );
 		$view = in_array( $v, array( 'month', 'week', 'day' ), true ) ? $v : ( '' === $v ? 'month' : 'list' );
+		$bar  = in_array( strtolower( static::first( $s, array( 'tribe_bar', 'tribe-bar', 'show_search_bar', 'events_bar' ) ) ), array( 'no', 'false', '0', 'off' ), true ) ? '' : '1';
 		return array(
 			'view'     => $view,
 			'days'     => 365,
 			'category' => Compat::cats( 'tec', static::first( $s, array( 'category', 'categories', 'tribe_events_cat', 'filter_category' ) ) ),
-			'filters'  => in_array( strtolower( static::first( $s, array( 'tribe_bar', 'tribe-bar', 'show_search_bar', 'events_bar' ) ) ), array( 'no', 'false', '0', 'off' ), true ) ? '' : '1',
+			'filters'  => $bar,
+			'more_filters' => $bar && Compat::had_filter_bar() ? 'yes' : '',
 			'subscribe' => '1', // TEC's views come with a "Subscribe to calendar" menu
 		);
 	}
